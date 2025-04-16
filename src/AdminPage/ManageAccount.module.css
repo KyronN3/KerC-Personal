@@ -1,0 +1,104 @@
+.container {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+  
+  .userCard {
+    display: flex;
+    align-items: center;
+    background-color: #e6e6e6;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  .userInfo {
+    flex: 1;
+    padding-left: 10px;
+  }
+  
+  .userName {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  
+  .userEmail {
+    font-size: 12px;
+    color: #555;
+  }
+  
+  .avatarContainer {
+    margin: 0 15px;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ff5252;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .avatar::after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+  }
+  
+  .avatar::before {
+    content: "";
+    width: 30px;
+    height: 15px;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    position: absolute;
+    bottom: 5px;
+  }
+  
+  .actionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .forgotButton {
+    background-color: #009900;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 6px 10px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .deleteButton {
+    background-color: #cc0000;
+    color: white;
+    border: none;
+    border-radius: 2px;
+    padding: 6px 10px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .forgotButton:hover {
+    background-color: #007a00;
+  }
+  
+  .deleteButton:hover {
+    background-color: #a30000;
+  }

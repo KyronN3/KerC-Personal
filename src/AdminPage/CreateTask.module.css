@@ -1,0 +1,81 @@
+.formContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: rgb(250, 241, 230);
+    box-shadow: 0 13px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .formTitle {
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .formGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .formRow {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .singleRow {
+    width: 100%;
+  }
+  
+  .inputField {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background-color: #f9f9f9;
+  }
+  
+  .textareaField {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+    background-color: #f9f9f9;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .confirmButton {
+    background-color: #00b300;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 40px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  
+  .confirmButton:hover {
+    background-color: #009900;
+  }
+  
+  @media (max-width: 600px) {
+    .formRow {
+      flex-direction: column;
+    }
+  }

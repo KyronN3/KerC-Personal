@@ -1,0 +1,53 @@
+@media only screen and (min-width: 768px) {
+  .orderStatusFlex {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .orderStatusGrid {
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(6, 300px);
+    grid-template-rows: repeat(3, 300px);
+    overflow: hidden;
+    margin: 30px;
+    height: 600px;
+    width: 46%;
+    background-color: antiquewhite;
+    box-shadow: 1px 3px 23px black;
+  }
+
+  .headOrderStatus {
+    padding: 30px;
+    margin-left: 13px;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+      sans-serif;
+    font-weight: 1000;
+  }
+
+  .pic {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 230px;
+    margin-top: 36px;
+    grid-column: 1 / 4;
+    border: 0;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    box-shadow: 3px 3px 23px black;
+    border-radius: 23px;
+  }
+
+  .statusMessage {
+    grid-column: 1 / 4;
+    grid-row: 2 / 3;
+    margin: 19px;
+    width: 100%;
+    padding: 30px;
+    border: 1px solid black;
+    box-shadow: 3px 3px 16px black;
+  }
+}

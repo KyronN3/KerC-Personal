@@ -1,0 +1,144 @@
+.container {
+    width: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: white;
+    box-shadow: 3px 3px 16px black;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .customerId {
+    color: #666;
+    margin: 0;
+  }
+  
+  .profilePicContainer {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
+  }
+  
+  .profilePic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #e86549;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .avatarIcon {
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    border: 2px solid white;
+    position: relative;
+  }
+  
+  .avatarIcon:before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    background-color: white;
+    top: 10%;
+    left: 25%;
+  }
+  
+  .avatarIcon:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 60%;
+    border-radius: 50% 50% 0 0;
+    background-color: white;
+    bottom: -30%;
+    left: 0;
+  }
+  
+  .uploadIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .uploadIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .formContainer {
+    margin-bottom: 30px;
+  }
+  
+  .inputRow {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .inputField {
+    flex: 1;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .confirmButtonContainer {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .confirmButton {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 40px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .confirmButton:hover {
+    background-color: #4cae4c;
+  }
+  
+  @media (max-width: 600px) {
+    .inputRow {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }

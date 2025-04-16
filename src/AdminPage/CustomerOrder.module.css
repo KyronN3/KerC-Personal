@@ -1,0 +1,119 @@
+.container {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .orderCard {
+    display: flex;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 12px;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .leftSection {
+    display: flex;
+    align-items: center;
+    width: 30%;
+    padding-right: 15px;
+  }
+  
+  .iconContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: #FFD700;
+    border-radius: 4px;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  
+  .icon {
+    color: #000;
+  }
+  
+  .orderDetails {
+    flex-grow: 1;
+  }
+  
+  .customerName {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+  
+  .customerEmail {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  
+  .dueDateLabel {
+    font-size: 11px;
+    color: #777;
+    margin-bottom: 1px;
+  }
+  
+  .dueDate {
+    font-size: 14px;
+  }
+  
+  .middleSection {
+    width: 45%;
+    padding: 0 10px;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+  }
+  
+  .orderDescription {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #333;
+  }
+  
+  .rightSection {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 10px;
+  }
+  
+  .createButton {
+    width: 100%;
+    padding: 8px 0;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  
+  .cancelButton {
+    width: 100%;
+    padding: 8px 0;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .createButton:hover {
+    background-color: #45a049;
+  }
+  
+  .cancelButton:hover {
+    background-color: #d32f2f;
+  }
