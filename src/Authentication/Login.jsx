@@ -9,16 +9,24 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {useState} from "react"
+import { Link } from "react-router-dom"
+import { DataContext } from '../context.jsx'
+import { useContext } from "react"
+
 
 export default function LoginForm() {
+  const { modalSignupOpen, setModalSignupOpen } = useContext(DataContext);
+
+  const createAccountModal = () => {
+    setModalSignupOpen(!modalSignupOpen);
+  }
 
   return (
     <div className={cn("flex flex-col gap-6")} style={{ borderRadius: "16px" }}>
-      <Card style={{backgroundColor : "rgb(250, 241, 230)"}}>
+      <Card style={{ backgroundColor: "rgb(250, 241, 230)" }}>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription style={{color : "black"}}>
+          <CardDescription style={{ color: "black" }}>
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
@@ -31,7 +39,7 @@ export default function LoginForm() {
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  style={{borderColor : "black"}}
+                  style={{ borderColor: "black" }}
                   required
                 />
               </div>
@@ -45,24 +53,25 @@ export default function LoginForm() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" style={{borderColor : "black"}} placeholder="******" required />
+                <Input id="password" type="password" style={{ borderColor: "black" }} placeholder="******" required />
               </div>
               <Button type="submit" className="w-full" style={{ cursor: "pointer" }}>
                 Login
               </Button>
-              <Button variant="outline" className="w-full" style={{ cursor: "pointer"}}>
+              <Button variant="outline" className="w-full" style={{ cursor: "pointer" }}>
                 Login with Google
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <Link to='/login/signup' onClick={createAccountModal} className="underline underline-offset-4">
                 Sign up
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>
       </Card>
+
     </div>
   )
 }
