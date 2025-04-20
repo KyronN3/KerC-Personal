@@ -14,46 +14,65 @@ import { Bold } from 'lucide-react'
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion"
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import StyleModal from './Modal.module.css'
 import Login from '../Authentication/Login.jsx'
+import CreateAccount from '../Authentication/CreateAccount.jsx'
 import { Link } from 'react-router-dom'
+import { DataContext } from '../context.jsx'
 
 
-export default function Home({isLogin = false}) {
-  const [modal, setModal] = useState(isLogin);
+export default function Home({ isLogin = false, isSignup = false }) {
+  const { modalSignupOpen, setModalSignupOpen } = useContext(DataContext);
+  const [modalLogin, setModalLogin] = useState(isLogin);
+  const [modalSignup, setModalSignup] = useState(isSignup);
+
 
   const LoginClick = () => {
-    setModal(!modal);
+    setModalLogin(!modalLogin);
   }
 
   const CloseModal = () => {
-    setModal(!modal)
+    setModalLogin(!modalLogin)
   }
 
-  modal ?
-    document.body.style.overflow = `hidden`
+  const SignupClick = () => {
+    if (modalSignup) {
+      setModalSignup(false);
+    }
+    setModalSignupOpen(false);
+  }
+
+  modalSignupOpen || modalSignup ?
+    (document.body.style.overflow = `hidden`)
     :
     document.body.style.overflow = 'scroll'
 
   return (<>
 
-      <nav className={Style.HeaderContainer}>
-        <img className={Style.Image} src={Logo} />
-        <Link to='/' className={Style.Home}>Home</Link>
-        <Link to='/about' className={Style.About}>About</Link>
-        <Link to='/contacts' className={Style.Contact}> Contacts</Link>
-        <Link to='/login' className={Style.Login} onClick={LoginClick}> Login</Link>
-      </nav >
+    <nav className={Style.HeaderContainer}>
+      <img className={Style.Image} src={Logo} />
+      <Link to='/' className={Style.Home}>Home</Link>
+      <Link to='/about' className={Style.About}>About</Link>
+      <Link to='/contacts' className={Style.Contact}> Contacts</Link>
+      <Link to='/login' className={Style.Login} onClick={LoginClick}> Login</Link>
+    </nav >
 
-    {modal && (
+    {modalLogin && (
       <div className={StyleModal.modal}>
         <div className={StyleModal.overlay} onClick={CloseModal}></div>
         <div className={StyleModal.modalContent}>
           <Login />
         </div>
-      </div>
-    )}
+      </div>)}
+
+    {modalSignupOpen || modalSignup ? (
+      <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={SignupClick}></div>
+        <div className={StyleModal.modalContent}>
+          <CreateAccount />
+        </div>
+      </div>) : null}
 
 
     <main>
