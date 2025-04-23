@@ -1,17 +1,19 @@
 .container {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    width: 1000px;
     margin: 0 auto;
+    margin-top: 60px;
     padding: 10px;
   }
   
   .userCard {
     display: flex;
     align-items: center;
-    background-color: #e6e6e6;
+    background-color: #FAEBD7;
     border-radius: 4px;
     margin-bottom: 10px;
     padding: 10px;
+    box-shadow: 0 1px 1px 1px #5D4037;
   }
   
   .userInfo {

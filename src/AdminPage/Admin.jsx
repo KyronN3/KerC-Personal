@@ -2,11 +2,30 @@ import Style from './Admin.module.css'
 import Logo from '../assets/imgs/logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useState } from 'react'
+import { signOut } from 'firebase/auth'
+import { auth } from '../config/firebase.jsx'
+import { Link, useNavigate } from 'react-router-dom'
 import CreateTask from './CreateTask.jsx'
 import EditPrice from './EditPrice.jsx'
 import CustomerOrder from './CustomerOrder.jsx'
 import ManageAccount from './ManageAccount.jsx'
 import ArchiveFiles from './ArchiveFiles.jsx'
+import {
+    LogOut,
+    User,
+    ShoppingCart,
+} from "lucide-react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 export default function Admin() {
 
     const [createTaskOpen, setCreateTaskOpen] = useState(false);
@@ -14,6 +33,7 @@ export default function Admin() {
     const [customerOrderOpen, setCustomerOrderOpen] = useState(false);
     const [ArchiveFileOpen, setArchiveFileOpen] = useState(false);
     const [manageAccountOpen, setManageAccountOpen] = useState(false);
+    const navManageOrder = useNavigate();
 
     const btnCreateTask = () => {
         setCustomerOrderOpen(false);
@@ -51,17 +71,52 @@ export default function Admin() {
         setManageAccountOpen(true);
     }
 
+    const logout = async () => {
+        await signOut(auth);
+        window.location.replace("/");
+    }
+
+    const manageOrderNav = () => {
+        navManageOrder('/admin');
+    }
+
+
     return (<>
         <nav className={Style.HeaderContainer}>
             <img className={Style.Image} src={Logo} alt="Logo" />
-            <a className={Style.Home}>Home</a>
+            <Link to="/" className={Style.Home}>Home</Link>
             <a className={Style.About}>About</a>
             <a className={Style.Contact}>Contacts</a>
             <a className={Style.Login}>
-                <Avatar className={Style.profile}>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>Profile</AvatarFallback>
-                </Avatar>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Avatar className={Style.Profile}>
+                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarFallback>...Loading</AvatarFallback>
+                        </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <User />
+                                <span className='cursor-pointer'>Profile</span>
+                                <DropdownMenuShortcut>P</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <ShoppingCart />
+                                <Link to='/admin' className='cursor-pointer' onClick={manageOrderNav}>Manage Orders</Link>
+                                <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuItem>
+                            <LogOut />
+                            <span onClick={logout} className='cursor-pointer'>Log out</span>
+                            <DropdownMenuShortcut>Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </a>
         </nav>
 
@@ -87,7 +142,7 @@ export default function Admin() {
                 </div>
             </button>
 
-            <button className={`${Style.SidebarButton} ${Style.youOrder}`} onClick={btnCustomerOrder}>
+            <button className={`${Style.SidebarButton}`} onClick={btnCustomerOrder}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -98,7 +153,7 @@ export default function Admin() {
                 </div>
             </button>
 
-            <button className={`${Style.SidebarButton} ${Style.orderHistory}`} onClick={btnArchiveFile}>
+            <button className={`${Style.SidebarButton}`} onClick={btnArchiveFile}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="21 8 21 21 3 21 3 8"></polyline>
@@ -109,7 +164,7 @@ export default function Admin() {
                 </div>
             </button>
 
-            <button className={`${Style.SidebarButton} ${Style.Profile}`} onClick={btnManageAccount}>
+            <button className={`${Style.SidebarButton}`} onClick={btnManageAccount}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>

@@ -1,11 +1,12 @@
 .formContainer {
-    max-width: 600px;
+    max-width: 1000px;
     margin: 0 auto;
+    margin-top: 60px;
     padding: 20px;
     width: 100vh;
     font-family: Arial, sans-serif;
-    background-color: rgb(250, 241, 230);
-    box-shadow: 0 13px 10px rgba(0, 0, 0, 0.05);
+    background-color: #FAEBD7;
+    box-shadow: 0 3px 16px 10px #5D4037;
   }
   
   .formTitle {

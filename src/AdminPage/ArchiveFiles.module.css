@@ -2,17 +2,18 @@
     font-family: Arial, sans-serif;
     max-width: 900px;
     margin: 0 auto;
+    margin-top: 60px;
     padding: 10px;
   }
   
   .receiptCard {
     display: flex;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: #FAEBD7;
     border-radius: 4px;
     margin-bottom: 15px;
     padding: 15px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px 1px #5D4037;
   }
   
   .leftSection {
