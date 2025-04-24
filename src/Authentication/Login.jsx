@@ -81,7 +81,7 @@ export default function LoginForm() {
     borderRadius: "16px",
     ...(window.innerWidth <= 720 && {
       position: 'fixed',
-      marginTop: '30%',
+      marginTop: '150px',
       marginLeft: '35.5%',
       transform: 'translate(-50%, -50%)',
       width: 350,
