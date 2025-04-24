@@ -12,7 +12,7 @@ import ArchiveFiles from './AdminPage/ArchiveFiles.jsx'
 import CreateAccount from './Authentication/CreateAccount.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import { ModalContext, UserDataContext, CreateAccountContext } from './context.jsx'
+import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext } from './context.jsx'
 import { useState, useEffect } from 'react'
 import { db } from './config/firebase.jsx'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
@@ -21,6 +21,7 @@ import { auth } from './config/firebase.jsx'
 function App() {
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
+  const [receiptId, setReceiptId] = useState('');
   const [userData, setUserData] = useState(
     {
       fname: null,
@@ -224,13 +225,17 @@ function App() {
   return (
     <>
 
-      <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
-        <UserDataContext.Provider value={{ userData, setUserData }}>
-          <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-            <ProtectedRoutes />
-          </ModalContext.Provider>
-        </UserDataContext.Provider>
-      </CreateAccountContext.Provider>
+      <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
+        <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
+          <UserDataContext.Provider value={{ userData, setUserData }}>
+            <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
+              <ProtectedRoutes />
+            </ModalContext.Provider>
+          </UserDataContext.Provider>
+        </CreateAccountContext.Provider>
+      </ReceiptContext.Provider>
+
+
     </>
   )
 }

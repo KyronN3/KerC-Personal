@@ -1,19 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import styles from './CustomerOrder.module.css';
 import { db } from '../config/firebase.jsx'
-import { collection, doc, getDocs, deleteDoc } from 'firebase/firestore'
+import { collection, doc, getDocs, deleteDoc, addDoc, updateDoc } from 'firebase/firestore'
 import { ClipboardCheck } from 'lucide-react';
-// import StatusUpdate from './StatusUpdate.jsx';
+import { ToastContainer, toast } from 'react-toastify';
+import { ReceiptContext } from '../context.jsx';
+import Receipt from './Receipt.jsx'
+import StatusUpdate from './StatusUpdate.jsx';
 import StyleModal from '../HomePage/Modal.module.css'
+
 
 
 const CustomerOrder = () => {
 
+  const { receiptId, setReceiptId } = useContext(ReceiptContext);
   const [data, setData] = useState([]);
   const [targetTableDelete, setTargetTableDelete] = useState('');
   const [targetTable, setTargetTable] = useState('');
+  const [targetTableReceipt, setTargetReceipt] = useState('');
+  const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
   const [clipboardCheckOpen, setClipboardCheckOpen] = useState(false);
   const [uid, setUid] = useState('');
+
 
   useEffect(() => {
     const getData = async () => {
@@ -59,6 +67,21 @@ const CustomerOrder = () => {
 
         const refWithId = doc(db, 'Order', dataScope[0].id);
         await deleteDoc(refWithId);
+
+        const refWithReceipt = collection(db, 'Receipt');
+        const receiptFetch = await getDocs(refWithReceipt);
+        const referencekey = receiptFetch.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+
+        if (dataScope[0] != undefined) {
+          const filtered = referencekey.filter(doc => {
+            return doc.referencekey == dataScope[0].id;
+          })
+          await deleteDoc(doc(db, 'Receipt', filtered[0].id));
+        }
+
       }
     }
     del();
@@ -94,6 +117,74 @@ const CustomerOrder = () => {
     select();
   }, [targetTable])
 
+
+  const createdReceipt = async (docData) => {
+    try {
+      const ref = collection(db, 'Receipt');
+      if (!docData.isReceipt) {
+        await addDoc(ref, {
+          referencekey: docData.referencekey,
+          price: docData.price,
+          service: docData.service,
+        },)
+      }
+
+      const refWithId = doc(db, 'Order', docData.referencekey);
+      await updateDoc(refWithId, { isReceipt: true });
+      toast.success("Receipt Created", {
+        position: 'bottom-right'
+      })
+
+    } catch (err) {
+      toast.error("Try Again", {
+        position: 'bottom-right'
+      })
+      console.error(err);
+    }
+  }
+
+
+  useEffect(() => {
+    const selectReceipt = async () => {
+      const ref = collection(db, 'Order');
+      const dataFetch = await getDocs(ref);
+
+      const filteredOne = dataFetch.docs.filter(doc => {
+        const data = doc.data();
+        return data.service.includes(targetTableReceipt.service)
+      })
+
+      const filteredTwo = filteredOne.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+      const filteredThree = filteredTwo.filter(doc => {
+        return doc.description.includes(targetTableReceipt.description)
+      })
+
+      const dataScope = filteredThree.filter(doc => {
+        return doc.customerID == targetTableReceipt.customerID
+      })
+
+      const refWithReceipt = collection(db, 'Receipt');
+      const receiptFetch = await getDocs(refWithReceipt);
+      const referencekey = receiptFetch.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+
+      if (dataScope[0] != undefined) {
+        const filtered = referencekey.filter(doc => {
+          return doc.referencekey == dataScope[0].id;
+        })
+        setReceiptId(filtered[0].id);
+      }
+    }
+    selectReceipt();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetTableReceipt])
+
   const toDelete = (item) => {
     setTargetTableDelete(item);
   }
@@ -103,51 +194,61 @@ const CustomerOrder = () => {
     setClipboardCheckOpen(!clipboardCheckOpen)
   }
   const closeModal = () => {
-    setClipboardCheckOpen(!clipboardCheckOpen)
-  }
-
-  if (updateStatusClose.current) {
     setClipboardCheckOpen(false)
+    setViewReceiptOpen(false);
   }
 
+  const viewReceipt = (item) => {
+    setTargetReceipt(item);
+    setViewReceiptOpen(!viewReceiptOpen);
+  }
   return (
     <>
-      {
-        data.map((doc, index) => (
-          <div key={index} className={styles.container}>
-            <div className={styles.orderCard}>
-              <div className={styles.leftSection}>
-                <div className={styles.iconContainer}>
-                  <ClipboardCheck className={styles.icon} onClick={() => clipboardCheck(doc)} size={24} />
-                </div>
-                <div className={styles.orderDetails}>
-                  <div className={styles.customerName}>{doc.name}</div>
-                  <div className={styles.customerEmail}>{doc.phone} {doc.email} </div>
-                  <div className={styles.dueDateLabel}>Due Date:</div>
-                  <div className={styles.dueDate}> {doc.timeDate} </div>
-                </div>
+      {data.map((doc, index) => (
+        <div key={index} className={styles.container}>
+          <div className={styles.orderCard}>
+            <div className={styles.leftSection}>
+              <div className={styles.iconContainer}>
+                <ClipboardCheck className={styles.icon} onClick={() => clipboardCheck(doc)} size={24} />
               </div>
-              <div className={styles.middleSection}>
-                <div className={styles.orderDescription}>
-                  {doc.description}
-                </div>
-              </div>
-              <div className={styles.rightSection}>
-                <button className={styles.createButton}>
-                  CREATE RECEIPT
-                </button>
-                <button className={styles.cancelButton} onClick={() => toDelete(doc)}>
-                  CANCEL ORDER
-                </button>
+              <div className={styles.orderDetails}>
+                <div className={styles.customerName}>{doc.name}</div>
+                <div className={styles.customerEmail}>{doc.phone} {doc.email} </div>
+                <div className={styles.dueDateLabel}>Due Date:</div>
+                <div className={styles.dueDate}> {doc.timeDate} </div>
               </div>
             </div>
-          </div >))}
+            <div className={styles.middleSection}>
+              <div className={styles.orderDescription}>
+                {doc.description}
+              </div>
+            </div>
+            <div className={styles.rightSection}>
+              {!doc.isReceipt ? (<button className={styles.createButton} onClick={() => createdReceipt(doc)}>CREATE RECEIPT </button>)
+                :
+                (<button className={styles.createButton} onClick={() => viewReceipt(doc)}>VIEW RECEIPT</button>)
+              }
+
+              <button className={styles.cancelButton} onClick={() => toDelete(doc)}>
+                CANCEL ORDER
+              </button>
+            </div>
+          </div>
+          <ToastContainer />
+        </div >))}
 
       {clipboardCheckOpen &&
         <div className={StyleModal.modal}>
           <div className={StyleModal.overlay} onClick={closeModal}></div>
           <div className={StyleModal.modalContent}><StatusUpdate value={uid} /></div>
         </div>}
+
+      {viewReceiptOpen &&
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}><Receipt value={receiptId} /></div>
+        </div>}
+
 
     </>);
 };

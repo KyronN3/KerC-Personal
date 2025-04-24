@@ -1,7 +1,7 @@
 import styles from './CreateTask.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { db } from '../config/firebase.jsx'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, doc, setDoc, getDocs } from 'firebase/firestore'
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,15 +16,38 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const CreateTask = () => {
 
+  
+  const [priceData, setPriceData] = useState([])
+  const [servicePrice, setServicePrice] = useState('');
   const [createTask, setCreateTask] = useState({
     name: null,
     customerID: null,
     phone: null,
     email: null,
     service: null,
+    price: null,
     timeDate: null,
     description: null
   })
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const ref = collection(db, 'Price');
+        const dataFetch = await getDocs(ref);
+
+        const dataScope = dataFetch.docs.map(data => ({
+          ...data.data()
+        }))
+
+        setPriceData(dataScope);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getData();
+  }, [])
+
 
   const onChangeName = (e) => {
     setCreateTask((taskPrev) => ({ ...taskPrev, name: e.target.value }))
@@ -53,23 +76,36 @@ const CreateTask = () => {
     setCreateTask((taskPrev) => ({ ...taskPrev, description: e.target.value }))
   }
 
+  const price = (doc) => {
+    setServicePrice(doc);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (createTask.service == null) {
         throw new Error("Please pick a Service")
       }
+
       const ref = collection(db, 'Order');
-      await addDoc(ref, {
+      const uid = await addDoc(ref, {
         name: createTask.name,
         customerID: createTask.customerID,
         phone: createTask.phone,
         email: createTask.email,
         service: createTask.service,
+        price: servicePrice.price,
         timeDate: createTask.timeDate,
         description: createTask.description,
-        status: null
+        isReceipt: false,
+        status: null,
       })
+
+      const refId = doc(db, 'Order', uid.id);
+      await setDoc(refId, {
+        referencekey: uid.id
+      }, { merge: true });
+
       e.target.reset();
     } catch (error) {
       toast.error("Unsuccessful, input missing. Try Again !", {
@@ -129,33 +165,15 @@ const CreateTask = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className={`w-30`} variant="outline">{createTask.service != null ? createTask.service : 'Services'}</Button>
+              <Button className={`w-80`} variant="outline">{createTask.service != null ? createTask.service : 'Services'}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-60 h-73 bg-[#FAEBD7] border-[#5D4037]">
               <DropdownMenuLabel className="text-center">KER-C</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup onValueChange={onChangeServices}>
-                <DropdownMenuRadioItem value="offset-printing">Offset Printing</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="digital-printing">Digital Printing</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="business-cards">Business Cards</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="flyers-brochures">Flyers & brochures</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="stickers-labels">Stickers & Labels</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="calendars">Calendars</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="envelopes">Envelopes</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="offset-printing">Offset Printing</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="digital-printing">Digital Printing</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="business-cards">Business Cards</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="flyers-brochures">Flyers & brochures</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="stickers-labels">Stickers & Labels</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="calendars">Calendars</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="envelopes">Envelopes</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="offset-printing">Offset Printing</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="digital-printing">Digital Printing</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="business-cards">Business Cards</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="flyers-brochures">Flyers & brochures</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="stickers-labels">Stickers & Labels</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="calendars">Calendars</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="envelopes">Envelopes</DropdownMenuRadioItem>
+                {priceData.map((doc, index) => (
+                  <DropdownMenuRadioItem key={index} onClick={() => price(doc)} value={`${doc.service} ${doc.option}`} >{doc.service} {doc.option}</DropdownMenuRadioItem>
+                ))}
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>

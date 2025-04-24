@@ -1,59 +1,154 @@
-import React from 'react';
+import { useState, useEffect, useContext } from 'react'
 import styles from './ArchiveFiles.module.css';
+import { db } from '../config/firebase.jsx';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { ReceiptContext } from '../context.jsx';
+import Receipt from './Receipt.jsx'
+import StyleModal from '../HomePage/Modal.module.css'
 
 const ArchiveFiles = () => {
-  return (
-    <div className={styles.container}>
-      {/* First Order Receipt */}
-      <div className={styles.receiptCard}>
-        <div className={styles.leftSection}>
-          <div className={styles.customerName}>Earl Robert Caamped</div>
-          <div className={styles.customerEmail}>09278412040 ecaampz@gmail.com</div>
-          <div className={styles.dueDate}>
-            Due Date:<br />
-            09/24/2025
+
+  const [archiveData, setArchiveData] = useState([]);
+  const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
+  const [targetTableReceipt, setTargetTableReceipt] = useState([]);
+  const { receiptId, setReceiptId } = useContext(ReceiptContext);
+
+  useEffect(() => {
+    try {
+      const getData = async () => {
+
+        const ref = collection(db, 'Order');
+        const dataFetch = await getDocs(ref);
+
+        const dataReceive = dataFetch.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+        setArchiveData(dataReceive)
+
+
+
+      }
+      getData()
+    } catch (err) {
+      console.error(err);
+    }
+
+  }, [])
+
+  useEffect(() => {
+    try {
+      const setData = () => {
+        const refArchive = collection(db, 'Archive');
+        archiveData.forEach(async doc => {
+          await addDoc(refArchive, {
+            ...doc
+          })
+        })
+      }
+      setData()
+    } catch (error) {
+      console.error(error)
+    }
+  }, [archiveData])
+
+
+
+  useEffect(() => {
+    const selectReceipt = async () => {
+      const ref = collection(db, 'Order');
+      const dataFetch = await getDocs(ref);
+
+      const filteredOne = dataFetch.docs.filter(doc => {
+        const data = doc.data();
+        return data.service.includes(targetTableReceipt.service)
+      })
+
+      const filteredTwo = filteredOne.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+
+      const filteredThree = filteredTwo.filter(doc => {
+        return doc.description.includes(targetTableReceipt.description)
+      })
+
+      const dataScope = filteredThree.filter(doc => {
+        return doc.customerID == targetTableReceipt.customerID
+      })
+
+      const refWithReceipt = collection(db, 'Receipt');
+      const receiptFetch = await getDocs(refWithReceipt);
+      const referencekey = receiptFetch.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+
+
+      if (dataScope[0] != undefined) {
+        const filtered = referencekey.filter(doc => {
+          return doc.referencekey == dataScope[0].id;
+        })
+        setReceiptId(filtered[0].id);
+      }
+    }
+    selectReceipt();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetTableReceipt])
+
+
+  const toDelete = (item) => {
+    console.log(item);
+  }
+
+  const viewReceipt = (item) => {
+    setViewReceiptOpen(!viewReceiptOpen);
+    setTargetTableReceipt(item);
+  }
+
+  const closeModal = () => {
+    setViewReceiptOpen(false);
+  }
+
+  return (<>
+
+    {archiveData.map(doc => (
+      <div className={styles.container} >
+        <div className={styles.receiptCard}>
+          <div className={styles.leftSection}>
+            <div className={styles.customerName}>{doc.name}</div>
+            <div className={styles.customerEmail}>{doc.phone} {doc.email}</div>
+            <div className={styles.dueDate}>
+              Due Date:<br />
+              {doc.timeDate}
+            </div>
+          </div>
+
+          <div className={styles.orderDescription}>
+            {doc.description}
+          </div>
+
+          <div className={styles.actionsContainer}>
+            {doc.Receipt
+              ?
+              <button className={styles.viewButton} onClick={() => viewReceipt(doc)}>VIEW RECEIPT</button>
+              :
+              <button className={styles.viewButton}>NO RECEIPT</button>
+            }
+            <button className={styles.deleteButton} onClick={() => toDelete(doc)}>
+              DELETE<br />ARCHIVE
+            </button>
           </div>
         </div>
-        
-        <div className={styles.orderDescription}>
-          30 black cotton t-shirts with white and red screen printing—logo on the left chest, large design on the back—ready by next Friday, with a sample before full production.
-        </div>
-        
-        <div className={styles.actionsContainer}>
-          <button className={styles.viewButton}>
-            VIEW<br />RECEIPT
-          </button>
-          <button className={styles.deleteButton}>
-            DELETE<br />ARCHIVE
-          </button>
-        </div>
       </div>
-      
-      {/* Second Order Receipt */}
-      <div className={styles.receiptCard}>
-        <div className={styles.leftSection}>
-          <div className={styles.customerName}>Kent Cartoneros</div>
-          <div className={styles.customerEmail}>09538522924 cartneroj@gmail.com</div>
-          <div className={styles.dueDate}>
-            Due Date:<br />
-            10/09/2025
-          </div>
-        </div>
-        
-        <div className={styles.orderDescription}>
-          Yearbook with a hardbound cover, full-color pages, and a modern layout, including class photos, achievements, and special messages. Deadline: 10/09/2025.
-        </div>
-        
-        <div className={styles.actionsContainer}>
-          <button className={styles.viewButton}>
-            VIEW<br />RECEIPT
-          </button>
-          <button className={styles.deleteButton}>
-            DELETE<br />ARCHIVE
-          </button>
-        </div>
-      </div>
-    </div>
+    ))}
+
+    {viewReceiptOpen &&
+      <div className={StyleModal.modal}>
+        <div className={StyleModal.overlay} onClick={closeModal}></div>
+        <div className={StyleModal.modalContent}><Receipt value={receiptId} /></div>
+      </div>}
+  </ >
   );
 };
 

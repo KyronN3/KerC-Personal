@@ -37,6 +37,19 @@ export default function LoginForm() {
       await signInWithEmailAndPassword(auth, user.email, user.password);
       setLogin(true);
       navigateHome('/')
+      toast.success("Login Successfully", {
+        position: 'bottom-center',
+        hideProgressBar: true,
+        closeButton: false,
+        autoClose: 3000,
+        pauseOnFocusLoss: false,
+        style: {
+          top: '60px',
+          border: '1px solid black',
+          width: 'auto',
+          height: '60px'
+        }
+      });
     } catch (error) {
       toast.error("Wrong email or password, please try Again!", {
         position: 'bottom-center',
@@ -60,7 +73,13 @@ export default function LoginForm() {
       await signInWithPopup(auth, googleAuth);
       setLogin(true);
       navigateHome('/');
+      toast.success("Login Successfully", {
+        position: 'bottom-right',
+      });
     } catch (err) {
+      toast.error("Try Again!", {
+        position: 'bottom-right',
+      });
       console.error(err);
     }
 
