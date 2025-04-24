@@ -1,0 +1,15 @@
+.TermsCondition {
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.Paragraphs {
+    text-align: left;
+    margin-left: 20px;
+    padding: 10%;
+    padding-top: 3%;
+    line-height: 2;
+}

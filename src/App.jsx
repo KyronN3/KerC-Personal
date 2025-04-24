@@ -2,6 +2,8 @@ import Home from './HomePage/Home.jsx'
 import Order from './CustomerPage/Orders.jsx'
 import Customer from './CustomerPage/Customer.jsx'
 import Admin from './AdminPage/Admin.jsx'
+import Inquire from './PageInquiry/InquiryPage.jsx'
+import Legal from './LegalPage/PageTerm.jsx'
 import OrderStatus from './CustomerPage/OrderStatus.jsx'
 import OrderHistory from './CustomerPage/OrderHistory.jsx'
 import CreateTask from './AdminPage/CreateTask.jsx'
@@ -81,6 +83,14 @@ function App() {
           element: <Home isLogin={false} isSignup={true} />
         }
       ]
+    },
+    {
+      path: '/inquire',
+      element: <Inquire />
+    },
+    {
+      path: '/legal',
+      element: <Legal />
     }
   ])
 
@@ -144,6 +154,14 @@ function App() {
           {
             path: '/manageaccount',
             element: <Admin accountOpen={false} />
+          },
+          {
+            path: '/inquire',
+            element: <Inquire />
+          },
+          {
+            path: '/legal',
+            element: <Legal />
           }
         ])} />;
       }
@@ -223,7 +241,6 @@ function App() {
 
   return (
     <>
-
       <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
         <UserDataContext.Provider value={{ userData, setUserData }}>
           <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>

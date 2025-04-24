@@ -212,6 +212,10 @@ const CreateAccount = () => {
                                 className={styles.input}
                                 required
                             />
+                            <label>
+                                <input type="checkbox" name="myCheckbox" value="checkboxValue" style={{marginRight: 10, marginTop: 20}}/>
+                                <p>By checking this box, you agree to the <a href="/legal"><u>Terms & Conditions</u></a> of our website.</p>  
+                            </label>
                             <button
                                 type="button"
                                 className={styles.togglePassword}

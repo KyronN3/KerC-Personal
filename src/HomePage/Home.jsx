@@ -68,6 +68,10 @@ export default function Home({ isLogin = false, isSignup = false }) {
     }
   }
 
+  const InquireClick = () => {
+    navOrder('/inquire');
+  };
+
   const closeAll = () => {
     setModalSignupOpen(false);
     setModalSignup(false);
@@ -91,8 +95,6 @@ export default function Home({ isLogin = false, isSignup = false }) {
       :
       navOrder('/admin')
   }
-
-
 
   return (<>
 
@@ -182,7 +184,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
               With a range of services and excellent customer service, we are committed to providing you with quality products that meet your needs.
               Experience printing made simple.
             </p>
-            <Button variant="outline" className={Style.enquire}>Enquire Price</Button>
+            <Button variant="outline" className={Style.enquire} onClick={InquireClick}>Inquire Price</Button>
           </div>
         </div>
 
@@ -250,7 +252,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
         </div>
 
 
-        <div className={Style.FAQContainerParent}>
+        <div className={Style.FAQContainerParent} style={{marginBottom: 100}}>
           <div className={Style.FAQContainer}>
             <h1 className={Style.headerFAQ}>KER-C FAQs</h1>
             <Accordion type="single" collapsible className="w-full">
@@ -264,14 +266,14 @@ export default function Home({ isLogin = false, isSignup = false }) {
               <AccordionItem value="item-2">
                 <AccordionTrigger className={Style.headerAccordion}>Where are you located?</AccordionTrigger>
                 <AccordionContent className={Style.answerAccordion}>
-                  We are in the city center of Panabo, near Gaisano Grand Mall, for easy access.
+                  We are located in the center of Panabo City, near the Gaisano Grand Mall.
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3">
                 <AccordionTrigger className={Style.headerAccordion} >Can I place an order online?</AccordionTrigger>
                 <AccordionContent className={Style.answerAccordion}>
-                  Yes! Our online inquiry system allows you to request services, track orders, and manage your account conveniently.
+                  Currently, online orders are not available. We invite you to visit our shop directly, where our team will be happy to assist you in person and ensure that all your requirements are met. Thank you for your understanding!
                 </AccordionContent>
               </AccordionItem>
 
@@ -285,7 +287,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
               <AccordionItem value="item-5">
                 <AccordionTrigger className={Style.headerAccordion}>Do you offer delivery?</AccordionTrigger>
                 <AccordionContent className={Style.answerAccordion}>
-                  Currently, we provide pickup at our location. Contact us for more details on delivery options.
+                  At this time, we provide pickup at our location. For more information regarding delivery options, please contact us directly. We're here to help!
                 </AccordionContent>
               </AccordionItem>
 
@@ -299,10 +301,9 @@ export default function Home({ isLogin = false, isSignup = false }) {
               <AccordionItem value="item-7">
                 <AccordionTrigger className={Style.headerAccordion}>What payment methods do you accept?</AccordionTrigger>
                 <AccordionContent className={Style.answerAccordion}>
-                  We accept cash and digital payments. More details are available at our store.
+                  We accept cash and GCash payments exclusively at our physical store. For more details, please visit us in-store. Thank you!
                 </AccordionContent>
               </AccordionItem>
-
             </Accordion>
           </div>
         </div>
@@ -346,7 +347,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
           </ul>
           <hr className={Style.lineTwo} />
           <div className={Style.footerIcons}>
-            Copyright &copy; 2025-Ker-C Printing Services
+            <p>Copyright &copy; 2025-Ker-C Printing Services</p>
           </div>
           <div className={Style.footerIconsContainer}>
             <img className={Style.iconsFooter} src={FacebookIcon} />
