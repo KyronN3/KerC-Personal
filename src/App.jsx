@@ -113,7 +113,7 @@ function App() {
             element: <Customer />
           }
         ])} />;
-        
+
       } else {
         return <RouterProvider router={createBrowserRouter([
           {
@@ -124,6 +124,26 @@ function App() {
           {
             path: '/admin',
             element: <Admin />
+          },
+          {
+            path: '/editprice',
+            element: <Admin EditTaskOpen={true} />
+          },
+          {
+            path: '/createtask',
+            element: <Admin CreateTaskOpen={true} />
+          },
+          {
+            path: '/customerorder',
+            element: <Admin orderOpen={true} />
+          },
+          {
+            path: '/archivefiles',
+            element: <Admin archiveFileOpen={true} />
+          },
+          {
+            path: '/manageaccount',
+            element: <Admin accountOpen={false} />
           }
         ])} />;
       }
@@ -203,6 +223,7 @@ function App() {
 
   return (
     <>
+
       <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
         <UserDataContext.Provider value={{ userData, setUserData }}>
           <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>

@@ -25,20 +25,20 @@
   margin-right: 56%;
   text-align: center;
   border-radius: 1rem;
-  border: 2px solid #5D4037;
-  background-color: #FAEBD7;
+  border: 2px solid #5d4037;
+  background-color: #faebd7;
   padding: 0.75rem 1.5rem;
   font-size: 15px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #5D4037;
+  color: #5d4037;
   transition: all 300ms;
 }
 
 .Home:hover {
   transform: translateX(-4px) translateY(-4px);
   border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
+  box-shadow: 4px 4px 2px #5d4037;
   cursor: pointer;
 }
 
@@ -55,19 +55,19 @@
   text-align: center;
   font-size: 16px;
   border-radius: 1rem;
-  border: 2px solid #5D4037;
-  background-color: #FAEBD7;
+  border: 2px solid #5d4037;
+  background-color: #faebd7;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #5D4037;
+  color: #5d4037;
   transition: all 300ms;
 }
 
 .About:hover {
   transform: translateX(-4px) translateY(-4px);
   border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
+  box-shadow: 4px 4px 2px #5d4037;
   cursor: pointer;
 }
 
@@ -84,19 +84,19 @@
   text-align: center;
   border-radius: 1rem;
   font-size: 16px;
-  border: 2px solid #5D4037;
-  background-color: #FAEBD7;
+  border: 2px solid #5d4037;
+  background-color: #faebd7;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #5D4037;
+  color: #5d4037;
   transition: all 300ms;
 }
 
 .Contact:hover {
   transform: translateX(-4px) translateY(-4px);
   border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
+  box-shadow: 4px 4px 2px #5d4037;
   cursor: pointer;
 }
 
@@ -109,7 +109,7 @@
 .Profile {
   height: 50px;
   width: 50px;
-  border: 3px solid #D7CCC8;
+  border: 3px solid #d7ccc8;
   cursor: pointer;
 }
 
@@ -174,8 +174,9 @@
   height: 100%;
   width: 300px;
   padding: 30px 0;
-  background-color: #5D4037;
+  background-color: #5d4037;
   z-index: 900;
+  transition: transform 0.3s ease;
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -186,20 +187,20 @@
   margin: 20px auto;
   text-align: center;
   border-radius: 1rem;
-  border: 2px solid #5D4037;
-  background-color: #FAEBD7;
+  border: 2px solid #5d4037;
+  background-color: #faebd7;
   padding: 1rem 1.5rem;
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #5D4037;
+  color: #5d4037;
   transition: all 300ms;
 }
 
 .SidebarButton:hover {
   transform: translateX(-4px) translateY(-4px);
   border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
+  box-shadow: 4px 4px 2px #5d4037;
   cursor: pointer;
 }
 
@@ -209,9 +210,62 @@
   box-shadow: none;
 }
 
+.hamburgerButton {
+  position: fixed;
+  top: 140px;
+  left: 320px;
+  z-index: 999;
+  transition: left 0.3s ease;
+  background-color: #5d4037;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 40px;
+  width: 40px;
+}
+
+.hamburgerButton span {
+  height: 3px;
+  width: 100%;
+  background-color: #faebd7;
+  border-radius: 2px;
+}
+
+
+.SidebarContainer {
+  top: 130px !important;
+  height: calc(100% - 130px) !important;
+  z-index: 899 !important;
+  transition: transform 0.3s ease;
+}
+
+
+@media (max-width: 768px) {
+  .hamburgerButton {
+    top: 250px;
+  }
+  .SidebarContainer {
+    top: 240px !important;
+    height: calc(100% - 240px) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hamburgerButton {
+    top: 200px;
+  }
+  .SidebarContainer {
+    top: 190px !important;
+    height: calc(100% - 190px) !important;
+  }
+}
 
 .Profile {
-  background-color: #A1887F;
+  background-color: #a1887f;
 }
 
 .buttonContent {
@@ -242,9 +296,9 @@
 
 .MainContentGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  grid-template-columns: repeat(8, minmax(200px, 1fr));
 }
 
 .MainContent {
-  grid-column: 1 / 4;
+  grid-column: 2 / 8;
 }

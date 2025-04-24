@@ -26,13 +26,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export default function Admin() {
+export default function Admin({orderOpen = false, EditTaskOpen = false, accountOpen = false, archiveFileOpen = false, CreateTaskOpen = false}) {
 
-    const [createTaskOpen, setCreateTaskOpen] = useState(false);
-    const [editTaskOpen, setEditTaskOpen] = useState(false);
-    const [customerOrderOpen, setCustomerOrderOpen] = useState(false);
-    const [ArchiveFileOpen, setArchiveFileOpen] = useState(false);
-    const [manageAccountOpen, setManageAccountOpen] = useState(false);
+    const [sidebarVisible, setSidebarVisible] = useState(true);
+    const [createTaskOpen, setCreateTaskOpen] = useState(CreateTaskOpen);
+    const [editTaskOpen, setEditTaskOpen] = useState(EditTaskOpen);
+    const [customerOrderOpen, setCustomerOrderOpen] = useState(orderOpen);
+    const [ArchiveFileOpen, setArchiveFileOpen] = useState(archiveFileOpen);
+    const [manageAccountOpen, setManageAccountOpen] = useState(accountOpen);
     const navManageOrder = useNavigate();
 
     const btnCreateTask = () => {
@@ -51,25 +52,26 @@ export default function Admin() {
     }
     const btnCustomerOrder = () => {
         setEditTaskOpen(false);
-        setEditTaskOpen(false);
+        setCreateTaskOpen(false);
         setManageAccountOpen(false);
         setArchiveFileOpen(false);
         setCustomerOrderOpen(true);
     }
     const btnArchiveFile = () => {
         setEditTaskOpen(false);
-        setEditTaskOpen(false);
+        setCreateTaskOpen(false);
         setManageAccountOpen(false);
         setCustomerOrderOpen(false);
         setArchiveFileOpen(true);
     }
     const btnManageAccount = () => {
         setEditTaskOpen(false);
-        setEditTaskOpen(false);
+        setCreateTaskOpen(false);
         setCustomerOrderOpen(false);
         setArchiveFileOpen(false);
         setManageAccountOpen(true);
     }
+
 
     const logout = async () => {
         await signOut(auth);
@@ -80,6 +82,9 @@ export default function Admin() {
         navManageOrder('/admin');
     }
 
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+    };
 
     return (<>
         <nav className={Style.HeaderContainer}>
@@ -121,8 +126,44 @@ export default function Admin() {
         </nav>
 
 
-        <div className={Style.SidebarContainer}>
-            <button className={Style.SidebarButton} onClick={btnCreateTask}>
+        <button
+            className={Style.hamburgerButton}
+            onClick={toggleSidebar}
+            style={{
+                position: 'fixed',
+                top: '140px', // Position below navbar
+                left: sidebarVisible ? '320px' : '20px',
+                zIndex: 999, // Lower z-index than navbar
+                transition: 'left 0.3s ease',
+                backgroundColor: '#5D4037',
+                border: 'none',
+                borderRadius: '5px',
+                padding: '10px',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '40px',
+                width: '40px'
+            }}
+        >
+            <span style={{ height: '3px', width: '100%', backgroundColor: '#FAEBD7', borderRadius: '2px' }}></span>
+            <span style={{ height: '3px', width: '100%', backgroundColor: '#FAEBD7', borderRadius: '2px' }}></span>
+            <span style={{ height: '3px', width: '100%', backgroundColor: '#FAEBD7', borderRadius: '2px' }}></span>
+        </button>
+
+        {/* Sidebar with conditional styling for visibility */}
+        <div
+            className={Style.SidebarContainer}
+            style={{
+                transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
+                transition: 'transform 0.3s ease',
+                top: '130px', // Position sidebar below navbar
+                height: 'calc(100% - 130px)', // Adjust height to account for navbar
+                zIndex: 899  // Lower z-index than navbar
+            }}
+        >
+            <Link to='/createtask' className={Style.SidebarButton} onClick={btnCreateTask}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -130,9 +171,9 @@ export default function Admin() {
                     </svg>
                     <span>CREATE TASK</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={Style.SidebarButton} onClick={btnEditTask}>
+            <Link to='/editprice' className={Style.SidebarButton} onClick={btnEditTask}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -140,9 +181,9 @@ export default function Admin() {
                     </svg>
                     <span>EDIT PRICE</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={`${Style.SidebarButton}`} onClick={btnCustomerOrder}>
+            <Link to='/customerorder' className={`${Style.SidebarButton}`} onClick={btnCustomerOrder}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -151,9 +192,9 @@ export default function Admin() {
                     </svg>
                     <span>CUSTOMER ORDERS</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={`${Style.SidebarButton}`} onClick={btnArchiveFile}>
+            <Link to='/archivefiles' className={`${Style.SidebarButton}`} onClick={btnArchiveFile}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="21 8 21 21 3 21 3 8"></polyline>
@@ -162,7 +203,7 @@ export default function Admin() {
                     </svg>
                     <span>ARCHIVE FILES</span>
                 </div>
-            </button>
+            </Link>
 
             <button className={`${Style.SidebarButton}`} onClick={btnManageAccount}>
                 <div className={Style.buttonContent}>
@@ -174,8 +215,6 @@ export default function Admin() {
                 </div>
             </button>
         </div>
-
-
 
         {
             createTaskOpen &&

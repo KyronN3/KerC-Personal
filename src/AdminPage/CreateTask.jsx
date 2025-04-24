@@ -12,10 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
+import { ToastContainer, toast } from 'react-toastify';
 
 const CreateTask = () => {
-  const [error, setError] = useState(false);
+
   const [createTask, setCreateTask] = useState({
     name: null,
     customerID: null,
@@ -57,10 +57,7 @@ const CreateTask = () => {
     e.preventDefault();
     try {
       if (createTask.service == null) {
-        setError(true);
         throw new Error("Please pick a Service")
-      } else {
-        setError(false);
       }
       const ref = collection(db, 'Order');
       await addDoc(ref, {
@@ -70,10 +67,14 @@ const CreateTask = () => {
         email: createTask.email,
         service: createTask.service,
         timeDate: createTask.timeDate,
-        description: createTask.description
+        description: createTask.description,
+        status: null
       })
       e.target.reset();
     } catch (error) {
+      toast.error("Unsuccessful, input missing. Try Again !", {
+        position: 'bottom-right',
+      });
       console.error(error);
     }
 
@@ -128,7 +129,7 @@ const CreateTask = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className={`w-30 border-[${error ? '#EE4B2B' : null}]`} variant="outline">{createTask.service != null ? createTask.service : 'Services'}</Button>
+              <Button className={`w-30`} variant="outline">{createTask.service != null ? createTask.service : 'Services'}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-60 h-73 bg-[#FAEBD7] border-[#5D4037]">
               <DropdownMenuLabel className="text-center">KER-C</DropdownMenuLabel>
@@ -187,6 +188,7 @@ const CreateTask = () => {
             </button>
           </div>
         </div>
+        <ToastContainer />
       </form>
     </div>
   );

@@ -9,6 +9,8 @@ import GmailIcon from '../assets/imgs/gmail.png'
 import Email from '../assets/imgs/mail.png'
 import Messenger from '../assets/imgs/messengerOutline.png'
 import AboutUsPic from '../assets/imgs/printing.webp'
+import StyleModal from './Modal.module.css'
+import Login from '../Authentication/Login.jsx'
 import { Button } from "@/components/ui/button"
 import { Bold } from 'lucide-react'
 import {
@@ -31,8 +33,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { useState, useContext } from 'react'
-import StyleModal from './Modal.module.css'
-import Login from '../Authentication/Login.jsx'
 import CreateAccount from '../Authentication/CreateAccount.jsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { ModalContext } from '../context.jsx'
