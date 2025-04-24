@@ -74,7 +74,20 @@ export default function LoginForm() {
     setUser(userPrev => setUser({ ...userPrev, password: e.target.value }))
   }
   return (
-    <div onSubmit={handleSubmit} className={cn("flex flex-col gap-6")} style={{ borderRadius: "16px" }}>
+    <div
+  onSubmit={handleSubmit}
+  className={cn("flex flex-col gap-6")}
+  style={{
+    borderRadius: "16px",
+    ...(window.innerWidth <= 720 && {
+      position: 'fixed',
+      marginTop: '30%',
+      marginLeft: '35.5%',
+      transform: 'translate(-50%, -50%)',
+      width: 350,
+    }),
+  }}
+>
       <Card style={{ backgroundColor: "rgb(250, 241, 230)" }}>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>

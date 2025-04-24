@@ -212,15 +212,10 @@ const CreateAccount = () => {
                                 className={styles.input}
                                 required
                             />
-                            <label>
-                                <input type="checkbox" name="myCheckbox" value="checkboxValue" style={{marginRight: 10, marginTop: 20}}/>
-                                <p>By checking this box, you agree to the <a href="/legal"><u>Terms & Conditions</u></a> of our website.</p>  
-                            </label>
                             <button
                                 type="button"
                                 className={styles.togglePassword}
                                 onClick={toggleConfirmPasswordVisibility}
-                                onChange={onChangePasswordConfirm}
                             >
                                 {showConfirmPassword ?
                                     <svg className={styles.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -233,6 +228,10 @@ const CreateAccount = () => {
                                     </svg>
                                 }
                             </button>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: 20, padding: 5}}>
+                            <input type="checkbox" name="myCheckbox" value="checkboxValue" style={{ marginRight: '2%' }} />
+                            <p style={{ fontSize: 12 }}>By checking this box, you agree to the <a href="/legal"><u>Terms & Conditions</u></a> of our website.</p>
                         </div>
                     </div>
 
