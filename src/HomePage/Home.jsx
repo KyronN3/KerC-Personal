@@ -9,38 +9,69 @@ import GmailIcon from '../assets/imgs/gmail.png'
 import Email from '../assets/imgs/mail.png'
 import Messenger from '../assets/imgs/messengerOutline.png'
 import AboutUsPic from '../assets/imgs/printing.webp'
+import StyleModal from './Modal.module.css'
+import Login from '../Authentication/Login.jsx'
 import { Button } from "@/components/ui/button"
 import { Bold } from 'lucide-react'
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion"
+import {
+  LogOut,
+  User,
+  ShoppingCart,
+} from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 import { useState, useContext } from 'react'
-import StyleModal from './Modal.module.css'
-import Login from '../Authentication/Login.jsx'
 import CreateAccount from '../Authentication/CreateAccount.jsx'
-import { Link } from 'react-router-dom'
-import { DataContext } from '../context.jsx'
-
-
+import { Link, useNavigate } from 'react-router-dom'
+import { ModalContext } from '../context.jsx'
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { auth } from '../config/firebase.jsx'
+import { signOut } from 'firebase/auth'
 export default function Home({ isLogin = false, isSignup = false }) {
-  const { modalSignupOpen, setModalSignupOpen } = useContext(DataContext);
+  const navLogout = useNavigate();
+  const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
   const [modalLogin, setModalLogin] = useState(isLogin);
   const [modalSignup, setModalSignup] = useState(isSignup);
-
+  const navOrder = useNavigate();
 
   const LoginClick = () => {
     setModalLogin(!modalLogin);
+    navLogout('/')
   }
 
   const CloseModal = () => {
     setModalLogin(!modalLogin)
+    navLogout('/')
   }
 
   const SignupClick = () => {
     if (modalSignup) {
       setModalSignup(false);
     }
+    if (modalSignupOpen) {
+      setModalSignupOpen(false);
+      navLogout('/login')
+    } else {
+      navLogout('/')
+    }
+  }
+
+  const closeAll = () => {
     setModalSignupOpen(false);
+    setModalSignup(false);
+    setModalLogin(false)
   }
 
   modalSignupOpen || modalSignup ?
@@ -48,14 +79,76 @@ export default function Home({ isLogin = false, isSignup = false }) {
     :
     document.body.style.overflow = 'scroll'
 
+  const logout = async () => {
+    await signOut(auth);
+    navLogout(0);
+  }
+
+  const myOrderNav = () => {
+    !auth?.currentUser?.email.includes("@admin.139907.print.com")
+      ?
+      navOrder('/customer')
+      :
+      navOrder('/admin')
+  }
+
+
+
   return (<>
 
     <nav className={Style.HeaderContainer}>
       <img className={Style.Image} src={Logo} />
-      <Link to='/' className={Style.Home}>Home</Link>
+      <Link to='/' onClick={closeAll} className={Style.Home}>Home</Link>
       <Link to='/about' className={Style.About}>About</Link>
       <Link to='/contacts' className={Style.Contact}> Contacts</Link>
-      <Link to='/login' className={Style.Login} onClick={LoginClick}> Login</Link>
+      {login ?
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className={Style.Profile}>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>...Loading</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+            {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+              ?
+              <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
+              :
+              <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>}
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem>
+                <User />
+                <span className='cursor-pointer'>Profile</span>
+                <DropdownMenuShortcut>P</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                  ?
+                  <><ShoppingCart />
+                    <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
+                    <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                  </>
+                  :
+                  <>
+                    <ShoppingCart />
+                    <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
+                    <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                  </>
+                }
+
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuItem>
+              <LogOut />
+              <span onClick={logout} className='cursor-pointer'>Log out</span>
+              <DropdownMenuShortcut>Q</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        :
+        <Link to='/login' className={Style.Login} onClick={LoginClick}> Login </Link>}
+
     </nav >
 
     {modalLogin && (
@@ -68,7 +161,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
 
     {modalSignupOpen || modalSignup ? (
       <div className={StyleModal.modal}>
-          <div className={StyleModal.overlay} onClick={SignupClick}></div>
+        <div className={StyleModal.overlay} onClick={SignupClick}></div>
         <div className={StyleModal.modalContent}>
           <CreateAccount />
         </div>

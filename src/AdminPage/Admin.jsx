@@ -2,18 +2,39 @@ import Style from './Admin.module.css'
 import Logo from '../assets/imgs/logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useState } from 'react'
+import { signOut } from 'firebase/auth'
+import { auth } from '../config/firebase.jsx'
+import { Link, useNavigate } from 'react-router-dom'
 import CreateTask from './CreateTask.jsx'
 import EditPrice from './EditPrice.jsx'
 import CustomerOrder from './CustomerOrder.jsx'
 import ManageAccount from './ManageAccount.jsx'
 import ArchiveFiles from './ArchiveFiles.jsx'
-export default function Admin() {
+import {
+    LogOut,
+    User,
+    ShoppingCart,
+} from "lucide-react"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
-    const [createTaskOpen, setCreateTaskOpen] = useState(false);
-    const [editTaskOpen, setEditTaskOpen] = useState(false);
-    const [customerOrderOpen, setCustomerOrderOpen] = useState(false);
-    const [ArchiveFileOpen, setArchiveFileOpen] = useState(false);
-    const [manageAccountOpen, setManageAccountOpen] = useState(false);
+export default function Admin({orderOpen = false, EditTaskOpen = false, accountOpen = false, archiveFileOpen = false, CreateTaskOpen = false}) {
+
+    const [sidebarVisible, setSidebarVisible] = useState(true);
+    const [createTaskOpen, setCreateTaskOpen] = useState(CreateTaskOpen);
+    const [editTaskOpen, setEditTaskOpen] = useState(EditTaskOpen);
+    const [customerOrderOpen, setCustomerOrderOpen] = useState(orderOpen);
+    const [ArchiveFileOpen, setArchiveFileOpen] = useState(archiveFileOpen);
+    const [manageAccountOpen, setManageAccountOpen] = useState(accountOpen);
+    const navManageOrder = useNavigate();
 
     const btnCreateTask = () => {
         setCustomerOrderOpen(false);
@@ -31,43 +52,118 @@ export default function Admin() {
     }
     const btnCustomerOrder = () => {
         setEditTaskOpen(false);
-        setEditTaskOpen(false);
+        setCreateTaskOpen(false);
         setManageAccountOpen(false);
         setArchiveFileOpen(false);
         setCustomerOrderOpen(true);
     }
     const btnArchiveFile = () => {
         setEditTaskOpen(false);
-        setEditTaskOpen(false);
+        setCreateTaskOpen(false);
         setManageAccountOpen(false);
         setCustomerOrderOpen(false);
         setArchiveFileOpen(true);
     }
     const btnManageAccount = () => {
         setEditTaskOpen(false);
-        setEditTaskOpen(false);
+        setCreateTaskOpen(false);
         setCustomerOrderOpen(false);
         setArchiveFileOpen(false);
         setManageAccountOpen(true);
     }
 
+
+    const logout = async () => {
+        await signOut(auth);
+        window.location.replace("/");
+    }
+
+    const manageOrderNav = () => {
+        navManageOrder('/admin');
+    }
+
+    const toggleSidebar = () => {
+        setSidebarVisible(!sidebarVisible);
+    };
+
     return (<>
         <nav className={Style.HeaderContainer}>
             <img className={Style.Image} src={Logo} alt="Logo" />
-            <a className={Style.Home}>Home</a>
+            <Link to="/" className={Style.Home}>Home</Link>
             <a className={Style.About}>About</a>
             <a className={Style.Contact}>Contacts</a>
             <a className={Style.Login}>
-                <Avatar className={Style.profile}>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>Profile</AvatarFallback>
-                </Avatar>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Avatar className={Style.Profile}>
+                            <AvatarImage src="https://github.com/shadcn.png" />
+                            <AvatarFallback>...Loading</AvatarFallback>
+                        </Avatar>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem>
+                                <User />
+                                <span className='cursor-pointer'>Profile</span>
+                                <DropdownMenuShortcut>P</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <ShoppingCart />
+                                <Link to='/admin' className='cursor-pointer' onClick={manageOrderNav}>Manage Orders</Link>
+                                <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                        <DropdownMenuItem>
+                            <LogOut />
+                            <span onClick={logout} className='cursor-pointer'>Log out</span>
+                            <DropdownMenuShortcut>Q</DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </a>
         </nav>
 
 
-        <div className={Style.SidebarContainer}>
-            <button className={Style.SidebarButton} onClick={btnCreateTask}>
+        <button
+            className={Style.hamburgerButton}
+            onClick={toggleSidebar}
+            style={{
+                position: 'fixed',
+                top: '140px', // Position below navbar
+                left: sidebarVisible ? '320px' : '20px',
+                zIndex: 999, // Lower z-index than navbar
+                transition: 'left 0.3s ease',
+                backgroundColor: '#5D4037',
+                border: 'none',
+                borderRadius: '5px',
+                padding: '10px',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                height: '40px',
+                width: '40px'
+            }}
+        >
+            <span style={{ height: '3px', width: '100%', backgroundColor: '#FAEBD7', borderRadius: '2px' }}></span>
+            <span style={{ height: '3px', width: '100%', backgroundColor: '#FAEBD7', borderRadius: '2px' }}></span>
+            <span style={{ height: '3px', width: '100%', backgroundColor: '#FAEBD7', borderRadius: '2px' }}></span>
+        </button>
+
+        {/* Sidebar with conditional styling for visibility */}
+        <div
+            className={Style.SidebarContainer}
+            style={{
+                transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
+                transition: 'transform 0.3s ease',
+                top: '130px', // Position sidebar below navbar
+                height: 'calc(100% - 130px)', // Adjust height to account for navbar
+                zIndex: 899  // Lower z-index than navbar
+            }}
+        >
+            <Link to='/createtask' className={Style.SidebarButton} onClick={btnCreateTask}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -75,9 +171,9 @@ export default function Admin() {
                     </svg>
                     <span>CREATE TASK</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={Style.SidebarButton} onClick={btnEditTask}>
+            <Link to='/editprice' className={Style.SidebarButton} onClick={btnEditTask}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="12" y1="1" x2="12" y2="23"></line>
@@ -85,9 +181,9 @@ export default function Admin() {
                     </svg>
                     <span>EDIT PRICE</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={`${Style.SidebarButton} ${Style.youOrder}`} onClick={btnCustomerOrder}>
+            <Link to='/customerorder' className={`${Style.SidebarButton}`} onClick={btnCustomerOrder}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -96,9 +192,9 @@ export default function Admin() {
                     </svg>
                     <span>CUSTOMER ORDERS</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={`${Style.SidebarButton} ${Style.orderHistory}`} onClick={btnArchiveFile}>
+            <Link to='/archivefiles' className={`${Style.SidebarButton}`} onClick={btnArchiveFile}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="21 8 21 21 3 21 3 8"></polyline>
@@ -107,9 +203,9 @@ export default function Admin() {
                     </svg>
                     <span>ARCHIVE FILES</span>
                 </div>
-            </button>
+            </Link>
 
-            <button className={`${Style.SidebarButton} ${Style.Profile}`} onClick={btnManageAccount}>
+            <button className={`${Style.SidebarButton}`} onClick={btnManageAccount}>
                 <div className={Style.buttonContent}>
                     <svg className={Style.icon} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -119,8 +215,6 @@ export default function Admin() {
                 </div>
             </button>
         </div>
-
-
 
         {
             createTaskOpen &&

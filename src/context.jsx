@@ -1,3 +1,4 @@
 import { createContext } from "react";
-
-export const DataContext = createContext();
+export const ModalContext = createContext();
+export const UserDataContext = createContext();
+export const CreateAccountContext = createContext();

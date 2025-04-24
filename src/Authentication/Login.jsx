@@ -9,20 +9,72 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link } from "react-router-dom"
-import { DataContext } from '../context.jsx'
-import { useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { ModalContext, UserDataContext } from '../context.jsx'
+import { useContext, useState } from "react"
+import { auth, googleAuth } from "../config/firebase.jsx"
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
+import { ToastContainer, toast } from "react-toastify"
 
 
 export default function LoginForm() {
-  const { modalSignupOpen, setModalSignupOpen } = useContext(DataContext);
+  const navigateHome = useNavigate();
+  const { modalSignupOpen, setModalSignupOpen, setLogin } = useContext(ModalContext);
+  const [user, setUser] = useState(
+    {
+      email: '',
+      password: ''
+    });
+
 
   const createAccountModal = () => {
     setModalSignupOpen(!modalSignupOpen);
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, user.email, user.password);
+      setLogin(true);
+      navigateHome('/')
+    } catch (error) {
+      toast.error("Wrong email or password, please try Again!", {
+        position: 'bottom-center',
+        hideProgressBar: true,
+        closeButton: false,
+        autoClose: 3000,
+        pauseOnFocusLoss: false,
+        style: {
+          top: '60px',
+          border: '1px solid black',
+          width: 'auto',
+          height: '60px'
+        }
+      });
+      console.error(error)
+    }
+  }
+
+  const authGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleAuth);
+      setLogin(true);
+      navigateHome('/');
+    } catch (err) {
+      console.error(err);
+    }
+
+  }
+
+  const onChangedEmail = (e) => {
+    setUser(userPrev => setUser({ ...userPrev, email: e.target.value }))
+  }
+
+  const onChangedPassword = (e) => {
+    setUser(userPrev => setUser({ ...userPrev, password: e.target.value }))
+  }
   return (
-    <div className={cn("flex flex-col gap-6")} style={{ borderRadius: "16px" }}>
+    <div onSubmit={handleSubmit} className={cn("flex flex-col gap-6")} style={{ borderRadius: "16px" }}>
       <Card style={{ backgroundColor: "rgb(250, 241, 230)" }}>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
@@ -38,6 +90,7 @@ export default function LoginForm() {
                 <Input
                   id="email"
                   type="email"
+                  onChange={onChangedEmail}
                   placeholder="m@example.com"
                   style={{ borderColor: "black" }}
                   required
@@ -53,12 +106,12 @@ export default function LoginForm() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" style={{ borderColor: "black" }} placeholder="******" required />
+                <Input id="password" onChange={onChangedPassword} type="password" style={{ borderColor: "black" }} placeholder="******" required />
               </div>
               <Button type="submit" className="w-full" style={{ cursor: "pointer" }}>
                 Login
               </Button>
-              <Button variant="outline" className="w-full" style={{ cursor: "pointer" }}>
+              <Button variant="outline" onClick={authGoogle} className="w-full" style={{ cursor: "pointer" }}>
                 Login with Google
               </Button>
             </div>
@@ -71,7 +124,7 @@ export default function LoginForm() {
           </form>
         </CardContent>
       </Card>
-
+      <ToastContainer />
     </div>
   )
 }
