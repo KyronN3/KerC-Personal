@@ -101,7 +101,7 @@ export default function Admin({orderOpen = false, EditTaskOpen = false, accountO
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem>

@@ -5,8 +5,9 @@ import { db } from '../config/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-const EditPrice = () => {
 
+const EditPrice = () => {
+  
   const [servicesData, setServicesData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceInputModalOpen, setPriceInputModalOpen] = useState(false);

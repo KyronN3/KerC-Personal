@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FileText, Plus } from 'lucide-react';
 import { db } from '../config/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function StatusUpdate(prop) {
   const [status, setStatus] = useState('');
@@ -12,12 +13,45 @@ export default function StatusUpdate(prop) {
 
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const ref = doc(db, 'Order', uid);
-    await updateDoc(ref, {status: status})
-    setStatus('');
-    setImage(null);
+    try {
+      const ref = doc(db, 'Order', uid);
+      await updateDoc(ref, { status: status })
+      setStatus('');
+      setImage(null);
+      toast.success("Updated Successfully!", {
+        position: 'bottom-center',
+        hideProgressBar: true,
+        closeButton: false,
+        autoClose: 3000,
+        pauseOnFocusLoss: false,
+        style: {
+          top: '13px',
+          marginLeft: '40px',
+          border: '1px solid black',
+          width: 'auto',
+          height: '60px'
+        }
+      });
+    } catch (err) {
+      toast.error("Unsuccessful, input missing. Try Again !", {
+        position: 'bottom-center',
+        hideProgressBar: true,
+        closeButton: false,
+        autoClose: 3000,
+        pauseOnFocusLoss: false,
+        style: {
+          top: '13px',
+          marginLeft: '40px',
+          border: '1px solid black',
+          width: 'auto',
+          height: '60px'
+        }
+      });
+      console.log(err);
+    }
+
   };
 
   return (
@@ -80,6 +114,7 @@ export default function StatusUpdate(prop) {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }
