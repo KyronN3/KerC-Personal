@@ -5,7 +5,8 @@ function PageTerm() {
   const [isOpen, setIsOpen] = useState(0);
   
   return (
-    <>
+    <>  
+        <div style={{marginBottom: '5%'}}></div>
         <div className='TermsCondition'>
             <h1 style={{margin: 0, marginTop: 20}}>Terms and Condition</h1>
             <p style={{margin: 5}}><i>Last Updated: April 12, 2025</i></p>
@@ -76,6 +77,7 @@ function PageTerm() {
                 <p style={{textAlign: 'left', marginTop: '5%'}}><b>Note:</b> You must agree to these terms to proceed with registration.</p>
             </div>
         </div>
+        <div style={{marginTop: '5%'}}></div>
     </>
   )
 }

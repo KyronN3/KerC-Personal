@@ -4,12 +4,20 @@
     margin-right: 10%;
     max-width: 1280px;
     margin: 0 auto;
+    color: white;
+    border-radius: 12px;
+    background-color: rgba(121, 85, 72);
 }
 
 .Paragraphs {
     text-align: left;
     margin-left: 20px;
-    padding: 10%;
+    padding: 5%;
     padding-top: 3%;
     line-height: 2;
+}
+
+.Paragraphs ul {
+    margin-left: 40px;
+    margin-bottom: 20px;
 }

@@ -559,7 +559,7 @@ body::before {
     width: 70%;
     height: 100vh;
     flex-direction: column;
-    background-color: rgba(121, 85, 72, 0.95); /* Brown with opacity */
+    background-color: rgba(121, 85, 72); /* Brown with opacity */
     transition: right 0.5s ease;
     padding-top: 80px;
     z-index: 999;

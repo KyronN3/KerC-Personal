@@ -3,9 +3,6 @@ import Logo from '../assets/imgs/logo.png'
 import Shop from '../assets/imgs/shop.png'
 import Telephone from '../assets/imgs/telephone.png'
 import Facebook from '../assets/imgs/facebookOutline.png'
-import FacebookIcon from '../assets/imgs/facebook.png'
-import MessengerIcon from '../assets/imgs/messenger.png'
-import GmailIcon from '../assets/imgs/gmail.png'
 import Email from '../assets/imgs/mail.png'
 import Messenger from '../assets/imgs/messengerOutline.png'
 import AboutUsPic from '../assets/imgs/printing.webp'
@@ -150,7 +147,6 @@ export default function Home({ isLogin = false, isSignup = false }) {
         </DropdownMenu>
         :
         <Link to='/login' className={Style.Login} onClick={LoginClick}> Login </Link>}
-
     </nav >
 
     {modalLogin && (
@@ -346,14 +342,6 @@ export default function Home({ isLogin = false, isSignup = false }) {
             <li>Envelopes</li>
           </ul>
           <hr className={Style.lineTwo} />
-          <div className={Style.footerIcons}>
-            <p>Copyright &copy; 2025-Ker-C Printing Services</p>
-          </div>
-          <div className={Style.footerIconsContainer}>
-            <img className={Style.iconsFooter} src={FacebookIcon} />
-            <img className={Style.iconsFooter} src={GmailIcon} />
-            <img className={Style.iconsFooter} src={MessengerIcon} />
-          </div>
         </div>
       </div>
     </footer>

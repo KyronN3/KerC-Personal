@@ -19,6 +19,10 @@ import { useState, useEffect } from 'react'
 import { db } from './config/firebase.jsx'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { auth } from './config/firebase.jsx'
+import './App.css'
+import fb from './assets/imgs/facebook.png';
+import messenger from './assets/imgs/messenger.png';
+import gmail from './assets/imgs/gmail.png';
 
 function App() {
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
@@ -242,7 +246,6 @@ function App() {
 
   return (
     <>
-
       <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
         <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
           <UserDataContext.Provider value={{ userData, setUserData }}>
@@ -253,6 +256,17 @@ function App() {
         </CreateAccountContext.Provider>
       </ReceiptContext.Provider>
 
+      <footer className='Footer'>
+        <div className='Copyright'>
+          <p>Copyright &copy; 2025 - Ker-C Printing Services</p>
+          <a href="/legal" style={{marginLeft: 50}}>Terms & Conditions</a>
+        </div>
+        <div className='Social'>
+          <img src={fb} className='SocialImg'></img>
+          <img src={gmail} className='SocialImg'></img>
+          <img src={messenger} className='SocialImg'></img>
+        </div>
+      </footer>
     </>
   )
 }
