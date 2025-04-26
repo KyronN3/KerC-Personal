@@ -92,19 +92,18 @@ export default function LoginForm() {
   const onChangedPassword = (e) => {
     setUser(userPrev => setUser({ ...userPrev, password: e.target.value }))
   }
+
   return (
     <div
   onSubmit={handleSubmit}
   className={cn("flex flex-col gap-6")}
   style={{
-    borderRadius: "16px",
-    ...(window.innerWidth <= 720 && {
+      borderRadius: "16px",
       position: 'fixed',
       marginTop: '150px',
-      marginLeft: '35.5%',
+      left: '47%',
       transform: 'translate(-50%, -50%)',
       width: 350,
-    }),
   }}
 >
       <Card style={{ backgroundColor: "rgb(250, 241, 230)" }}>
