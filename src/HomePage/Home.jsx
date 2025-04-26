@@ -3,11 +3,15 @@ import Logo from '../assets/imgs/logo.png'
 import Shop from '../assets/imgs/shop.png'
 import Telephone from '../assets/imgs/telephone.png'
 import Facebook from '../assets/imgs/facebookOutline.png'
+import FacebookIcon from '../assets/imgs/facebook.png'
+import MessengerIcon from '../assets/imgs/messenger.png'
+import GmailIcon from '../assets/imgs/gmail.png'
 import Email from '../assets/imgs/mail.png'
 import Messenger from '../assets/imgs/messengerOutline.png'
 import AboutUsPic from '../assets/imgs/printing.webp'
 import StyleModal from './Modal.module.css'
 import Login from '../Authentication/Login.jsx'
+import { Squash as Hamburger } from 'hamburger-react';
 import { Button } from "@/components/ui/button"
 import { Bold } from 'lucide-react'
 import {
@@ -42,6 +46,8 @@ export default function Home({ isLogin = false, isSignup = false }) {
   const [modalLogin, setModalLogin] = useState(isLogin);
   const [modalSignup, setModalSignup] = useState(isSignup);
   const navOrder = useNavigate();
+  const [isOpen, setOpen] = useState(false);
+
 
   const LoginClick = () => {
     setModalLogin(!modalLogin);
@@ -97,57 +103,64 @@ export default function Home({ isLogin = false, isSignup = false }) {
 
     <nav className={Style.HeaderContainer}>
       <img className={Style.Image} src={Logo} />
-      <Link to='/' onClick={closeAll} className={Style.Home}>Home</Link>
-      <Link to='/about' className={Style.About}>About</Link>
-      <Link to='/contacts' className={Style.Contact}> Contacts</Link>
-      {login ?
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Avatar className={Style.Profile}>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>...Loading</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
-            {!auth?.currentUser?.email.includes("@admin.139907.print.com")
-              ?
-              <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
-              :
-              <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>}
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <User />
-                <span className='cursor-pointer'>Profile</span>
-                <DropdownMenuShortcut>P</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+      
+      <div className={Style.hamburger}>
+        <Hamburger toggled={isOpen} toggle={setOpen} />
+      </div>
+      <div className={`${Style["nav-links"]} ${isOpen ? Style.active : ""}`}>
+        <Link to='/' onClick={() => {closeAll(); setOpen(false)}} className={Style.Home}>HOME</Link>
+        <Link to='/#about' onClick={() => {setOpen(false); scrollToSection('about')}} className={Style.About}>ABOUT</Link>
+        <Link to='/#contact' onClick={() => {setOpen(false); scrollToSection('contact')}} className={Style.Contact}>CONTACTS</Link>
+        {login ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className={Style.Profile}>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>...Loading</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
                 {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                   ?
-                  <><ShoppingCart />
-                    <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
-                    <DropdownMenuShortcut>M</DropdownMenuShortcut>
-                  </>
+                  <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
                   :
-                  <>
-                    <ShoppingCart />
-                    <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
-                    <DropdownMenuShortcut>M</DropdownMenuShortcut>
-                  </>
-                }
+                  <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>}
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <User />
+                    <span className='cursor-pointer'>Profile</span>
+                    <DropdownMenuShortcut>P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                      ?
+                      <><ShoppingCart />
+                        <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
+                        <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                      </>
+                      :
+                      <>
+                        <ShoppingCart />
+                        <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
+                        <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                      </>
+                    }
 
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuItem>
+                <LogOut />
+                <span onClick={logout} className='cursor-pointer'>Log out</span>
+                <DropdownMenuShortcut>Q</DropdownMenuShortcut>
               </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuItem>
-              <LogOut />
-              <span onClick={logout} className='cursor-pointer'>Log out</span>
-              <DropdownMenuShortcut>Q</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        :
-        <Link to='/login' className={Style.Login} onClick={LoginClick}> Login </Link>}
-    </nav >
+            </DropdownMenuContent>
+          </DropdownMenu>
+          ) : (
+            <Link to='/login' className={Style.Login} onClick={() => {LoginClick(); setOpen(false)}}>Login</Link>
+          )}
+        </div>
+      </nav>
 
     {modalLogin && (
       <div className={StyleModal.modal}>
@@ -169,8 +182,8 @@ export default function Home({ isLogin = false, isSignup = false }) {
     <main>
       <article>
         <div className={Style.mainContainer}>
-          <img src={AboutUsPic} className={Style.AboutUsPic} />
-          <div className={Style.bigBox}>
+          <img src={AboutUsPic} className={Style.AboutUsPic}  />
+          <div className={Style.bigBox} id="about">
 
             <h1>About Ker-C Printing Services</h1>
             <p>
@@ -199,7 +212,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
             referrerPolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
-        <div className={Style.cardContainerParent}>
+        <div className={Style.cardContainerParent} id="contact">
           <div className={Style.cardContainer}>
 
             <div className={Style.cardOpen}>
