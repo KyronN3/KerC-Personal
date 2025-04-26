@@ -2,11 +2,11 @@
     text-align: center;
     margin-left: 10%;
     margin-right: 10%;
-    max-width: 1280px;
+    max-width: 900px;
     margin: 0 auto;
     color: white;
     border-radius: 12px;
-    background-color: rgba(121, 85, 72);
+    background-color: #1565C0;
 }
 
 .Paragraphs {
@@ -15,9 +15,35 @@
     padding: 5%;
     padding-top: 3%;
     line-height: 2;
+    text-align: justify;
 }
 
-.Paragraphs ul {
+.Paragraphs li {
     margin-left: 40px;
-    margin-bottom: 20px;
+    text-align: justify;
+}
+
+.Paragraphs h3 {
+    margin-top: 15px;
+}
+
+@media (max-width: 900px) {
+    .TermsCondition {
+        text-align: center;
+        margin-left: 5%;
+        margin-right: 5%;
+        max-width: 500px;
+        margin: 0 auto;
+        color: white;
+        border-radius: 12px;
+        background-color: #1565C0;
+    }
+
+    .Paragraphs {
+        text-align: left;
+        margin-left: 20px;
+        padding: 5%;
+        padding-top: 3%;
+        line-height: 1.5;
+    }
 }

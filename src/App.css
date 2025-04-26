@@ -1,6 +1,6 @@
 .Footer {
     padding: 10px;
-    background: rgba(121, 85, 72); 
+    background: #1565C0; 
     color: white;
     display: flex;
     align-items: center;
@@ -8,6 +8,10 @@
     height: auto;
     max-width: 1920px;
     margin: 0 auto;
+  }
+
+  .Legal {
+    margin-left: 50px;
   }
   
   .Social {
@@ -102,6 +106,16 @@
   
     .mobile-logo {
       display: block;
+    }
+
+    .Copyright {
+      font-size: 12px;
+      margin-left: 10px;
+
+    }
+
+    .Legal {
+      font-size: 12px;
     }
     
     .pc-logo {

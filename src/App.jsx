@@ -259,7 +259,7 @@ function App() {
       <footer className='Footer'>
         <div className='Copyright'>
           <p>Copyright &copy; 2025 - Ker-C Printing Services</p>
-          <a href="/legal" style={{marginLeft: 50}}>Terms & Conditions</a>
+          <a href="/legal" className='Legal'>Terms & Conditions</a>
         </div>
         <div className='Social'>
           <img src={fb} className='SocialImg'></img>

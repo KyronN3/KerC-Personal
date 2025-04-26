@@ -77,9 +77,17 @@ const CreateAccount = () => {
     }
 
 
+    const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
+    const [showCheckboxError, setShowCheckboxError] = useState(false);
+
+    const handleCheckboxChange = (e) => {
+        setIsCheckboxChecked(e.target.checked);
+        setShowCheckboxError(false);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if ((errorColorNumber, errorColorPasswordConfirm) !== 'red') {
+        if (isCheckboxChecked && (errorColorNumber, errorColorPasswordConfirm) !== 'red') {
             try {
                 await createUserWithEmailAndPassword(auth, user.email, user.password);
                 setUserData(user);
@@ -91,11 +99,11 @@ const CreateAccount = () => {
                 setUserData(user);
                 console.error(error);
             }
-
         } else {
-            console.log('Error');
+            setShowCheckboxError(true);
         }
-    }
+    };
+    
 
     return (
         <div onSubmit={handleSubmit} className={styles.container}>
@@ -109,7 +117,7 @@ const CreateAccount = () => {
                                 type="text"
                                 name="firstName"
                                 onChange={onChangedFname}
-                                placeholder="Enter Your First Name"
+                                placeholder="First Name"
                                 className={styles.input}
                                 required
                             />
@@ -119,7 +127,7 @@ const CreateAccount = () => {
                                 type="text"
                                 name="lastName"
                                 onChange={onChangeLname}
-                                placeholder="Enter Your Last Name"
+                                placeholder="Last Name"
                                 className={styles.input}
                                 required
                             />
@@ -131,7 +139,7 @@ const CreateAccount = () => {
                             type="email"
                             name="email"
                             onChange={onChangeEmail}
-                            placeholder="Enter Your Email"
+                            placeholder="Email Address"
                             className={styles.input}
                             required
                         />
@@ -142,7 +150,7 @@ const CreateAccount = () => {
                             type="text"
                             name="address"
                             onChange={onChangeAddress}
-                            placeholder="Enter Your Address"
+                            placeholder="Address"
                             className={styles.input}
                             required
                         />
@@ -155,7 +163,7 @@ const CreateAccount = () => {
                             onChange={onChangeMobileNumber}
                             pattern="[0-9]{11}"
                             style={{ borderColor: errorColorNumber }}
-                            placeholder="Enter Your Mobile Number #09-123-123-123"
+                            placeholder="Mobile No. (09xxxxxxxxx)"
                             className={styles.input}
                             required
                         />
@@ -166,7 +174,7 @@ const CreateAccount = () => {
                             type="text"
                             name="username"
                             onChange={onChangeUsername}
-                            placeholder="Enter Your Username"
+                            placeholder="Username"
                             className={styles.input}
                             required
                         />
@@ -177,7 +185,7 @@ const CreateAccount = () => {
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
-                                placeholder="Enter Your Password"
+                                placeholder="Password"
                                 onChange={onChangePassword}
                                 className={styles.input}
                                 required
@@ -208,7 +216,7 @@ const CreateAccount = () => {
                                 name="confirmPassword"
                                 onChange={onChangePasswordConfirm}
                                 style={{ borderColor: errorColorPasswordConfirm }}
-                                placeholder="Enter Your Password again"
+                                placeholder="Confirm Password"
                                 className={styles.input}
                                 required
                             />
@@ -230,9 +238,12 @@ const CreateAccount = () => {
                             </button>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', marginTop: 20, padding: 5}}>
-                            <input type="checkbox" name="myCheckbox" value="checkboxValue" style={{ marginRight: '2%' }} />
-                            <p style={{ fontSize: 12 }}>By checking this box, you agree to the <a href="/legal"><u>Terms & Conditions</u></a> of our website.</p>
+                            <input type="checkbox" checked={isCheckboxChecked} onChange={handleCheckboxChange} name="agreeTerm" value="checkboxValue" style={{ marginRight: '2%' }} />
+                            <p style={{ fontSize: 12 }}>By checking this box, you agree to the <a href="/legal"><u>Terms & Conditions</u></a> of this website.</p>
                         </div>
+                        {showCheckboxError && (
+                            <p className={styles.errorMessage} style={{color: 'red', fontSize: 12, textAlign: 'center'}}>Please check the box to proceed with registration.</p>
+                        )}
                     </div>
 
                     <button type="submit" className={styles.button}>
