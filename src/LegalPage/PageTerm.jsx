@@ -16,7 +16,7 @@ function PageTerm() {
                     <li>You must be at least 18 years old to create an account.</li>
                     <li>If you are below 18, you must have parental or guardian consent.</li>
                     <li>You must reside in the Philippines or have legal rights to use our platform.</li>
-                    <li>New bullet point: You must provide a valid email address during registration.</li>
+                    <li>You must provide a valid email address during registration.</li>
                 <h3>2. Account Registration</h3>
                     <li>All information you provide must be accurate and up to date.</li>
                     <li>You are responsible for keeping your password and login secure.</li>

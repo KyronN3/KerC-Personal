@@ -14,39 +14,33 @@
 }
 
 
-.slick-prev {
-    left: -40px;
+.slick-dots {
+    position: absolute;
+    bottom: 25px;
+    z-index: 1;
 }
 
+.slick-prev {
+    left: -8%;
+}
 
 .slick-next {
-    right: -40px;
+    right: -8%;
 }
-
 
 .slick-prev img, .slick-next img {
     width: 100%;
     height: auto;
 }
 
-
 .slick-prev:before, .slick-next:before {
     display: none;
 }
-
-
-
-
-.slick-next {
-    right: -60px;
-}
-
 
 .slider-item {
     padding: 10px;
     text-align: center;
 }
-
 
 .serviceImage {
     width: 100%;
@@ -55,11 +49,11 @@
     object-fit: contain;
     border: 15px solid blue;
     border-radius: 15px;
+    display: block;
+    margin: 0 auto;
 }
 
-
 .serviceName {
-   
     text-align: center;
     font-size: 30px;
     font-weight: bold;
@@ -67,16 +61,14 @@
     color: blue;
 }
 
-
 .serviceDescription {
-   
     text-align: center;
     font-size: 20px;
     font-family: sans-serif;
     color: rgb(0, 0, 0);
+    max-width: 400px;
+    height: 160px;
 }
-
-
 
 
 .btnConfirm {
@@ -98,7 +90,6 @@
 .Service {
     color: blue;
     text-align: center;
-    margin-bottom: 50px;
     margin-bottom: 50px;
     font-weight: 900;
     font-size: 50px;
