@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import Style from './Home.module.css'
 import Logo from '../assets/imgs/logo.png'
 import Shop from '../assets/imgs/shop.png'
@@ -37,6 +38,7 @@ import { ModalContext } from '../context.jsx'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { auth } from '../config/firebase.jsx'
 import { signOut } from 'firebase/auth'
+
 export default function Home({ isLogin = false, isSignup = false }) {
   const navLogout = useNavigate();
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
@@ -44,7 +46,6 @@ export default function Home({ isLogin = false, isSignup = false }) {
   const [modalSignup, setModalSignup] = useState(isSignup);
   const navOrder = useNavigate();
   const [isOpen, setOpen] = useState(false);
-
 
   const LoginClick = () => {
     setModalLogin(!modalLogin);
@@ -100,14 +101,14 @@ export default function Home({ isLogin = false, isSignup = false }) {
 
     <nav className={Style.HeaderContainer}>
       <img className={Style.Image} src={Logo} />
-      
+
       <div className={Style.hamburger}>
         <Hamburger toggled={isOpen} toggle={setOpen} />
       </div>
       <div className={`${Style["nav-links"]} ${isOpen ? Style.active : ""}`}>
-        <Link to='/' onClick={() => {closeAll(); setOpen(false)}} className={Style.Home}>HOME</Link>
-        <Link to='/#about' onClick={() => {setOpen(false); scrollToSection('about')}} className={Style.About}>ABOUT</Link>
-        <Link to='/#contact' onClick={() => {setOpen(false); scrollToSection('contact')}} className={Style.Contact}>CONTACTS</Link>
+        <Link to='/' onClick={() => { closeAll(); setOpen(false) }} className={Style.Home}>HOME</Link>
+        <Link to='/#about' onClick={() => { setOpen(false); scrollToSection('about') }} className={Style.About}>ABOUT</Link>
+        <Link to='/#contact' onClick={() => { setOpen(false); scrollToSection('contact') }} className={Style.Contact}>CONTACTS</Link>
         {login ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -117,32 +118,32 @@ export default function Home({ isLogin = false, isSignup = false }) {
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
-                {!auth?.currentUser?.email.includes("@admin.139907.print.com")
-                  ?
-                  <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
-                  :
-                  <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>}
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <User />
-                    <span className='cursor-pointer'>Profile</span>
-                    <DropdownMenuShortcut>P</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    {!auth?.currentUser?.email.includes("@admin.139907.print.com")
-                      ?
-                      <><ShoppingCart />
-                        <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
-                        <DropdownMenuShortcut>M</DropdownMenuShortcut>
-                      </>
-                      :
-                      <>
-                        <ShoppingCart />
-                        <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
-                        <DropdownMenuShortcut>M</DropdownMenuShortcut>
-                      </>
-                    }
+              {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                ?
+                <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
+                :
+                <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>}
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <User />
+                  <span className='cursor-pointer'>Profile</span>
+                  <DropdownMenuShortcut>P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                    ?
+                    <><ShoppingCart />
+                      <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
+                      <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                    </>
+                    :
+                    <>
+                      <ShoppingCart />
+                      <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
+                      <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                    </>
+                  }
 
                 </DropdownMenuItem>
               </DropdownMenuGroup>
@@ -153,11 +154,11 @@ export default function Home({ isLogin = false, isSignup = false }) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          ) : (
-            <Link to='/login' className={Style.Login} onClick={() => {LoginClick(); setOpen(false)}}>Login</Link>
-          )}
-        </div>
-      </nav>
+        ) : (
+          <Link to='/login' className={Style.Login} onClick={() => { LoginClick(); setOpen(false) }}>Login</Link>
+        )}
+      </div>
+    </nav>
 
     {modalLogin && (
       <div className={StyleModal.modal}>
@@ -179,7 +180,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
     <main>
       <article>
         <div className={Style.mainContainer}>
-          <img src={AboutUsPic} className={Style.AboutUsPic}  />
+          <img src={AboutUsPic} className={Style.AboutUsPic} />
           <div className={Style.bigBox} id="about">
 
             <h1>About Ker-C Printing Services</h1>
@@ -258,7 +259,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
         </div>
 
 
-        <div className={Style.FAQContainerParent} style={{marginBottom: 100}}>
+        <div className={Style.FAQContainerParent} style={{ marginBottom: 100 }}>
           <div className={Style.FAQContainer}>
             <h1 className={Style.headerFAQ}>KER-C FAQs</h1>
             <Accordion type="single" collapsible className="w-full">
