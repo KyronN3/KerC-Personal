@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import styles from './ArchiveFiles.module.css';
 import { db } from '../config/firebase.jsx';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import { ReceiptContext } from '../context.jsx';
 import Receipt from './Receipt.jsx'
 import StyleModal from '../HomePage/Modal.module.css'
@@ -36,21 +36,21 @@ const ArchiveFiles = () => {
 
   }, [])
 
-  useEffect(() => {
-    try {
-      const setData = () => {
-        const refArchive = collection(db, 'Archive');
-        archiveData.forEach(async doc => {
-          await addDoc(refArchive, {
-            ...doc
-          })
-        })
-      }
-      setData()
-    } catch (error) {
-      console.error(error)
-    }
-  }, [archiveData])
+  // useEffect(() => {
+  //   try {
+  //     const setData = () => {
+  //       const refArchive = collection(db, 'Archive');
+  //       archiveData.forEach(async doc => {
+  //         await addDoc(refArchive, {
+  //           ...doc
+  //         })
+  //       })
+  //     }
+  //     setData()
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }, [archiveData])
 
 
 

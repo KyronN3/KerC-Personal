@@ -77,9 +77,6 @@ export default function LoginForm() {
         position: 'bottom-right',
       });
     } catch (err) {
-      toast.error("Try Again!", {
-        position: 'bottom-right',
-      });
       console.error(err);
     }
 

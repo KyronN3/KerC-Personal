@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const EditPrice = () => {
-  
+
   const [servicesData, setServicesData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceInputModalOpen, setPriceInputModalOpen] = useState(false);
@@ -120,7 +120,7 @@ const EditPrice = () => {
 
 
   return (<>
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto mt-6">
       <form onSubmit={handleSearch} className="relative">
         <div className="relative">
           <input
@@ -143,7 +143,7 @@ const EditPrice = () => {
       </form>
     </div>
 
-    <div className="p-4">
+    <div className="p-3">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>

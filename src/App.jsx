@@ -142,23 +142,23 @@ function App() {
           },
           {
             path: '/editprice',
-            element: <Admin EditTaskOpen={true} />
+            element: <Admin />
           },
           {
             path: '/createtask',
-            element: <Admin CreateTaskOpen={true} />
+            element: <Admin />
           },
           {
             path: '/customerorder',
-            element: <Admin orderOpen={true} />
+            element: <Admin />
           },
           {
             path: '/archivefiles',
-            element: <Admin archiveFileOpen={true} />
+            element: <Admin />
           },
           {
             path: '/manageaccount',
-            element: <Admin accountOpen={false} />
+            element: <Admin />
           },
           {
             path: '/inquire',
@@ -267,6 +267,7 @@ function App() {
           <img src={messenger} className='SocialImg'></img>
         </div>
       </footer>
+
     </>
   )
 }
