@@ -1,13 +1,13 @@
 .formContainer {
     max-width: 30000px;
     margin: 0 auto;
-    margin-top: 60px;
-    padding: 20px;
-    width: 130vh;
+    margin-top: 19px;
+    padding: 16px;
+    width: 80vh;
     height: auto;
     font-family: Arial, sans-serif;
     background-color: #FAEBD7;
-    box-shadow: 0 3px 16px 3px #5D4037;
+    box-shadow: 0 3px 16px 1px #5D4037;
   }
   
   .formTitle {

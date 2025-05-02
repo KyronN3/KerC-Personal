@@ -29,11 +29,6 @@ const data = {
       icon: Edit,
     },
     {
-      name: "Customer Order",
-      url: "/customerorder",
-      icon: ShoppingCart,
-    },
-    {
       name: "Archive File",
       url: "/archivefiles",
       icon: Archive
