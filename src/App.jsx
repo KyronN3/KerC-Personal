@@ -149,10 +149,6 @@ function App() {
             element: <Admin />
           },
           {
-            path: '/customerorder',
-            element: <Admin />
-          },
-          {
             path: '/archivefiles',
             element: <Admin />
           },

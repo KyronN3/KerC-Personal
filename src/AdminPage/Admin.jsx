@@ -118,13 +118,19 @@ export default function Admin() {
                         <SidebarTrigger className="ml-1" />
                     </div>
                 </header>
-                <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0">
-                    {goTo.pathname == '/createtask' ?
-                        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                            <div className="aspect-video rounded-xl h-[56vh] w-[83vh] col-start-1 col-end-2 bg-muted/100" ><CreateTask /></div>
-                            <div className="aspect-video rounded-xl bg-muted/100 h-[56vh] w-[90vh] ml-83 col-start-2 col-end-3 overflow-x-scroll" ><CustomerOrder /></div>
+                <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
+                    {goTo.pathname === '/createtask' ? (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
+                            <div className="rounded-xl bg-white shadow w-full overflow-auto inset-shadow-sm">
+                                <CreateTask />
+                            </div>
+                            <div className="rounded-xl bg-white shadow h-[50vh] overflow-auto inset-shadow-sm">
+                                <CustomerOrder />
+                            </div>
                         </div>
-                        : <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">{toRender()}</div>}
+                    ) : (
+                        <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">{toRender()}</div>
+                    )}
                 </div>
             </SidebarInset>
         </SidebarProvider>

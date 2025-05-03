@@ -1,83 +1,132 @@
 .formContainer {
-    max-width: 30000px;
-    margin: 0 auto;
-    margin-top: 19px;
-    padding: 16px;
-    width: 80vh;
-    height: auto;
-    font-family: Arial, sans-serif;
-    background-color: #FAEBD7;
-    box-shadow: 0 3px 16px 1px #5D4037;
-  }
-  
-  .formTitle {
-    text-align: left;
-    margin-bottom: 20px;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .formGrid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  max-width: 800px; /* Use max-width instead of a fixed vh unit */
+  margin: 0 auto;
+  margin-top: 20px;
+  padding: 16px;
+  width: 100%; /* Use percentage width instead of vh */
+  height: auto;
+  font-family: Arial, sans-serif;
+  background-color: #FAEBD7;
+  box-shadow: 0 3px 16px 1px #5D4037;
+  border-radius: 8px; /* Added for better appearance */
+}
+
+.formTitle {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.formRow {
+  display: flex;
+  gap: 10px;
+}
+
+.singleRow {
+  width: 100%;
+}
+
+.inputField {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  background-color: #f9f9f9;
+  width: 100%; /* Ensure inputs take full width */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.textareaField {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  background-color: #f9f9f9;
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.confirmButton {
+  background-color: #00b300;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 40px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.2s; /* Smooth hover effect */
+}
+
+.confirmButton:hover {
+  background-color: #009900;
+}
+
+/* Media queries for better responsiveness */
+@media (max-width: 768px) {
+  .formContainer {
+    width: 95%; /* Take up more width on smaller screens */
+    padding: 12px;
   }
   
   .formRow {
-    display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 12px;
   }
   
-  .singleRow {
-    width: 100%;
+  /* Ensure the dropdown takes full width on mobile */
+  .formRow button, 
+  .formRow [role="combobox"],
+  .singleRow button {
+    width: 100% !important;
   }
   
-  .inputField {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    outline: none;
-    background-color: #f9f9f9;
-  }
-  
-  .textareaField {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    outline: none;
-    resize: vertical;
-    min-height: 100px;
-    background-color: #f9f9f9;
-  }
-  
-  .buttonContainer {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
+  /* Make button full width on mobile */
   .confirmButton {
-    background-color: #00b300;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 40px;
+    width: 100%;
+    padding: 12px 0;
+  }
+  
+  .formTitle {
     font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
+    text-align: center;
   }
-  
-  .confirmButton:hover {
-    background-color: #009900;
-  }
-  
-  @media (max-width: 600px) {
-    .formRow {
-      flex-direction: column;
-    }
-  }
+}
+
+/* Additional fix for the dropdown button - this requires updating your JSX */
+/* Replace your dropdown button's className with: */
+/* className={`${styles.dropdownButton} ${isSmallScreen ? 'w-full' : 'w-80'}`} */
+.dropdownButton {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: left;
+  padding: 12px;
+}
+
+/* Style the dropdown content to be responsive */
+:global(.w-60.h-73) {
+  width: 100% !important;
+  max-height: 300px;
+  overflow-y: auto;
+}

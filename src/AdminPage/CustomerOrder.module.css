@@ -1,120 +1,187 @@
 .container {
-    font-family: Arial, sans-serif;
-    max-width: 900px;
-    margin: 13px auto;
-    padding: 6px;
-  }
-  
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  width: 97%;
+  margin: 13px auto;
+}
+
+.orderCard {
+  display: flex;
+  background-color: #faebd7;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  padding: 12px;
+  align-items: center;
+  box-shadow: 0 1px 1px 1px #5d4037;
+  transition: transform 0.2s, box-shadow 0.2s; /* Add transition for smooth hover effect */
+}
+
+/* Add hover effect */
+.orderCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(93, 64, 55, 0.4);
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  width: 30%;
+  padding-right: 15px;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #ffd700;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: background-color 0.2s; /* Add transition for icon container */
+}
+
+/* Add hover effect for icon container */
+.iconContainer:hover {
+  background-color: #ffcc00;
+}
+
+.icon {
+  color: #000;
+  cursor: pointer;
+}
+
+.orderDetails {
+  flex-grow: 1;
+  min-width: 0; /* Important for text wrapping */
+}
+
+.customerName {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.customerEmail {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 6px;
+  word-wrap: break-word; /* Add this for email wrapping */
+  overflow-wrap: break-word;
+}
+
+.dueDateLabel {
+  font-size: 11px;
+  color: #777;
+  margin-bottom: 1px;
+}
+
+.dueDate {
+  font-size: 14px;
+}
+
+.middleSection {
+  width: 45%;
+  padding: 0 10px;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  min-width: 0; /* Critical for text wrapping in flex containers */
+}
+
+.orderDescription {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #333;
+  /* Text wrapping properties */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+}
+
+.rightSection {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.createButton {
+  width: 100%;
+  padding: 8px 0;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s; /* Add transition for button */
+}
+
+.cancelButton {
+  width: 100%;
+  padding: 8px 0;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s; /* Add transition for button */
+}
+
+.createButton:hover {
+  background-color: #45a049;
+  transform: scale(1.03); /* Slight scale effect on hover */
+}
+
+.cancelButton:hover {
+  background-color: #d32f2f;
+  transform: scale(1.03); /* Slight scale effect on hover */
+}
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
   .orderCard {
-    display: flex;
-    background-color: #FAEBD7;
-    border-radius: 4px;
-    margin-bottom: 12px;
-    padding: 12px;
-    align-items: center;
-    box-shadow: 0 1px 1px 1px #5D4037;
-  }
-  
-  .leftSection {
-    display: flex;
-    align-items: center;
-    width: 30%;
-    padding-right: 15px;
-  }
-  
-  .iconContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    background-color: #FFD700;
-    border-radius: 4px;
-    margin-right: 12px;
-    flex-shrink: 0;
-  }
-  
-  .icon {
-    color: #000;
-    cursor: pointer;
-  }
-  
-  .orderDetails {
-    flex-grow: 1;
-  }
-  
-  .customerName {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 2px;
-  }
-  
-  .customerEmail {
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 6px;
-  }
-  
-  .dueDateLabel {
-    font-size: 11px;
-    color: #777;
-    margin-bottom: 1px;
-  }
-  
-  .dueDate {
-    font-size: 14px;
-  }
-  
-  .middleSection {
-    width: 45%;
-    padding: 0 10px;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-  }
-  
-  .orderDescription {
-    font-size: 13px;
-    line-height: 1.4;
-    color: #333;
-  }
-  
-  .rightSection {
-    width: 25%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-left: 10px;
+    align-items: stretch;
   }
-  
-  .createButton {
+
+  .leftSection,
+  .middleSection,
+  .rightSection {
     width: 100%;
-    padding: 8px 0;
-    background-color: #4CAF50;
-    color: white;
+    padding: 10px 0;
     border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    cursor: pointer;
   }
-  
-  .cancelButton {
-    width: 100%;
-    padding: 8px 0;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    cursor: pointer;
+
+  .leftSection {
+    padding-bottom: 10px;
   }
-  
-  .createButton:hover {
-    background-color: #45a049;
+
+  .middleSection {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    padding: 10px 0;
   }
-  
-  .cancelButton:hover {
-    background-color: #d32f2f;
+
+  .rightSection {
+    padding-top: 10px;
   }
+
+  .orderDetails {
+    padding-right: 0;
+  }
+
+  /* Adjust hover effect for mobile */
+  .orderCard:hover {
+    transform: translateY(-2px); /* Smaller lift effect on mobile */
+  }
+}

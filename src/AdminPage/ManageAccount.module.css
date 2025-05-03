@@ -1,106 +1,190 @@
-.container {
-    font-family: Arial, sans-serif;
-    width: 1000px;
-    margin: 0 auto;
-    margin-top: 60px;
-    padding: 10px;
+.gridContainer {
+  font-family: Arial, sans-serif;
+  max-width: 100%;
+  padding: 20px;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.gridRow {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -10px; /* Negative margin to offset the padding on items */
+  justify-content: flex-start; /* Align items to the left */
+}
+
+.gridItem {
+  flex: 0 0 calc(33.333% - 20px); /* 3 items per row with 20px gap */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.userCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #faebd7;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 1px 1px 1px #5d4037;
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s; /* Add smooth transition for hover */
+}
+
+.userCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(93, 64, 55, 0.4);
+}
+
+.userInfo {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.userName {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.userEmail {
+  font-size: 13px;
+  color: #555;
+  word-break: break-word;
+}
+
+.avatarContainer {
+  margin: 10px 0 20px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #ff5252;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.userCard:hover .avatar {
+  transform: scale(1.05);
+}
+
+.avatar::after {
+  content: "";
+  width: 32px;
+  height: 32px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 16px;
+}
+
+.avatar::before {
+  content: "";
+  width: 48px;
+  height: 24px;
+  background-color: white;
+  border-radius: 32px 32px 0 0;
+  position: absolute;
+  bottom: 8px;
+}
+
+.actionsContainer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.forgotButton {
+  background-color: #009900;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.deleteButton {
+  background-color: #cc0000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.forgotButton:hover {
+  background-color: #007a00;
+  transform: scale(1.03);
+}
+
+.deleteButton:hover {
+  background-color: #a30000;
+  transform: scale(1.03);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1200px) {
+  .gridItem {
+    flex: 0 0 calc(50% - 20px); /* 2 items per row on medium screens */
   }
-  
+}
+
+@media (max-width: 768px) {
+  .gridItem {
+    flex: 0 0 calc(100% - 20px); /* 1 item per row on small screens */
+  }
+
   .userCard {
-    display: flex;
-    align-items: center;
-    background-color: #FAEBD7;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    padding: 10px;
-    box-shadow: 0 1px 1px 1px #5D4037;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
-  
+
   .userInfo {
-    flex: 1;
-    padding-left: 10px;
+    width: calc(100% - 100px);
+    text-align: left;
+    margin-bottom: 0;
   }
-  
-  .userName {
-    font-weight: bold;
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
-  
-  .userEmail {
-    font-size: 12px;
-    color: #555;
-  }
-  
+
   .avatarContainer {
-    margin: 0 15px;
+    margin: 0;
   }
-  
+
   .avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #ff5252;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+    width: 60px;
+    height: 60px;
   }
-  
+
   .avatar::after {
-    content: "";
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 10px;
+    width: 24px;
+    height: 24px;
+    top: 12px;
   }
-  
+
   .avatar::before {
-    content: "";
-    width: 30px;
-    height: 15px;
-    background-color: white;
-    border-radius: 20px 20px 0 0;
-    position: absolute;
-    bottom: 5px;
+    width: 36px;
+    height: 18px;
+    bottom: 6px;
   }
-  
+
   .actionsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    width: 100%;
+    margin-top: 15px;
   }
-  
-  .forgotButton {
-    background-color: #009900;
-    color: white;
-    border: none;
-    border-radius: 2px;
-    padding: 6px 10px;
-    font-size: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  
-  .deleteButton {
-    background-color: #cc0000;
-    color: white;
-    border: none;
-    border-radius: 2px;
-    padding: 6px 10px;
-    font-size: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-  
-  .forgotButton:hover {
-    background-color: #007a00;
-  }
-  
-  .deleteButton:hover {
-    background-color: #a30000;
-  }
+}

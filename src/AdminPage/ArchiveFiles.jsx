@@ -111,37 +111,35 @@ const ArchiveFiles = () => {
   }
 
   return (<>
+    <div className={styles.gridContainer}>
+      <div className={styles.gridRow}>
+        {archiveData.map(doc => (
+          <div key={doc.id} className={styles.gridItem}>
+            <div className={styles.archiveCard}>
+              <div className={styles.cardHeader}>
+                <div className={styles.customerName}>{doc.name}</div>
+                <div className={styles.customerEmail}>{doc.phone} {doc.email}</div>
+              </div>
 
-    {archiveData.map(doc => (
-      <div className={styles.container} >
-        <div className={styles.receiptCard}>
-          <div className={styles.leftSection}>
-            <div className={styles.customerName}>{doc.name}</div>
-            <div className={styles.customerEmail}>{doc.phone} {doc.email}</div>
-            <div className={styles.dueDate}>
-              Due Date:<br />
-              {doc.timeDate}
+              <div className={styles.cardBody}>
+                <div className={styles.description}>{doc.description}</div>
+                <div className={styles.dueDate}>
+                  <span>Due Date:</span> {doc.timeDate}
+                </div>
+              </div>
+
+              <div className={styles.cardActions}>
+                {doc.Receipt
+                  ? <button className={styles.viewButton} onClick={() => viewReceipt(doc)}>VIEW RECEIPT</button>
+                  : <button className={styles.viewButton}>NO RECEIPT</button>
+                }
+                <button className={styles.deleteButton} onClick={() => toDelete(doc)}>DELETE ARCHIVE</button>
+              </div>
             </div>
           </div>
-
-          <div className={styles.orderDescription}>
-            {doc.description}
-          </div>
-
-          <div className={styles.actionsContainer}>
-            {doc.Receipt
-              ?
-              <button className={styles.viewButton} onClick={() => viewReceipt(doc)}>VIEW RECEIPT</button>
-              :
-              <button className={styles.viewButton}>NO RECEIPT</button>
-            }
-            <button className={styles.deleteButton} onClick={() => toDelete(doc)}>
-              DELETE<br />ARCHIVE
-            </button>
-          </div>
-        </div>
+        ))}
       </div>
-    ))}
+    </div>
 
     {viewReceiptOpen &&
       <div className={StyleModal.modal}>
