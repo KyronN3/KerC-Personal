@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const CreateTask = () => {
 
-  
+
   const [priceData, setPriceData] = useState([])
   const [servicePrice, setServicePrice] = useState('');
   const [createTask, setCreateTask] = useState({
@@ -110,6 +110,10 @@ const CreateTask = () => {
     } catch (error) {
       toast.error("Unsuccessful, input missing. Try Again !", {
         position: 'bottom-right',
+        style: {
+          width: "20vw",
+          fontSize: "13px"
+        }
       });
       console.error(error);
     }
