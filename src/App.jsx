@@ -14,8 +14,8 @@ import ArchiveFiles from './AdminPage/ArchiveFiles.jsx'
 import CreateAccount from './Authentication/CreateAccount.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext } from './context.jsx'
-import { useState, useEffect } from 'react'
+import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext } from './context.jsx'
+import { useState, useEffect, useRef } from 'react'
 import { db } from './config/firebase.jsx'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
 import { auth } from './config/firebase.jsx'
@@ -27,6 +27,7 @@ import gmail from './assets/imgs/gmail.png';
 function App() {
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
+  const viewReceiptOpen = useRef(false);
   const [receiptId, setReceiptId] = useState('');
   const [userData, setUserData] = useState(
     {
@@ -242,15 +243,17 @@ function App() {
 
   return (
     <>
-      <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
-        <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
-          <UserDataContext.Provider value={{ userData, setUserData }}>
-            <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-              <ProtectedRoutes />
-            </ModalContext.Provider>
-          </UserDataContext.Provider>
-        </CreateAccountContext.Provider>
-      </ReceiptContext.Provider>
+      <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
+        <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
+          <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
+            <UserDataContext.Provider value={{ userData, setUserData }}>
+              <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
+                <ProtectedRoutes />
+              </ModalContext.Provider>
+            </UserDataContext.Provider>
+          </CreateAccountContext.Provider>
+        </ReceiptContext.Provider>
+      </ViewReceiptOpenContext.Provider>
 
       <footer className='Footer'>
         <div className='Copyright'>

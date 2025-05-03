@@ -4,24 +4,25 @@ import { db } from '../config/firebase.jsx'
 import { collection, doc, getDocs, deleteDoc, addDoc, updateDoc } from 'firebase/firestore'
 import { ClipboardCheck } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
-import { ReceiptContext } from '../context.jsx';
-import Receipt from './Receipt.jsx'
+import { ReceiptContext, ViewReceiptOpenContext } from '../context.jsx';
 import StatusUpdate from './StatusUpdate.jsx';
+import { useNavigate } from 'react-router-dom';
 import StyleModal from '../HomePage/Modal.module.css'
+
 
 
 
 const CustomerOrder = () => {
 
-  const { receiptId, setReceiptId } = useContext(ReceiptContext);
+  const { setReceiptId } = useContext(ReceiptContext);
+  const { viewReceiptOpen } = useContext(ViewReceiptOpenContext)
   const [data, setData] = useState([]);
   const [targetTableDelete, setTargetTableDelete] = useState('');
   const [targetTable, setTargetTable] = useState('');
   const [targetTableReceipt, setTargetReceipt] = useState('');
-  const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
   const [clipboardCheckOpen, setClipboardCheckOpen] = useState(false);
   const [uid, setUid] = useState('');
-
+  const reload = useNavigate();
 
   useEffect(() => {
     const getData = async () => {
@@ -80,11 +81,13 @@ const CustomerOrder = () => {
             return doc.referencekey == dataScope[0].id;
           })
           await deleteDoc(doc(db, 'Receipt', filtered[0].id));
+          viewReceiptOpen.current = false;
+          reload('/createtask');
         }
-
       }
     }
     del();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetTableDelete])
 
   useEffect(() => {
@@ -195,13 +198,15 @@ const CustomerOrder = () => {
   }
   const closeModal = () => {
     setClipboardCheckOpen(false)
-    setViewReceiptOpen(false);
+    viewReceiptOpen.current = false;
   }
 
   const viewReceipt = (item) => {
     setTargetReceipt(item);
-    setViewReceiptOpen(!viewReceiptOpen);
+    viewReceiptOpen.current = true;
   }
+
+
   return (
     <>
       {data.map((doc, index) => (
@@ -242,13 +247,6 @@ const CustomerOrder = () => {
           <div className={StyleModal.overlay} onClick={closeModal}></div>
           <div className={StyleModal.modalContent}><StatusUpdate value={uid} /></div>
         </div>}
-
-      {viewReceiptOpen &&
-        <div className={StyleModal.modal}>
-          <div className={StyleModal.overlay} onClick={closeModal}></div>
-          <div className={StyleModal.modalContent}><Receipt value={receiptId} /></div>
-        </div>}
-
 
     </>);
 };
