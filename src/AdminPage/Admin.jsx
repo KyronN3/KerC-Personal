@@ -2,7 +2,7 @@
 import Style from './Admin.module.css'
 import Logo from '../assets/imgs/logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { signOut } from 'firebase/auth'
 import { auth } from '../config/firebase.jsx'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
@@ -66,7 +66,9 @@ export default function Admin() {
                 return <ManageAccount />
         }
     }
-
+    //rerender
+    useEffect(() => {
+    }, [viewReceiptOpen])
     return (<>
         <nav className={Style.HeaderContainer}>
             <img className={Style.Image} src={Logo} />
@@ -126,10 +128,10 @@ export default function Admin() {
                             <div className=" rounded-xl bg-white shadow w-full inset-shadow-sm w-full col-span-1 md:col-span-2 overflow-auto ">
                                 <CreateTask />
                             </div>
-                            <div className="rounded-xl bg-white shadow h-[50vh] overflow-auto inset-shadow-sm order-1 md:order-1">
+                            <div className="rounded-xl bg-white shadow h-[54vh] text-[13px] overflow-auto inset-shadow-sm order-1 md:order-1">
                                 <CustomerOrder />
                             </div>
-                            <div className="rounded-xl bg-white shadow h-[60h] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
+                            <div className="rounded-xl bg-white shadow h-[54vh] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
                         </div>
                     ) : (
                         <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">
@@ -139,10 +141,10 @@ export default function Admin() {
                 </div> : <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
                     {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
-                            <div className="rounded-xl bg-white shadow w-full inset-shadow-sm">
+                            <div className="rounded-xl bg-white shadow w-full h-[54vh] col-start-1 col-end-2 overflow-auto inset-shadow-sm">
                                 <CreateTask />
                             </div>
-                            <div className="rounded-xl bg-white shadow h-[50vh] overflow-auto inset-shadow-sm">
+                            <div className="rounded-xl bg-white shadow h-[43.5vh] text-[13px] overflow-auto inset-shadow-sm">
                                 <CustomerOrder />
                             </div>
                         </div>

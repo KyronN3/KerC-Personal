@@ -107,6 +107,13 @@ const CreateTask = () => {
       }, { merge: true });
 
       e.target.reset();
+      toast.success("Successfully created", {
+        position: 'bottom-right',
+        style: {
+          width: "20vw",
+          fontSize: "13px"
+        }
+      });
     } catch (error) {
       toast.error("Unsuccessful, input missing. Try Again !", {
         position: 'bottom-right',
