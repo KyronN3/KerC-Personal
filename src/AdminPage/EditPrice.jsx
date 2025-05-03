@@ -128,10 +128,10 @@ const EditPrice = () => {
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full py-2 pl-10 pr-4 text-black bg-[#ffd700] border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="w-5 h-5 text-gray-400" />
+            <Search className="w-5 h-5 black" />
           </div>
         </div>
         <button
@@ -152,19 +152,19 @@ const EditPrice = () => {
               <th className="p-2 border border-[#5D4037] text-left font-bold">OPTIONS</th>
               <th className="p-2 border border-[#5D4037] text-left font-bold">PRICE</th>
               <th className="p-2 border border-[#5D4037] text-left font-bold">DESCRIPTION</th>
-              <th className="p-2 border border-[#795548] w-12"></th>
+              <th className="p-2 border  w-12"></th>
             </tr>
           </thead>
           <tbody>
             {servicesData.map((item, index) => (
               <tr key={index} className={index % 2 === 0 ? "bg-[#faebd7]" : "bg-[#faebd7]"}>
-                <td className="p-2 border border-gray-300">{item.service}</td>
-                <td className="p-2 border border-gray-300">{item.option}</td>
-                <td className="p-2 border border-gray-300">{item.price}</td>
-                <td className="p-2 border border-gray-300">{item.description}</td>
-                <td className="p-2 border border-gray-300 flex justify-center">
-                  <button className="text-gray-600 cursor-pointer" onClick={() => priceEdit(item)}>
-                    <Edit2 size={18} />
+                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.service}</td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.option}</td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.price}</td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.description}</td>
+                <td className="p-2 flex border border-[#795548] justify-center">
+                  <button className="text-gray-600  cursor-pointer" onClick={() => priceEdit(item)}>
+                    <Edit2  size="60"/>
                   </button>
                 </td>
               </tr>

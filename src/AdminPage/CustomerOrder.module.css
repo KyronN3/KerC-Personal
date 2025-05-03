@@ -7,12 +7,12 @@
 
 .orderCard {
   display: flex;
-  background-color: #faebd7;
+  background-color: #ffd700;
   border-radius: 4px;
   margin-bottom: 12px;
   padding: 12px;
   align-items: center;
-  box-shadow: 0 1px 1px 1px #5d4037;
+  box-shadow: 0 1px 13px 1px rgb(255, 255, 255);
   transition: transform 0.2s, box-shadow 0.2s; /* Add transition for smooth hover effect */
 }
 
@@ -35,7 +35,7 @@
   align-items: center;
   width: 40px;
   height: 40px;
-  background-color: #ffd700;
+  background-color: #4caf50;
   border-radius: 4px;
   margin-right: 12px;
   flex-shrink: 0;
@@ -44,7 +44,7 @@
 
 /* Add hover effect for icon container */
 .iconContainer:hover {
-  background-color: #ffcc00;
+  background-color: #f44336;
 }
 
 .icon {

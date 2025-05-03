@@ -6,8 +6,9 @@
   width: 100%; /* Use percentage width instead of vh */
   height: auto;
   font-family: Arial, sans-serif;
-  background-color: #FAEBD7;
-  box-shadow: 0 1px 13px 1px #5D4037;
+  background-color: #ffd700;
+  box-shadow: 0 1px 13px 1px rgb(255, 255, 255);
+  border-radius: 13px;
 }
 
 .formTitle {
@@ -15,7 +16,7 @@
   margin-bottom: 16px; /* Reduced from 20px */
   font-size: 18px;
   font-weight: bold;
-  color: #5D4037;
+  color: #5d4037;
 }
 
 .formGrid {
@@ -95,31 +96,31 @@
     border-radius: 12px; /* Slightly reduced for mobile */
     margin-bottom: 0; /* Remove bottom margin on mobile */
   }
- 
+
   .formRow {
     flex-direction: column;
     gap: 8px; /* Further reduced from 10px */
   }
- 
+
   /* Ensure the dropdown takes full width on mobile */
   .formRow button,
   .formRow [role="combobox"],
   .singleRow button {
     width: 100% !important;
   }
- 
+
   /* Make button full width on mobile */
   .confirmButton {
     width: 100%;
     padding: 12px 0;
   }
- 
+
   .formTitle {
     font-size: 16px;
     text-align: center;
     margin-bottom: 12px; /* Reduced from 15px */
   }
- 
+
   .formGrid {
     gap: 8px; /* Further reduced from 10px */
   }
