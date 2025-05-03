@@ -45,7 +45,7 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar collapsible="icon" className="relative h-full">
-        <SidebarContent className="bg-[#0077b6] justify-center" >
+        <SidebarContent className="bg-transparent backdrop-blur-md bg-opacity-0  justify-center" >
           <NavProjects projects={data.projects} />
         </SidebarContent>
       </Sidebar>

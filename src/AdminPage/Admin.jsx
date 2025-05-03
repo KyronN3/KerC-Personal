@@ -115,7 +115,7 @@ export default function Admin() {
 
         <SidebarProvider>
             <AppSidebar />
-            <SidebarInset className="text-[100px]">
+            <SidebarInset className="text-[6vh]">
                 <header className="flex h-16 shrink items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
                         <SidebarTrigger className="ml-1" />
@@ -123,28 +123,24 @@ export default function Admin() {
                 </header>
 
                 {viewReceiptOpen.current ? <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
-                    {goTo.pathname === '/createtask' ? (
+                    {goTo.pathname === '/createtask' && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
-                            <div className=" rounded-xl bg-white shadow w-full inset-shadow-sm w-full col-span-1 md:col-span-2 overflow-auto ">
+                            <div className=" bg-white/80 bg-muted/50 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.6)] rounded-xl p-8 shadow w-full inset-shadow-sm w-full col-span-1 md:col-span-2 overflow-auto ">
                                 <CreateTask />
                             </div>
-                            <div className="rounded-xl bg-white shadow h-[54vh] text-[13px] overflow-auto inset-shadow-sm order-1 md:order-1">
+                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] text-[13px] overflow-auto inset-shadow-sm order-1 md:order-1">
                                 <CustomerOrder />
                             </div>
-                            <div className="rounded-xl bg-white shadow h-[54vh] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
-                        </div>
-                    ) : (
-                        <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">
-                            {toRender()}
+                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
                         </div>
                     )}
                 </div> : <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
                     {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
-                            <div className="rounded-xl bg-white shadow w-full h-[54vh] col-start-1 col-end-2 overflow-auto inset-shadow-sm">
+                            <div className=" rounded-xl bg-muted/50 p-8 shadow w-full col-start-1 col-end-2 overflow-auto inset-shadow-sm">
                                 <CreateTask />
                             </div>
-                            <div className="rounded-xl bg-white shadow h-[43.5vh] text-[13px] overflow-auto inset-shadow-sm">
+                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[43.5vh] text-[13px] overflow-x-hidden inset-shadow-sm">
                                 <CustomerOrder />
                             </div>
                         </div>

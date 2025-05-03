@@ -1,7 +1,7 @@
 .modal,
 .overlay {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   top: 0;
   left: 0;
   right: 0;
@@ -15,8 +15,8 @@
 }
 
 .modalContent {
-  position: absolute;
-  top: 40%;
+  position: sticky;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -30%);
   animation: fadeIn 0.1s ease-in-out;
