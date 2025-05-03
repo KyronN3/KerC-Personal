@@ -1,27 +1,27 @@
 .formContainer {
   max-width: 800px; /* Use max-width instead of a fixed vh unit */
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 13px;
   padding: 16px;
   width: 100%; /* Use percentage width instead of vh */
   height: auto;
   font-family: Arial, sans-serif;
   background-color: #FAEBD7;
-  box-shadow: 0 3px 16px 1px #5D4037;
-  border-radius: 8px; /* Added for better appearance */
+  box-shadow: 0 1px 13px 1px #5D4037;
 }
 
 .formTitle {
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 16px; /* Reduced from 20px */
   font-size: 18px;
   font-weight: bold;
+  color: #5D4037;
 }
 
 .formGrid {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px; /* Further reduced from 12px */
 }
 
 .formRow {
@@ -31,6 +31,12 @@
 
 .singleRow {
   width: 100%;
+  margin-top: 0; /* Ensure no extra margin */
+}
+
+/* Add this class for date and textarea fields to reduce space */
+.spacedField {
+  margin-top: 0;
 }
 
 .inputField {
@@ -61,7 +67,7 @@
 .buttonContainer {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 16px; /* Reduced from 20px */
 }
 
 .confirmButton {
@@ -86,35 +92,40 @@
   .formContainer {
     width: 95%; /* Take up more width on smaller screens */
     padding: 12px;
+    border-radius: 12px; /* Slightly reduced for mobile */
+    margin-bottom: 0; /* Remove bottom margin on mobile */
   }
-  
+ 
   .formRow {
     flex-direction: column;
-    gap: 12px;
+    gap: 8px; /* Further reduced from 10px */
   }
-  
+ 
   /* Ensure the dropdown takes full width on mobile */
-  .formRow button, 
+  .formRow button,
   .formRow [role="combobox"],
   .singleRow button {
     width: 100% !important;
   }
-  
+ 
   /* Make button full width on mobile */
   .confirmButton {
     width: 100%;
     padding: 12px 0;
   }
-  
+ 
   .formTitle {
     font-size: 16px;
     text-align: center;
+    margin-bottom: 12px; /* Reduced from 15px */
+  }
+ 
+  .formGrid {
+    gap: 8px; /* Further reduced from 10px */
   }
 }
 
-/* Additional fix for the dropdown button - this requires updating your JSX */
-/* Replace your dropdown button's className with: */
-/* className={`${styles.dropdownButton} ${isSmallScreen ? 'w-full' : 'w-80'}`} */
+/* Additional fix for the dropdown button */
 .dropdownButton {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
@@ -122,6 +133,7 @@
   font-size: 14px;
   text-align: left;
   padding: 12px;
+  width: 100%; /* Ensure full width */
 }
 
 /* Style the dropdown content to be responsive */

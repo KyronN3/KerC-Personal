@@ -3,6 +3,7 @@ import { Printer } from 'lucide-react';
 import { ReceiptContext } from '../context';
 import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import styles from './Receipt.module.css';
 
 export default function SimpleReceipt() {
 
@@ -42,50 +43,48 @@ export default function SimpleReceipt() {
     };
 
     return (
-        <div className="p-4 max-w-md mx-auto">
-            <div className="mb-4 flex justify-end items-center">
+        <div className={styles.container}>
+
+            <div className={styles.buttonContainer}>
                 <button
                     onClick={handlePrint}
-                    className="flex items-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    className={styles.printButton}
                 >
-                    <Printer className="mr-1" size={18} />
+                    <Printer className={styles.printerIcon} size={16} />
                     Print
                 </button>
             </div>
-
-            <div id="receipt" className="border border-gray-300 p-6 bg-white">
-                <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold">KER-C</h2>
+            <div id="receipt" className={styles.receipt}>
+                <div className={styles.header}>
+                    <h2 className={styles.title}>KER-C</h2>
                 </div>
-
-                <div className="mb-6">
-                    <div className="font-bold mb-2 pb-2 border-b border-gray-300">Receipt</div>
-                    <div className="text-sm text-gray-500">
-                        Date: {new Date().toLocaleDateString()}
+                <div className={styles.receiptInfo}>
+                    <div className={styles.receiptLabel}>Receipt</div>
+                    <div className={styles.date}>
+                        Date: 5/3/2025
                     </div>
                 </div>
-
-                <table className="w-full mb-6">
-                    <thead>
-                        <tr className="border-b border-gray-300">
-                            <th className="text-left py-2">Service</th>
-                            <th className="text-right py-2">Price</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="border-b border-gray-200">
-                            <td className="py-2">{items.service}</td>
-                            <td className="text-right py-2">{items.price}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div className="flex justify-between font-bold text-lg border-t border-gray-300 pt-2">
-                    <span>Total:</span>
+                <div className={styles.tableWrapper}>
+                    <table className={styles.table}>
+                        <thead>
+                            <tr className={styles.tableHeader}>
+                                <th className={styles.tableHeaderLeft}>Service</th>
+                                <th className={styles.tableHeaderRight}>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className={styles.tableRow}>
+                                <td className={styles.tableCell}>{items != undefined ? items.service : "Empty"}</td>
+                                <td className={styles.tableCellRight}>{items != undefined ? items.price : 0}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <div className="text-center mt-8 text-sm text-gray-500">
+                <div className={styles.totalContainer}>
+                    <span>Total:</span>
+                    {/* <span>{items.price}</span> */}
+                </div>
+                <div className={styles.footer}>
                     Thank you for your business!
                 </div>
             </div>

@@ -193,7 +193,7 @@ const CreateTask = () => {
             />
           </div>
 
-          <div className={styles.singleRow}>
+          <div className={`${styles.singleRow} ${styles.spacedField}`}>
             <textarea
               name="description"
               placeholder="Description"
