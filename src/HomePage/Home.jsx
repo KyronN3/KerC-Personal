@@ -97,6 +97,10 @@ export default function Home({ isLogin = false, isSignup = false }) {
       navOrder('/admin')
   }
 
+  const goToProfilePageAdmin = () => {
+    navOrder('/profilepageadmin')
+  }
+
   return (<>
 
     <nav className={Style.HeaderContainer}>
@@ -127,7 +131,12 @@ export default function Home({ isLogin = false, isSignup = false }) {
               <DropdownMenuGroup>
                 <DropdownMenuItem>
                   <User />
-                  <span className='cursor-pointer'>Profile</span>
+                  {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                    ?
+                    <span className='cursor-pointer'>Profile</span>
+                    :
+                    <span className='cursor-pointer' onClick={goToProfilePageAdmin}>Profile</span>
+                  }
                   <DropdownMenuShortcut>P</DropdownMenuShortcut>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
