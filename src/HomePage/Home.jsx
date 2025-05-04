@@ -34,12 +34,14 @@ import {
 import { useState, useContext } from 'react'
 import CreateAccount from '../Authentication/CreateAccount.jsx'
 import { Link, useNavigate } from 'react-router-dom'
-import { ModalContext } from '../context.jsx'
+import { ModalContext, ProfilePicContext } from '../context.jsx'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { auth } from '../config/firebase.jsx'
 import { signOut } from 'firebase/auth'
 
 export default function Home({ isLogin = false, isSignup = false }) {
+
+  const { currentProfilePic } = useContext(ProfilePicContext)
   const navLogout = useNavigate();
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
   const [modalLogin, setModalLogin] = useState(isLogin);
@@ -101,6 +103,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
     navOrder('/profilepageadmin')
   }
 
+
   return (<>
 
     <nav className={Style.HeaderContainer}>
@@ -117,7 +120,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className={Style.Profile}>
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
                 <AvatarFallback>...Loading</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>

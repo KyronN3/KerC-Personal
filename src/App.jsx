@@ -15,7 +15,7 @@ import CreateAccount from './Authentication/CreateAccount.jsx'
 import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext } from './context.jsx'
+import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext, ProfilePicContext } from './context.jsx'
 import { useState, useEffect, useRef } from 'react'
 import { db } from './config/firebase.jsx'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
@@ -26,10 +26,12 @@ import messenger from './assets/imgs/messenger.png';
 import gmail from './assets/imgs/gmail.png';
 
 function App() {
+  const viewReceiptOpen = useRef(false);
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
-  const viewReceiptOpen = useRef(false);
   const [receiptId, setReceiptId] = useState('');
+  const [currentProfilePic, setCurrentProfilePic] = useState('');
+  const [login, setLogin] = useState(false);
   const [userData, setUserData] = useState(
     {
       fname: null,
@@ -42,7 +44,7 @@ function App() {
       passwordConfirm: null,
       isAdmin: false
     });
-  const [login, setLogin] = useState(false);
+
 
   // const items = [
   //   {
@@ -248,17 +250,19 @@ function App() {
 
   return (
     <>
-      <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
-        <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
-          <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
-            <UserDataContext.Provider value={{ userData, setUserData }}>
-              <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-                <ProtectedRoutes />
-              </ModalContext.Provider>
-            </UserDataContext.Provider>
-          </CreateAccountContext.Provider>
-        </ReceiptContext.Provider>
-      </ViewReceiptOpenContext.Provider>
+      <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
+        <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
+          <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
+            <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
+              <UserDataContext.Provider value={{ userData, setUserData }}>
+                <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
+                  <ProtectedRoutes />
+                </ModalContext.Provider>
+              </UserDataContext.Provider>
+            </CreateAccountContext.Provider>
+          </ReceiptContext.Provider>
+        </ViewReceiptOpenContext.Provider>
+      </ProfilePicContext.Provider>
 
       <footer className='Footer'>
         <div className='Copyright'>
