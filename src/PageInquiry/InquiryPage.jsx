@@ -1,7 +1,39 @@
+/* eslint-disable no-undef */
 import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Logo from '../assets/imgs/logo.png';
+import { useState, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { auth } from '../config/firebase.jsx';
+import { signOut } from 'firebase/auth';
+import { Squash as Hamburger } from 'hamburger-react';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ProfilePicContext, ModalContext } from '../context.jsx';
+import {
+  LogOut,
+  User,
+  ShoppingCart,
+  Edit,
+  Save,
+  X,
+  Phone,
+  Mail,
+  Home,
+  Key,
+  Shield,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import btnNext from "../assets/imgs/inquiryPage/btnNext.png";
 import btnPrev from "../assets/imgs/inquiryPage/btnPrev.png";
@@ -26,7 +58,7 @@ import stickerLabels from "../assets/imgs/inquiryPage/stickerLabels.jpg";
 import xeroxPhotocopy from "../assets/imgs/inquiryPage/xeroxPhotocopy.jpg";
 import yearBook from "../assets/imgs/inquiryPage/yearBook.jpg";
 import './InquiryPage.css';
-
+import Style from './InquiryPage.module.css'
 
 const data = [
   { image: tshirt, name: "T-shirt printing", description: "We use high-quality screen printing to create durable and vibrant designs for personal, business, or event needs. Perfect for bulk orders with a professional finish." },
@@ -53,6 +85,7 @@ const data = [
 
 
 const NextArrow = (props) => {
+
   const { onClick } = props;
   return (
     <div className="slick-next" onClick={onClick}>
@@ -106,28 +139,160 @@ const settings = {
 
 
 function InquiryPage() {
+
+  const { currentProfilePic } = useContext(ProfilePicContext);
+  const navLogout = useNavigate();
+  const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
+  const [modalLogin, setModalLogin] = useState(false);
+  const [modalSignup, setModalSignup] = useState(false);
+  const navOrder = useNavigate();
+  const [isOpen, setOpen] = useState(false);
+
+  const LoginClick = () => {
+    setModalLogin(!modalLogin);
+    navLogout('/')
+  }
+
+  const CloseModal = () => {
+    setModalLogin(!modalLogin)
+    navLogout('/')
+  }
+
+  const SignupClick = () => {
+    if (modalSignup) {
+      setModalSignup(false);
+    }
+    if (modalSignupOpen) {
+      setModalSignupOpen(false);
+      navLogout('/login')
+    } else {
+      navLogout('/')
+    }
+  }
+
+  const InquireClick = () => {
+    navOrder('/inquire');
+  };
+
+  const closeAll = () => {
+    setModalSignupOpen(false);
+    setModalSignup(false);
+    setModalLogin(false)
+  }
+
+  modalSignupOpen || modalSignup ?
+    (document.body.style.overflow = `hidden`)
+    :
+    document.body.style.overflow = 'scroll'
+
+  const logout = async () => {
+    await signOut(auth);
+    navLogout(0);
+  }
+
+  const myOrderNav = () => {
+    !auth?.currentUser?.email.includes("@admin.139907.print.com")
+      ?
+      navOrder('/customer')
+      :
+      navOrder('/admin')
+  }
+
+  const goToProfilePageAdmin = () => {
+    navOrder('/profilepageadmin')
+  }
+
+
   return (
-    <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
-      <h2 className="Service">Choose a service</h2>
-      <div>
-        <Slider {...settings}>
-          {data.map((item) => (
-            <div className="serviceName" key={item.name}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                <img className="serviceImage"
-                  src={item.image}  
-                  alt={item.name}
-                />
-                <h3>{item.name}</h3>
-                <p className="serviceDescription">{item.description}</p>
-                <button className="btnConfirm">Confirm</button>
+    <>
+      <nav className={Style.HeaderContainer}>
+        <img className={Style.Image} src={Logo} />
+
+        <div className={Style.hamburger}>
+          <Hamburger toggled={isOpen} toggle={setOpen} />
+        </div>
+        <div className={`${Style["nav-links"]} ${isOpen ? Style.active : ""}`}>
+          <Link to='/' onClick={() => { closeAll(); setOpen(false) }} className={Style.Home}>HOME</Link>
+          <Link to='/#about' onClick={() => { setOpen(false); scrollToSection('about') }} className={Style.About}>ABOUT</Link>
+          <Link to='/#contact' onClick={() => { setOpen(false); scrollToSection('contact') }} className={Style.Contact}>CONTACTS</Link>
+          {login ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className={Style.Profile}>
+                  <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
+                  <AvatarFallback>...Loading</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+                {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                  ?
+                  <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
+                  :
+                  <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>}
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>
+                    <User />
+                    {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                      ?
+                      <span className='cursor-pointer'>Profile</span>
+                      :
+                      <span className='cursor-pointer' onClick={goToProfilePageAdmin}>Profile</span>
+                    }
+                    <DropdownMenuShortcut>P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    {!auth?.currentUser?.email.includes("@admin.139907.print.com")
+                      ?
+                      <><ShoppingCart />
+                        <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
+                        <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                      </>
+                      :
+                      <>
+                        <ShoppingCart />
+                        <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
+                        <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                      </>
+                    }
+
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <LogOut />
+                  <span onClick={logout} className='cursor-pointer'>Log out</span>
+                  <DropdownMenuShortcut>Q</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to='/login' className={Style.Login} onClick={() => { LoginClick(); setOpen(false) }}>Login</Link>
+          )}
+
+
+        </div>
+      </nav>
+      <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
+        <h2 className="Service">Choose a service</h2>
+        <div>
+          <Slider {...settings}>
+            {data.map((item) => (
+              <div className="serviceName" key={item.name}>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                  <img className="serviceImage"
+                    src={item.image}
+                    alt={item.name}
+                  />
+                  <h3>{item.name}</h3>
+                  <p className="serviceDescription">{item.description}</p>
+                  <button className="btnConfirm">Confirm</button>
+                </div>
               </div>
-            </div>
-          ))}
-        </Slider>
+            ))}
+          </Slider>
+        </div>
       </div>
-    </div>
-  );
+    </>);
 }
 
 
