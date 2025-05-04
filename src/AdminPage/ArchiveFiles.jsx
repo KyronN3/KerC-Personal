@@ -1,152 +1,223 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useContext } from 'react'
 import styles from './ArchiveFiles.module.css';
 import { db } from '../config/firebase.jsx';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, deleteDoc, getDoc } from 'firebase/firestore';
 import { ReceiptContext } from '../context.jsx';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import Receipt from './Receipt.jsx'
 import StyleModal from '../HomePage/Modal.module.css'
+
 
 const ArchiveFiles = () => {
 
   const [archiveData, setArchiveData] = useState([]);
+  const [tempData, setTempData] = useState([]);
   const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
-  const [targetTableReceipt, setTargetTableReceipt] = useState([]);
-  const { receiptId, setReceiptId } = useContext(ReceiptContext);
+  const [targetTableDelete, setTargetTableDelete] = useState();
+  const [itemFromDoc, setItemFromDoc] = useState([]);
+  const [item, setItem] = useState([]);
+  const { receiptId } = useContext(ReceiptContext);
+  const reload = useNavigate();
 
+  // Fetch Order data
   useEffect(() => {
-    try {
-      const getData = async () => {
-
+    const getData = async () => {
+      try {
         const ref = collection(db, 'Order');
-        const dataFetch = await getDocs(ref);
 
+        const dataFetch = await getDocs(ref);
         const dataReceive = dataFetch.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
-        }))
-        setArchiveData(dataReceive)
-
-
-
+        }));
+        setArchiveData(dataReceive);
+      } catch (err) {
+        console.error(err);
       }
-      getData()
-    } catch (err) {
-      console.error(err);
+    };
+    getData();
+  }, []);
+
+  // Fetch Archive data
+  useEffect(() => {
+    const datReceive = async () => {
+      try {
+        const ref = collection(db, 'Archive');
+        const dataFetch = await getDocs(ref);
+        const dataReceive = dataFetch.docs.map(doc => ({
+          docId: doc.id,
+          ...doc.data()
+        }));
+
+        const filterUndefine = dataReceive.filter(doc => {
+          return doc.referencekey != undefined
+        })
+        setItemFromDoc(filterUndefine);
+
+        setTempData(dataReceive);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    datReceive();
+  }, [targetTableDelete]);
+
+  // Filter data to find unique items not already in Archive
+  useEffect(() => {
+    if (archiveData.length > 0 && tempData.length > 0) {
+      try {
+        const referenceKeys = tempData.map((doc) => doc.referencekey);
+        const filtered = archiveData.filter((dataDoc) =>
+          !referenceKeys.includes(dataDoc.referencekey)
+        );
+
+        setItem(filtered);
+      } catch (err) {
+        console.error(err);
+      }
     }
-
-  }, [])
-
-  // useEffect(() => {
-  //   try {
-  //     const setData = () => {
-  //       const refArchive = collection(db, 'Archive');
-  //       archiveData.forEach(async doc => {
-  //         await addDoc(refArchive, {
-  //           ...doc
-  //         })
-  //       })
-  //     }
-  //     setData()
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }, [archiveData])
-
-
+  }, [archiveData, tempData]);
 
   useEffect(() => {
-    const selectReceipt = async () => {
-      const ref = collection(db, 'Order');
-      const dataFetch = await getDocs(ref);
+    if (item.length > 0) {
+      const storeUniqueItems = async () => {
+        try {
+          const ref = collection(db, 'Archive');
+          const addedDocs = [];
+          for (const doc of item) {
 
-      const filteredOne = dataFetch.docs.filter(doc => {
-        const data = doc.data();
-        return data.service.includes(targetTableReceipt.service)
-      })
+            if (doc && doc.referencekey) {
+              await addDoc(ref, {
+                customerID: doc.customerID || '',
+                description: doc.description || '',
+                email: doc.email || '',
+                id: doc.id || '',
+                isReceipt: doc.isReceipt || false,
+                name: doc.name || '',
+                phone: doc.phone || '',
+                price: doc.price || 0,
+                referencekey: doc.referencekey,
+                service: doc.service || '',
+                status: doc.status || null,
+                timeDate: doc.timeDate || '',
+              });
+              addedDocs.push(doc.referencekey);
+            }
+          }
 
-      const filteredTwo = filteredOne.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }))
-
-      const filteredThree = filteredTwo.filter(doc => {
-        return doc.description.includes(targetTableReceipt.description)
-      })
-
-      const dataScope = filteredThree.filter(doc => {
-        return doc.customerID == targetTableReceipt.customerID
-      })
-
-      const refWithReceipt = collection(db, 'Receipt');
-      const receiptFetch = await getDocs(refWithReceipt);
-      const referencekey = receiptFetch.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
+          console.log(`Added ${addedDocs.length} unique documents to Archive`);
 
 
-      if (dataScope[0] != undefined) {
-        const filtered = referencekey.filter(doc => {
-          return doc.referencekey == dataScope[0].id;
-        })
-        setReceiptId(filtered[0].id);
+          if (addedDocs.length > 0) {
+            const archiveRef = collection(db, 'Archive');
+            const snapshot = await getDocs(archiveRef);
+            const newArchiveData = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }));
+            const filterUndefine = newArchiveData.filter(doc => {
+              return doc.referencekey != undefined
+            })
+            setItemFromDoc(filterUndefine);
+            setTempData(newArchiveData);
+          }
+        } catch (err) {
+          console.error("Error storing items to Archive:", err);
+        }
+      };
+
+      storeUniqueItems();
+    }
+  }, [item]);
+
+  const toDelete = async (item) => {
+    setTargetTableDelete(item);
+
+    if (item.referencekey == undefined) {
+      toast.error("Must have default archive", {
+        position: 'top-right',
+        style: {
+          width: "20vw",
+          fontSize: "13px"
+        }
+      });
+    } else {
+      try {
+        const dataSnap = await getDoc(doc(db, 'Order', item.referencekey))
+        if (dataSnap.exists()) {
+          throw new Error("Invalid Deletion")
+        } else { await deleteDoc(doc(db, 'Archive', item.docId)) }
+        reload(0)
+        toast.success("Successfully deleted", {
+          position: 'top-right',
+          style: {
+            width: "20vw",
+            fontSize: "13px"
+          }
+        });
+
+      } catch {
+        toast.error("Error, Transaction in progress. Please delete first the order", {
+          position: 'top-right',
+          style: {
+            width: "20vw",
+            fontSize: "13px"
+          }
+        });
       }
     }
-    selectReceipt();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [targetTableReceipt])
+  };
 
-
-  const toDelete = (item) => {
-    console.log(item);
-  }
-
-  const viewReceipt = (item) => {
+  const viewReceipt = () => {
     setViewReceiptOpen(!viewReceiptOpen);
-    setTargetTableReceipt(item);
-  }
+  };
 
   const closeModal = () => {
     setViewReceiptOpen(false);
-  }
+  };
 
-  return (<>
-    <div className={styles.gridContainer}>
-      <div className={styles.gridRow}>
-        {archiveData.map(doc => (
-          <div key={doc.id} className={styles.gridItem}>
-            <div className={styles.archiveCard}>
-              <div className={styles.cardHeader}>
-                <div className={styles.customerName}>{doc.name}</div>
-                <div className={styles.customerEmail}>{doc.phone} {doc.email}</div>
-              </div>
+  return (
+    <>
+      <div className={styles.gridContainer}>
+        <div className={styles.gridRow}>
+          {itemFromDoc.map(doc => (
+            <div key={doc.referenceKeys} className={styles.gridItem}>
+              <div className={styles.archiveCard}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.customerName}>{doc.name}</div>
+                  <div className={styles.customerEmail}>{doc.phone} {doc.email}</div>
+                </div>
 
-              <div className={styles.cardBody}>
-                <div className={styles.description}>{doc.description}</div>
-                <div className={styles.dueDate}>
-                  <span>Due Date:</span> {doc.timeDate}
+                <div className={styles.cardBody}>
+                  <div className={styles.description}>{doc.description}</div>
+                  <div className={styles.dueDate}>
+                    <span>Due Date:</span> {doc.timeDate}
+                  </div>
+                </div>
+
+                <div className={styles.cardActions}>
+                  {doc.isReceipt
+                    ? <button className={styles.viewButton} onClick={() => viewReceipt(doc)}>VIEW RECEIPT</button>
+                    : <button className={styles.viewButton}>NO RECEIPT</button>
+                  }
+                  <button className={styles.deleteButton} onClick={() => toDelete(doc)}>DELETE ARCHIVE</button>
                 </div>
               </div>
-
-              <div className={styles.cardActions}>
-                {doc.Receipt
-                  ? <button className={styles.viewButton} onClick={() => viewReceipt(doc)}>VIEW RECEIPT</button>
-                  : <button className={styles.viewButton}>NO RECEIPT</button>
-                }
-                <button className={styles.deleteButton} onClick={() => toDelete(doc)}>DELETE ARCHIVE</button>
-              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <ToastContainer />
       </div>
-    </div>
 
-    {viewReceiptOpen &&
-      <div className={StyleModal.modal}>
-        <div className={StyleModal.overlay} onClick={closeModal}></div>
-        <div className={StyleModal.modalContent}><Receipt value={receiptId} /></div>
-      </div>}
-  </ >
+      {viewReceiptOpen && (
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}><Receipt value={receiptId} /></div>
+        </div>
+      )}
+    </>
   );
 };
 

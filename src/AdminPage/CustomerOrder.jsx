@@ -11,8 +11,8 @@ import StyleModal from '../HomePage/Modal.module.css'
 
 
 
-
 const CustomerOrder = () => {
+
 
   const { setReceiptId } = useContext(ReceiptContext);
   const { viewReceiptOpen } = useContext(ViewReceiptOpenContext)
@@ -134,6 +134,19 @@ const CustomerOrder = () => {
 
       const refWithId = doc(db, 'Order', docData.referencekey);
       await updateDoc(refWithId, { isReceipt: true });
+
+      const getData = await getDocs(collection(db, 'Archive'));
+      const archiveData = getData.docs.map((doc) => ({
+        docId: doc.id,
+        ...doc.data()
+      }
+      ))
+      const id = archiveData.filter(doc => {
+        return doc.referencekey == docData.referencekey;
+      })
+      if (id[0] != undefined) await updateDoc(doc(db, 'Archive', id[0].docId), { isReceipt: true });
+
+
       toast.success("Receipt Created", {
         position: 'bottom-right'
       })
