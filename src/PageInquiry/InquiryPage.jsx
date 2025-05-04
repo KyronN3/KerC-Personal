@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -49,7 +48,7 @@ import stickerLabels from "../assets/imgs/inquiryPage/stickerLabels.jpg";
 import xeroxPhotocopy from "../assets/imgs/inquiryPage/xeroxPhotocopy.jpg";
 import yearBook from "../assets/imgs/inquiryPage/yearBook.jpg";
 import './InquiryPage.css';
-import Style from './InquiryPage.module.css'
+import Style from './InquiryPage.module.css';
 
 const data = [
   { image: tshirt, name: "T-shirt printing", description: "We use high-quality screen printing to create durable and vibrant designs for personal, business, or event needs. Perfect for bulk orders with a professional finish." },
@@ -74,9 +73,7 @@ const data = [
   { image: yearBook, name: "Yearbooks", description: "Professionally designed and printed yearbooks to capture memories. Custom layouts, high-quality binding, and premium paper options for schools, organizations, and special events." }
 ];
 
-
 const NextArrow = (props) => {
-
   const { onClick } = props;
   return (
     <div className="slick-next" onClick={onClick}>
@@ -84,7 +81,6 @@ const NextArrow = (props) => {
     </div>
   );
 };
-
 
 const PrevArrow = (props) => {
   const { onClick } = props;
@@ -94,7 +90,6 @@ const PrevArrow = (props) => {
     </div>
   );
 };
-
 
 const settings = {
   dots: true,
@@ -128,9 +123,14 @@ const settings = {
   ],
 };
 
+const scrollToSection = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
 function InquiryPage() {
-
   const { currentProfilePic } = useContext(ProfilePicContext);
   const navLogout = useNavigate();
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
@@ -194,13 +194,14 @@ function InquiryPage() {
   }
 
   const confirmClick = () => {
-    navOrder('/servicePrice')
+    navOrder('/serviceprice')
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+      {/* Navigation */}
       <nav className={Style.HeaderContainer}>
-        <img className={Style.Image} src={Logo} />
+        <img className={Style.Image} src={Logo} alt="Logo" />
 
         <div className={Style.hamburger}>
           <Hamburger toggled={isOpen} toggle={setOpen} />
@@ -217,7 +218,7 @@ function InquiryPage() {
                   <AvatarFallback>...Loading</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+              <DropdownMenuContent className="w-56 relative z-50 bg-orange-200">
                 {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                   ?
                   <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
@@ -226,7 +227,7 @@ function InquiryPage() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <User />
+                    <User className="mr-2" />
                     {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                       ?
                       <span className='cursor-pointer'>Profile</span>
@@ -238,22 +239,21 @@ function InquiryPage() {
                   <DropdownMenuItem>
                     {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                       ?
-                      <><ShoppingCart />
+                      <><ShoppingCart className="mr-2" />
                         <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
                         <DropdownMenuShortcut>M</DropdownMenuShortcut>
                       </>
                       :
                       <>
-                        <ShoppingCart />
+                        <ShoppingCart className="mr-2" />
                         <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>Manage Orders</Link>
                         <DropdownMenuShortcut>M</DropdownMenuShortcut>
                       </>
                     }
-
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuItem>
-                  <LogOut />
+                  <LogOut className="mr-2" />
                   <span onClick={logout} className='cursor-pointer'>Log out</span>
                   <DropdownMenuShortcut>Q</DropdownMenuShortcut>
                 </DropdownMenuItem>
@@ -265,28 +265,33 @@ function InquiryPage() {
         </div>
       </nav>
 
-      <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
-        <h2 className="Service">Choose a service</h2>
-        <div>
-          <Slider {...settings}>
-            {data.map((item) => (
-              <div className="serviceName" key={item.name}>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <img className="serviceImage"
-                    src={item.image}
-                    alt={item.name}
-                  />
-                  <h3>{item.name}</h3>
-                  <p className="serviceDescription">{item.description}</p>
-                  <button className="btnConfirm" onClick={confirmClick}>Confirm</button>
+      {/* Main Content */}
+      <main className="flex-grow">
+        <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
+          <h2 className="Service">Choose a service</h2>
+          <div>
+            <Slider {...settings}>
+              {data.map((item) => (
+                <div className="serviceName" key={item.name}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <img className="serviceImage"
+                      src={item.image}
+                      alt={item.name}
+                    />
+                    <h3>{item.name}</h3>
+                    <p className="serviceDescription">{item.description}</p>
+                    <button className="btnConfirm" onClick={confirmClick}>Confirm</button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </Slider>
+              ))}
+            </Slider>
+          </div>
         </div>
-      </div>
-    </>);
-}
+      </main>
 
+
+    </div>
+  );
+}
 
 export default InquiryPage;

@@ -1,6 +1,7 @@
 
-import Style from './InquiryPage.module.css'
-import TShirtStyle from './TshirtPrinting.module.css'
+import Style from './InquiryPage.module.css';
+import Tshirt from './inquiryPage/tshirt.jpg';
+import TShirtStyle from './TshirtPrinting.module.css';
 import Logo from '../assets/imgs/logo.png';
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -98,7 +99,7 @@ const TShirtPrintingPage = () => {
     }
 
     const goBackToServices = () => {
-        navOrder('/services');
+        navOrder('/inquire');
     }
 
     // Scroll to section function
@@ -176,17 +177,8 @@ const TShirtPrintingPage = () => {
             </div>
         </nav>
 
-        <div className={TShirtStyle["tshirt-printing-container"]}>
-            <div className={TShirtStyle["back-button"]}>
-                <button
-                    onClick={goBackToServices}
-                    className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full transition-all"
-                >
-                    <ArrowLeft className="mr-2" />
-                    <span className="text-lg font-medium">Choose another service</span>
-                </button>
-            </div>
 
+        <div className={TShirtStyle["tshirt-printing-container"]}>
             <h1 className="text-5xl font-bold mb-6 border-b-4 border-black inline-block pb-2 text-center mx-auto block">T-Shirt Printing</h1>
 
             <div className={TShirtStyle["service-content"]}>
@@ -194,7 +186,7 @@ const TShirtPrintingPage = () => {
                     <div className="relative bg-blue-500 rounded-lg p-6 overflow-hidden w-full">
                         <div className="flex justify-center items-center">
                             <div className="text-white p-4 text-center">
-                                <p>T-shirt design mockup showing white and black shirts with 'Your Design Here' text</p>
+                                <img src={Tshirt} className='w-100 '></img> {/*Image*/}
                                 <div className="flex justify-end mt-4">
                                     <div className="w-8 h-8 bg-green-400 rounded-full mr-1"></div>
                                     <div className="w-8 h-8 bg-green-400 rounded-full mr-1"></div>
@@ -263,7 +255,7 @@ const TShirtPrintingPage = () => {
                         </div>
                     </div>
 
-                    <div className={`${TShirtStyle.calculator} bg-gray-50 p-6 rounded-lg shadow-md mb-8`}>
+                    <div className={`${TShirtStyle.calculator} bg-gray-50 p-6 rounded-lg shadow-md mt-8`}>
                         <h2 className="text-2xl font-bold mb-4">Price Calculator</h2>
                         <div className={TShirtStyle["quantity-selector-container"]}>
                             <div className="selected-option mb-4">
@@ -281,7 +273,6 @@ const TShirtPrintingPage = () => {
                                         -
                                     </button>
                                     <input
-                                        type="number"
                                         min="1"
                                         value={quantity}
                                         onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
@@ -302,17 +293,16 @@ const TShirtPrintingPage = () => {
                             </div>
                         </div>
                     </div>
-
-                    <p className="mt-4 text-lg">Call for exact pricing and available discounts.</p>
-
-                    <div className="mt-8">
+                    <div className={TShirtStyle["back-button"]}>
                         <button
-                            onClick={InquireClick}
-                            className={`${TShirtStyle["inquire-button"]} bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg text-xl font-medium transition-all`}
+                            onClick={goBackToServices}
+                            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full transition-all"
                         >
-                            Request a Quote
+                            <ArrowLeft className="mr-2" />
+                            <span className="text-lg font-medium">Choose another service</span>
                         </button>
                     </div>
+                    <p className="mt-4 text-lg">Call for exact pricing and available discounts.</p>
                 </div>
             </div>
         </div>
