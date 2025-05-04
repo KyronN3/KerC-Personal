@@ -11,7 +11,7 @@ import EditPrice from './EditPrice.jsx'
 import CustomerOrder from './CustomerOrder.jsx'
 import ManageAccount from './ManageAccount.jsx'
 import Receipt from './Receipt.jsx'
-import { ViewReceiptOpenContext } from '../context.jsx';
+import { ViewReceiptOpenContext, ProfilePicContext } from '../context.jsx';
 import { Squash as Hamburger } from 'hamburger-react';
 import ArchiveFiles from './ArchiveFiles.jsx'
 import {
@@ -38,6 +38,7 @@ import {
 
 export default function Admin() {
 
+    const { currentProfilePic } = useContext(ProfilePicContext);
     const { viewReceiptOpen } = useContext(ViewReceiptOpenContext);
     const goToPage = useNavigate();
     const [isOpen, setOpen] = useState(false);
@@ -89,7 +90,7 @@ export default function Admin() {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Avatar className={Style.Profile}>
-                                <AvatarImage src="https://github.com/shadcn.png" />
+                                <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
                                 <AvatarFallback>...Loading</AvatarFallback>
                             </Avatar>
                         </DropdownMenuTrigger>

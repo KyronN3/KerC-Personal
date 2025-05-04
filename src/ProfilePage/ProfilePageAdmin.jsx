@@ -1,12 +1,15 @@
 import Style from './ProfilePageAdmin.module.css';
 import Logo from '../assets/imgs/logo.png';
-import { useState, useEffect } from 'react';
-import { useNavigation, Link } from 'react-router-dom';
-import { auth, db } from '../config/firebase.jsx';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { auth, db, storage } from '../config/firebase.jsx';
 import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { listAll, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import { Squash as Hamburger } from 'hamburger-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { v4 } from 'uuid';
+import { ProfilePicContext } from '../context.jsx';
 import {
     LogOut,
     User,
@@ -18,7 +21,8 @@ import {
     Mail,
     Home,
     Key,
-    Shield
+    Shield,
+    Upload
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -31,11 +35,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 const ProfilePageAdmin = () => {
+
+    const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext);
     const [isOpen, setOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const navManageOrder = useNavigation();
+    const [image, setImage] = useState();
+    const [imagePreview, setImagePreview] = useState();
+    const navManageOrder = useNavigate();
 
     const [profile, setProfile] = useState({
         address: null,
@@ -58,6 +65,8 @@ const ProfilePageAdmin = () => {
     };
 
     const handleCancel = () => {
+        navManageOrder(0);
+        setImage(null);
         setIsEditing(false);
     };
 
@@ -66,12 +75,40 @@ const ProfilePageAdmin = () => {
         await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
             ...formData
         })
-        setIsEditing(false);
-        // Save Data
-        console.log("Saving profile:", formData);
-        console.log(profile)
+        try {
+            if (image != null) {
+                //picture save
+                const picName = ref(storage, `ProfilePicture/${image.name.concat(v4())}`)
+                await uploadBytes(picName, image)
+                updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
+                    profilePic: picName._location.path_
+                })
+                setIsEditing(false);
+                navManageOrder(0);
+            }
+        } catch (err) {
+            setIsEditing(false);
+            console.error(err)
+        }
     };
 
+    useEffect(() => {
+        const getPic = async () => {
+            const getData = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
+            if (getData.exists()) {
+                const data = getData.data();
+                const response = await listAll(ref(storage, 'ProfilePicture'))
+                const url = response.items.filter((pic) => {
+                    return pic._location.path_ == data.profilePic;
+                })
+                url.forEach(async (pic) => {
+                    const imageUrl = await getDownloadURL(pic);
+                    setCurrentProfilePic(imageUrl);
+                })
+            }
+        }
+        getPic();
+    }, [])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -113,7 +150,6 @@ const ProfilePageAdmin = () => {
         }; getData();
     }, [])
 
-
     return (
         <>
             <nav className={Style.HeaderContainer}>
@@ -129,7 +165,7 @@ const ProfilePageAdmin = () => {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Avatar className={Style.Profile}>
-                                    <AvatarImage src="https://github.com/shadcn.png" />
+                                    <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
                                     <AvatarFallback>...Loading</AvatarFallback>
                                 </Avatar>
                             </DropdownMenuTrigger>
@@ -194,37 +230,32 @@ const ProfilePageAdmin = () => {
                         <div className="mb-6 md:mb-0 flex flex-col items-center">
                             <div className="w-32 h-32 md:w-40 md:h-40 bg-gray-200 rounded-full flex items-center justify-center mb-4">
                                 {profile.profilePic ? (
-                                    <img
-                                        src={profile.profilePic}
-                                        alt="Profile"
-                                        className="w-full h-full rounded-full object-cover"
-                                    />
+                                    <Avatar className={Style.UserProfile}>
+                                        <AvatarImage src={imagePreview != null ? imagePreview : currentProfilePic || "https://github.com/shadcn.png"} />
+                                        <AvatarFallback>...Loading</AvatarFallback>
+                                    </Avatar>
                                 ) : (
                                     <Avatar className={Style.UserProfile}>
-                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                        <AvatarImage src={imagePreview || "https://github.com/shadcn.png"} />
                                         <AvatarFallback>...Loading</AvatarFallback>
                                     </Avatar>
                                 )}
                             </div>
-                            {isEditing && (
+                            {isEditing &&
                                 <label className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm md:text-base">
-                                    Upload Photo
-                                    <input
-                                        type="file"
-                                        className="hidden"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                            if (e.target.files && e.target.files[0]) {
-                                                const reader = new FileReader();
-                                                reader.onload = (event) => {
-                                                    setFormData({ ...formData, profilePic: event.target.result });
-                                                };
-                                                reader.readAsDataURL(e.target.files[0]);
-                                            }
-                                        }}
-                                    />
+                                    Upload Picture
+                                    <input type="file" className="hidden" onChange={(e) => {
+                                        if (e.target.files[0] && e.target.files) {
+                                            const file = e.target.files[0];
+                                            setImage(file);
+
+                                            const imageUrl = URL.createObjectURL(file);
+                                            setImagePreview(imageUrl);
+                                        }
+                                    }} />
                                 </label>
-                            )}
+                            }
+
                         </div>
 
                         {/* Profile Details */}
