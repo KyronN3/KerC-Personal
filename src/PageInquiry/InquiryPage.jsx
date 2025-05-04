@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -15,14 +14,6 @@ import {
   LogOut,
   User,
   ShoppingCart,
-  Edit,
-  Save,
-  X,
-  Phone,
-  Mail,
-  Home,
-  Key,
-  Shield,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -202,6 +193,9 @@ function InquiryPage() {
     navOrder('/profilepageadmin')
   }
 
+  const confirmClick = () => {
+    navOrder('/servicePrice')
+  }
 
   return (
     <>
@@ -268,10 +262,9 @@ function InquiryPage() {
           ) : (
             <Link to='/login' className={Style.Login} onClick={() => { LoginClick(); setOpen(false) }}>Login</Link>
           )}
-
-
         </div>
       </nav>
+
       <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
         <h2 className="Service">Choose a service</h2>
         <div>
@@ -285,7 +278,7 @@ function InquiryPage() {
                   />
                   <h3>{item.name}</h3>
                   <p className="serviceDescription">{item.description}</p>
-                  <button className="btnConfirm">Confirm</button>
+                  <button className="btnConfirm" onClick={confirmClick}>Confirm</button>
                 </div>
               </div>
             ))}
