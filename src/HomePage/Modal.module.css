@@ -15,8 +15,8 @@
 }
 
 .modalContent {
-  position: sticky;
-  top: 60%;
+  position: absolute;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -30%);
   animation: fadeIn 0.1s ease-in-out;

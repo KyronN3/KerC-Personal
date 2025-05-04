@@ -39,7 +39,7 @@ import {
 export default function Admin() {
 
     const { viewReceiptOpen } = useContext(ViewReceiptOpenContext);
-    const navManageOrder = useNavigate();
+    const goToPage = useNavigate();
     const [isOpen, setOpen] = useState(false);
     const goTo = useLocation();
 
@@ -49,7 +49,7 @@ export default function Admin() {
     }
 
     const manageOrderNav = () => {
-        navManageOrder('/admin');
+        goToPage('/admin');
     }
     const toRender = () => {
         switch (goTo.pathname) {
@@ -66,9 +66,15 @@ export default function Admin() {
                 return <ManageAccount />
         }
     }
+
+    const goToProfilePageAdmin = () => {
+        goToPage('/profilepageadmin')
+    }
+
     //rerender
     useEffect(() => {
     }, [viewReceiptOpen])
+
     return (<>
         <nav className={Style.HeaderContainer}>
             <img className={Style.Image} src={Logo} />
@@ -93,7 +99,7 @@ export default function Admin() {
                             <DropdownMenuGroup>
                                 <DropdownMenuItem>
                                     <User />
-                                    <span className='cursor-pointer'>Profile</span>
+                                    <span className='cursor-pointer' onClick={goToProfilePageAdmin}>Profile</span>
                                     <DropdownMenuShortcut>P</DropdownMenuShortcut>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>

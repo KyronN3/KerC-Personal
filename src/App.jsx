@@ -12,6 +12,7 @@ import CustomerOrder from './AdminPage/CustomerOrder.jsx'
 import ManageAccount from './AdminPage/ManageAccount.jsx'
 import ArchiveFiles from './AdminPage/ArchiveFiles.jsx'
 import CreateAccount from './Authentication/CreateAccount.jsx'
+import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext } from './context.jsx'
@@ -140,6 +141,10 @@ function App() {
           {
             path: '/admin',
             element: <Admin />
+          },
+          {
+            path: '/profilepageadmin',
+            element: <ProfilePageAdmin />
           },
           {
             path: '/editprice',
