@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Style from './ProfilePageAdmin.module.css';
 import Logo from '../assets/imgs/logo.png';
 import { useState, useEffect, useContext } from 'react';
