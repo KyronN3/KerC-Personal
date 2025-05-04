@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './ArchiveFiles.module.css';
 import { db } from '../config/firebase.jsx';
 import { collection, getDocs, addDoc, doc, deleteDoc, getDoc } from 'firebase/firestore';
-import { ReceiptContext } from '../context.jsx';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import Receipt from './Receipt.jsx'
+import Receipt from './ReceiptArchive.jsx'
 import StyleModal from '../HomePage/Modal.module.css'
 
 
@@ -16,9 +15,9 @@ const ArchiveFiles = () => {
   const [tempData, setTempData] = useState([]);
   const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
   const [targetTableDelete, setTargetTableDelete] = useState();
+  const [receiptId, setReceiptId] = useState();
   const [itemFromDoc, setItemFromDoc] = useState([]);
   const [item, setItem] = useState([]);
-  const { receiptId } = useContext(ReceiptContext);
   const reload = useNavigate();
 
   // Fetch Order data
@@ -102,6 +101,7 @@ const ArchiveFiles = () => {
                 service: doc.service || '',
                 status: doc.status || null,
                 timeDate: doc.timeDate || '',
+                isArchive: true
               });
               addedDocs.push(doc.referencekey);
             }
@@ -148,8 +148,11 @@ const ArchiveFiles = () => {
         const dataSnap = await getDoc(doc(db, 'Order', item.referencekey))
         if (dataSnap.exists()) {
           throw new Error("Invalid Deletion")
-        } else { await deleteDoc(doc(db, 'Archive', item.docId)) }
-        reload(0)
+        } else {
+          await deleteDoc(doc(db, 'Archive', item.docId))
+          reload(0)
+        }
+
         toast.success("Successfully deleted", {
           position: 'top-right',
           style: {
@@ -168,9 +171,20 @@ const ArchiveFiles = () => {
         });
       }
     }
+    const receiptArchive = await getDocs(collection(db, 'ReceiptArchive'))
+    const receiptArchiveData = receiptArchive.docs.map((doc) => ({
+      docId: doc.id,
+      ...doc.data()
+    }))
+
+    const referencekey = receiptArchiveData.filter((doc) => {
+      return doc.referencekey == item.referencekey;
+    })
+    await deleteDoc(doc(db, 'ReceiptArchive', referencekey[0].docId))
   };
 
-  const viewReceipt = () => {
+  const viewReceipt = (item) => {
+    setReceiptId(item.id)
     setViewReceiptOpen(!viewReceiptOpen);
   };
 
@@ -214,7 +228,7 @@ const ArchiveFiles = () => {
       {viewReceiptOpen && (
         <div className={StyleModal.modal}>
           <div className={StyleModal.overlay} onClick={closeModal}></div>
-          <div className={StyleModal.modalContent}><Receipt value={receiptId} /></div>
+          <div className={StyleModal.modalContent}><Receipt id={receiptId} /></div>
         </div>
       )}
     </>

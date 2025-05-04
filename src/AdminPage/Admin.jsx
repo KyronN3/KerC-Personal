@@ -123,7 +123,7 @@ export default function Admin() {
                 </header>
 
                 {viewReceiptOpen.current ? <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
-                    {goTo.pathname === '/createtask' && (
+                    {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
                             <div className=" bg-white/80 bg-muted/50 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.6)] rounded-xl p-8 shadow w-full inset-shadow-sm w-full col-span-1 md:col-span-2 overflow-auto ">
                                 <CreateTask />
@@ -133,7 +133,7 @@ export default function Admin() {
                             </div>
                             <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
                         </div>
-                    )}
+                    ) : <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">{toRender()}</div>}
                 </div> : <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
                     {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">

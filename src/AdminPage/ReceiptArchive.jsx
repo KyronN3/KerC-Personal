@@ -1,27 +1,25 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Printer } from 'lucide-react';
 import { ReceiptContext } from '../context';
 import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import styles from './Receipt.module.css';
 
-export default function SimpleReceipt() {
-
-    const { receiptId } = useContext(ReceiptContext);
+export default function SimpleReceipt(props) {
+    
     const [items, setItems] = useState([]);
-
     useEffect(() => {
 
         const receiptIdSearch = async () => {
             try {
-                const ref = collection(db, 'Receipt')
+                const ref = collection(db, 'ReceiptArchive')
                 const receiptFetch = await getDocs(ref);
                 const receiptReceive = receiptFetch.docs.map(doc => ({
-                    id: doc.id,
+                    docId: doc.id,
                     ...doc.data()
                 }))
                 const data = receiptReceive.filter(doc => {
-                    return doc.id == receiptId
+                    return doc.referencekey == props.id
                 })
                 setItems(data[0]);
             } catch (err) {

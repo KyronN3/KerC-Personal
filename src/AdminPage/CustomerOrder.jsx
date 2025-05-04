@@ -129,7 +129,12 @@ const CustomerOrder = () => {
           referencekey: docData.referencekey,
           price: docData.price,
           service: docData.service,
-        },)
+        })
+        await addDoc(collection(db, 'ReceiptArchive'), {
+          referencekey: docData.referencekey,
+          price: docData.price,
+          service: docData.service,
+        })
       }
 
       const refWithId = doc(db, 'Order', docData.referencekey);
