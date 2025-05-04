@@ -108,7 +108,7 @@ const CreateTask = () => {
 
       e.target.reset();
       toast.success("Successfully created", {
-        position: 'bottom-right',
+        position: 'top-right',
         style: {
           width: "20vw",
           fontSize: "13px"
@@ -116,7 +116,7 @@ const CreateTask = () => {
       });
     } catch (error) {
       toast.error("Unsuccessful, input missing. Try Again !", {
-        position: 'bottom-right',
+        position: 'top-right',
         style: {
           width: "20vw",
           fontSize: "13px"
