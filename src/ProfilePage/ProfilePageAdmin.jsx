@@ -22,7 +22,6 @@ import {
     Home,
     Key,
     Shield,
-    Upload
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -104,6 +103,7 @@ const ProfilePageAdmin = () => {
                 url.forEach(async (pic) => {
                     const imageUrl = await getDownloadURL(pic);
                     setCurrentProfilePic(imageUrl);
+                    console.log(imageUrl)
                 })
             }
         }
