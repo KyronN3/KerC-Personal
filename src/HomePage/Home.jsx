@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 import Style from './Home.module.css'
 import Logo from '../assets/imgs/logo.png'
@@ -31,17 +32,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import CreateAccount from '../Authentication/CreateAccount.jsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { ModalContext, ProfilePicContext } from '../context.jsx'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { auth } from '../config/firebase.jsx'
+import { auth, db, storage } from '../config/firebase.jsx'
+import { doc, getDoc } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
+import { listAll, getDownloadURL, ref } from 'firebase/storage'
 
 export default function Home({ isLogin = false, isSignup = false }) {
 
-  const { currentProfilePic } = useContext(ProfilePicContext)
+  const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext)
   const navLogout = useNavigate();
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
   const [modalLogin, setModalLogin] = useState(isLogin);
@@ -103,6 +106,23 @@ export default function Home({ isLogin = false, isSignup = false }) {
     navOrder('/profilepageadmin')
   }
 
+  useEffect(() => {
+    const getPic = async () => {
+      const dataSnap = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
+      if (dataSnap.exists()) {
+        const data = dataSnap.data();
+        const response = await listAll(ref(storage, 'ProfilePicture'))
+        const url = response.items.filter((pic) => {
+          return pic._location.path_ == data.profilePic;
+        })
+        url.forEach(async (pic) => {
+          const imageUrl = await getDownloadURL(pic);
+          setCurrentProfilePic(imageUrl);
+        })
+      }
+    }
+    getPic();
+  }, [])
 
   return (<>
 

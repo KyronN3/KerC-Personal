@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Style from './ProfilePageAdmin.module.css';
 import Logo from '../assets/imgs/logo.png';
 import { useState, useEffect, useContext } from 'react';
@@ -22,7 +23,6 @@ import {
     Home,
     Key,
     Shield,
-    Upload
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -104,6 +104,7 @@ const ProfilePageAdmin = () => {
                 url.forEach(async (pic) => {
                     const imageUrl = await getDownloadURL(pic);
                     setCurrentProfilePic(imageUrl);
+                    console.log(imageUrl)
                 })
             }
         }
