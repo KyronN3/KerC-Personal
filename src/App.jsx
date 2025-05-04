@@ -12,6 +12,7 @@ import CustomerOrder from './AdminPage/CustomerOrder.jsx'
 import ManageAccount from './AdminPage/ManageAccount.jsx'
 import ArchiveFiles from './AdminPage/ArchiveFiles.jsx'
 import CreateAccount from './Authentication/CreateAccount.jsx'
+import ServicePrice from './PageInquiry/ServicePrice.jsx'
 import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
@@ -24,6 +25,7 @@ import './App.css'
 import fb from './assets/imgs/facebook.png';
 import messenger from './assets/imgs/messenger.png';
 import gmail from './assets/imgs/gmail.png';
+
 
 function App() {
   const viewReceiptOpen = useRef(false);
@@ -100,6 +102,10 @@ function App() {
     {
       path: '/legal',
       element: <Legal />
+    },
+    {
+      path: 'servicePrice',
+      element: <ServicePrice />
     }
   ])
 
@@ -130,6 +136,18 @@ function App() {
           {
             path: '/customer',
             element: <Customer />
+          },
+          {
+            path: '/inquire',
+            element: <Inquire />
+          },
+          {
+            path: '/legal',
+            element: <Legal />
+          },
+          {
+            path: 'servicePrice',
+            element: <ServicePrice />
           }
         ])} />;
 
@@ -171,6 +189,10 @@ function App() {
           {
             path: '/legal',
             element: <Legal />
+          },
+          {
+            path: 'servicePrice',
+            element: <ServicePrice />
           }
         ])} />;
       }
