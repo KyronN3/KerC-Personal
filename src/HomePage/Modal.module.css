@@ -1,3 +1,4 @@
+/* Base modal and overlay styles */
 .modal,
 .overlay {
   width: 100vw;
@@ -24,6 +25,8 @@
   padding: 14px 28px;
   border-radius: 3px;
   width: 30%;
+  max-width: 600px;
+  min-width: 300px;
   z-index: 3;
   height: fit-content;
 }
@@ -33,6 +36,10 @@
   top: 10px;
   right: 10px;
   padding: 5px 7px;
+  cursor: pointer; /* Added cursor pointer for better UX */
+  background: none;
+  border: none;
+  font-size: 1.2rem;
 }
 
 @keyframes fadeIn {
@@ -41,5 +48,38 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1200px) {
+  .modalContent {
+    width: 40%;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .modalContent {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .modalContent {
+    width: 70%;
+    padding: 12px 20px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .modalContent {
+    width: 85%;
+    top: 30%;
+    padding: 10px 16px;
+  }
+  
+  .closeModal {
+    top: 5px;
+    right: 5px;
   }
 }

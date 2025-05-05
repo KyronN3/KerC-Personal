@@ -10,7 +10,7 @@ const CreateAccount = () => {
     const { setModalSignupOpen } = useContext(ModalContext);
     const { setCreateAccountOpen } = useContext(CreateAccountContext);
     const { setUserData } = useContext(UserDataContext);
-    
+
     const [errorColorNumber, setErrorColorNumber] = useState(null);
     const [errorColorPasswordConfirm, setErrorColorPasswordConfirm] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +26,7 @@ const CreateAccount = () => {
             username: null,
             password: null,
             passwordConfirm: null,
+            profilePic: null,
             isAdmin: false
         });
 
@@ -47,9 +48,9 @@ const CreateAccount = () => {
 
     const onChangeEmail = (e) => {
         setUser((prevUser) => ({ ...prevUser, email: e.target.value }));
-        if(e.target.value.includes("@admin.139907.print.com")){
-                setUser((prevUser) => ({ ...prevUser, isAdmin: true}))
-        }   
+        if (e.target.value.includes("@admin.139907.print.com")) {
+            setUser((prevUser) => ({ ...prevUser, isAdmin: true }))
+        }
     }
 
     const onChangeAddress = (e) => {
@@ -103,7 +104,7 @@ const CreateAccount = () => {
             setShowCheckboxError(true);
         }
     };
-    
+
 
     return (
         <div onSubmit={handleSubmit} className={styles.container}>
@@ -237,12 +238,12 @@ const CreateAccount = () => {
                                 }
                             </button>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: 20, padding: 5}}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginTop: 20, padding: 5 }}>
                             <input type="checkbox" checked={isCheckboxChecked} onChange={handleCheckboxChange} name="agreeTerm" value="checkboxValue" style={{ marginRight: '2%' }} />
                             <p style={{ fontSize: 12 }}>By checking this box, you agree to the <a href="/legal"><u>Terms & Conditions</u></a> of this website.</p>
                         </div>
                         {showCheckboxError && (
-                            <p className={styles.errorMessage} style={{color: 'red', fontSize: 12, textAlign: 'center'}}>Please check the box to proceed with registration.</p>
+                            <p className={styles.errorMessage} style={{ color: 'red', fontSize: 12, textAlign: 'center' }}>Please check the box to proceed with registration.</p>
                         )}
                     </div>
 

@@ -1,13 +1,11 @@
 import StyleModal from '../HomePage/Modal.module.css'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Edit2, Search, PhilippinePeso } from 'lucide-react';
 import { db } from '../config/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
-
 const EditPrice = () => {
-
   const [servicesData, setServicesData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceInputModalOpen, setPriceInputModalOpen] = useState(false);
@@ -15,6 +13,8 @@ const EditPrice = () => {
   const [newPrice, setNewPrice] = useState('');
   const [update, setUpdate] = useState(false);
   const reload = useNavigate();
+  const modalRef = useRef(null);
+  const targetRowRef = useRef(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -60,11 +60,9 @@ const EditPrice = () => {
     search()
   }, [searchQuery])
 
-
   useEffect(() => {
     const changePrice = async () => {
       try {
-
         const ref = collection(db, 'Price');
         const dataFetch = await getDocs(ref);
 
@@ -88,8 +86,8 @@ const EditPrice = () => {
         if (dataScope[0] != undefined) {
           const refWithId = doc(db, 'Price', dataScope[0].id);
           await updateDoc(refWithId, { price: `₱${newPrice}` })
+          reload(0);
         }
-
       } catch (err) {
         console.error(err);
       }
@@ -98,26 +96,50 @@ const EditPrice = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [update])
 
+  useEffect(() => {
+    if (priceInputModalOpen && modalRef.current) {
+
+      setTimeout(() => {
+        const yOffset = -400;
+        const y = modalRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+        window.scrollTo({
+          top: y,
+          behavior: 'smooth'
+        });
+      }, 100);
+    }
+  }, [priceInputModalOpen]);
+
+
   const onChangePrice = (e) => {
     setNewPrice(e.target.value);
   }
 
   const handlePrice = (e) => {
     e.preventDefault();
-    setPriceInputModalOpen(!priceInputModalOpen);
-    reload(0);
+    setPriceInputModalOpen(false);
     setUpdate(!update);
   }
 
-  const priceEdit = (item) => {
-    setPriceInputModalOpen(!priceInputModalOpen);
-    setTargetTable(item);
+  const priceEdit = (item, index) => {
+    setTargetTable({ ...item, rowIndex: index });
+    setPriceInputModalOpen(true);
+    setNewPrice('');
   }
 
   const closeModal = () => {
-    setPriceInputModalOpen(!priceInputModalOpen);
+    setPriceInputModalOpen(false);
   }
 
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      closeModal();
+    } else if (e.key === 'Enter') {
+      handlePrice(e);
+    }
+  };
 
   return (<>
     <div className="w-full max-w-md mx-auto mt-6">
@@ -128,10 +150,10 @@ const EditPrice = () => {
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-2 pl-10 pr-4 text-black bg-[#ffd700] border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full py-2 pl-10 pr-16 text-black bg-[#ffd700] border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Search className="w-5 h-5 black" />
+            <Search className="w-5 h-5 text-black" />
           </div>
         </div>
         <button
@@ -144,28 +166,41 @@ const EditPrice = () => {
     </div>
 
     <div className="p-3">
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
+      <div className="overflow-x-auto overflow-y-visible rounded-lg shadow-md border">
+        <table className="w-full border-collapse min-w-full table-auto">
           <thead>
             <tr className="bg-cyan-300">
-              <th className="p-2 border border-[#5D4037] color-white-600 text-left font-bold">SERVICES</th>
+              <th className="p-2 border border-[#5D4037] text-left font-bold">SERVICES</th>
               <th className="p-2 border border-[#5D4037] text-left font-bold">OPTIONS</th>
               <th className="p-2 border border-[#5D4037] text-left font-bold">PRICE</th>
               <th className="p-2 border border-[#5D4037] text-left font-bold">DESCRIPTION</th>
-              <th className="p-2 border  w-12"></th>
+              <th className="p-2 border border-[#5D4037] text-center font-bold w-16">EDIT</th>
             </tr>
           </thead>
           <tbody>
             {servicesData.map((item, index) => (
-              <tr key={index} className={index % 2 === 0 ? "bg-[#faebd7]" : "bg-[#faebd7]"}>
-                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.service}</td>
-                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.option}</td>
-                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.price}</td>
-                <td className="p-2 border border-[#795548] bg-[#ffd700]">{item.description}</td>
-                <td className="p-2 flex border border-[#795548] justify-center">
-                  <button className="text-gray-600  cursor-pointer" onClick={() => priceEdit(item)}>
-                    <Edit2  size="60"/>
-                  </button>
+              <tr
+                key={index}
+                className={index % 2 === 0 ? "bg-[#faebd7]" : "bg-[#faebd7]"}
+                ref={targetTable.rowIndex === index ? targetRowRef : null}
+                style={targetTable.rowIndex === index && update ? { backgroundColor: '#fff3cd' } : {}}
+              >
+                <td className="p-2 border border-[#795548] bg-[#ffd700] break-words">{item.service}</td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700] break-words">{item.option}</td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700] break-words">{item.price}</td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700]">
+                  <div className="break-words">{item.description}</div>
+                </td>
+                <td className="p-2 border border-[#795548] bg-[#ffd700]">
+                  <div className="flex justify-center">
+                    <button
+                      className="text-gray-600 cursor-pointer hover:text-blue-600 transition-colors"
+                      onClick={() => priceEdit(item, index)}
+                      aria-label={`Edit price for ${item.service} ${item.option}`}
+                    >
+                      <Edit2 size={20} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -174,11 +209,25 @@ const EditPrice = () => {
       </div>
     </div>
 
-    {priceInputModalOpen ?
+    {priceInputModalOpen && (
       <div className={StyleModal.modal}>
-        <div className={StyleModal.overlay} onClick={closeModal}></div>
-        <div className={StyleModal.modalContent}>
+        <div
+          className={StyleModal.overlay}
+          onClick={closeModal}
+          aria-label="Close modal"
+        ></div>
+        <div
+          className={StyleModal.modalContent}
+          ref={modalRef}
+          onKeyDown={handleKeyDown}
+          tabIndex={-1}
+        >
           <div className="w-full max-w-md mx-auto p-4 bg-white rounded-lg shadow">
+            <h3 className="text-lg font-medium mb-2">
+              Edit Price: {targetTable.service} - {targetTable.option}
+            </h3>
+            <p className="text-sm text-gray-600 mb-3">Current price: {targetTable.price}</p>
+
             <form onSubmit={handlePrice}>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Set New Price
@@ -189,9 +238,11 @@ const EditPrice = () => {
                 </div>
                 <input
                   type="text"
+                  value={newPrice}
                   onChange={onChangePrice}
                   placeholder="Enter new price"
                   className="block w-full pl-10 pr-20 py-2 sm:text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  autoFocus
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center">
                   <button
@@ -202,12 +253,20 @@ const EditPrice = () => {
                   </button>
                 </div>
               </div>
+              <div className="mt-3 flex justify-end">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 mr-2"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
-      : null}
-
+    )}
   </>);
 };
 

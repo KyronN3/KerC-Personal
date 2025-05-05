@@ -92,17 +92,17 @@ export default function LoginForm() {
 
   return (
     <div
-  onSubmit={handleSubmit}
-  className={cn("flex flex-col gap-6")}
-  style={{
-      borderRadius: "16px",
-      position: 'fixed',
-      marginTop: '150px',
-      left: '47%',
-      transform: 'translate(-50%, -50%)',
-      width: 350,
-  }}
->
+      onSubmit={handleSubmit}
+      className={cn("flex flex-col gap-6")}
+      style={{
+        borderRadius: "16px",
+        position: 'fixed',
+        marginTop: '150px',
+        left: '47%',
+        transform: 'translate(-50%, -50%)',
+        width: 350,
+      }}
+    >
       <Card style={{ backgroundColor: "rgb(250, 241, 230)" }}>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>

@@ -5,3 +5,4 @@ export const CreateAccountContext = createContext();
 export const ReceiptContext = createContext();
 export const ViewReceiptOpenContext = createContext();
 export const ProfilePicContext = createContext();
+export const AppSideBarOpenContext = createContext();
