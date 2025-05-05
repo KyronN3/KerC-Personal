@@ -1,16 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
-import styles from './ArchiveFiles.module.css';
 import { db } from '../config/firebase.jsx';
 import { collection, getDocs, addDoc, doc, deleteDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { AlertTriangle, Trash2, X } from 'lucide-react';
 import Receipt from './ReceiptArchive.jsx'
 import StyleModal from '../HomePage/Modal.module.css'
-
+import styles from './ArchiveFiles.module.css';
 
 const ArchiveFiles = () => {
 
+  const [showModal, setShowModal] = useState(false);
   const [archiveData, setArchiveData] = useState([]);
   const [tempData, setTempData] = useState([]);
   const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
@@ -134,6 +135,22 @@ const ArchiveFiles = () => {
 
   const toDelete = async (item) => {
     setTargetTableDelete(item);
+    setShowModal(true);
+  };
+
+
+  const viewReceipt = (item) => {
+    setReceiptId(item.id)
+    setViewReceiptOpen(!viewReceiptOpen);
+  };
+
+  const closeModal = () => {
+    setViewReceiptOpen(false);
+    setShowModal(false);
+  };
+
+  const handleDelete = async () => {
+    const item = targetTableDelete;
 
     if (item.referencekey == undefined) {
       toast.error("Must have default archive", {
@@ -145,23 +162,40 @@ const ArchiveFiles = () => {
       });
     } else {
       try {
+
         const dataSnap = await getDoc(doc(db, 'Order', item.referencekey))
         if (dataSnap.exists()) {
           throw new Error("Invalid Deletion")
         } else {
+          setShowModal(false);
           await deleteDoc(doc(db, 'Archive', item.docId))
-          reload(0)
         }
 
-        toast.success("Successfully deleted", {
-          position: 'top-right',
-          style: {
-            width: "20vw",
-            fontSize: "13px"
-          }
-        });
+        if (item.isReceipt) {
+          const receiptArchive = await getDocs(collection(db, 'ReceiptArchive'))
+          const receiptArchiveData = receiptArchive.docs.map((doc) => ({
+            docId: doc.id,
+            ...doc.data()
+          }))
+
+          const referencekey = receiptArchiveData.filter((doc) => {
+            return doc.referencekey == item.referencekey;
+          })
+          await deleteDoc(doc(db, 'ReceiptArchive', referencekey[0].docId))
+          reload(0);
+        } else {
+          reload(0);
+          toast.success("Successfully deleted", {
+            position: 'top-right',
+            style: {
+              width: "20vw",
+              fontSize: "13px"
+            }
+          });
+        }
 
       } catch {
+        setShowModal(false);
         toast.error("Error, Transaction in progress. Please delete first the order", {
           position: 'top-right',
           style: {
@@ -171,26 +205,11 @@ const ArchiveFiles = () => {
         });
       }
     }
-    const receiptArchive = await getDocs(collection(db, 'ReceiptArchive'))
-    const receiptArchiveData = receiptArchive.docs.map((doc) => ({
-      docId: doc.id,
-      ...doc.data()
-    }))
 
-    const referencekey = receiptArchiveData.filter((doc) => {
-      return doc.referencekey == item.referencekey;
-    })
-    await deleteDoc(doc(db, 'ReceiptArchive', referencekey[0].docId))
+
+
   };
 
-  const viewReceipt = (item) => {
-    setReceiptId(item.id)
-    setViewReceiptOpen(!viewReceiptOpen);
-  };
-
-  const closeModal = () => {
-    setViewReceiptOpen(false);
-  };
 
   return (
     <>
@@ -229,6 +248,55 @@ const ArchiveFiles = () => {
         <div className={StyleModal.modal}>
           <div className={StyleModal.overlay} onClick={closeModal}></div>
           <div className={StyleModal.modalContent}><Receipt id={receiptId} /></div>
+        </div>
+      )}
+
+      {showModal && (
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}>
+            <div className="fixed inset-0 flex items-center justify-center p-4 z-10">
+              <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden">
+                {/* Header */}
+                <div className="bg-blue-100 px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <AlertTriangle className="text-blue-600" size={20} />
+                    <h3 className="font-medium text-blue-800">Confirm Cancellation</h3>
+                  </div>
+                  <button
+                    onClick={closeModal}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-4">
+                  <p className="text-gray-700 mb-4">
+                    Are you sure you want to cancel this order? This action cannot be undone.
+                  </p>
+
+                  {/* Buttons */}
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      onClick={closeModal}
+                      className="px-4 py-2 border border-blue-200 text-blue-600 rounded hover:bg-blue-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center space-x-1"
+                    >
+                      <Trash2 size={16} />
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </>

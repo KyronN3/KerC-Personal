@@ -1,22 +1,24 @@
 import { useState, useEffect, useContext } from 'react';
-import styles from './CustomerOrder.module.css';
 import { db } from '../config/firebase.jsx'
 import { collection, doc, getDocs, deleteDoc, addDoc, updateDoc } from 'firebase/firestore'
-import { ClipboardCheck } from 'lucide-react';
+import { ClipboardCheck, AlertTriangle, Trash2, X } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { ReceiptContext, ViewReceiptOpenContext } from '../context.jsx';
 import StatusUpdate from './StatusUpdate.jsx';
 import { useNavigate } from 'react-router-dom';
 import StyleModal from '../HomePage/Modal.module.css'
+import styles from './CustomerOrder.module.css';
 
 
 
 const CustomerOrder = () => {
 
-
+  const [showModal, setShowModal] = useState(false);
   const { setReceiptId } = useContext(ReceiptContext);
   const { viewReceiptOpen } = useContext(ViewReceiptOpenContext)
   const [data, setData] = useState([]);
+  const [isDelete, setIsDelete] = useState(false);
+  const [targetTableDeleteConfirm, setTargetTableDeleteConfirm] = useState('');
   const [targetTableDelete, setTargetTableDelete] = useState('');
   const [targetTable, setTargetTable] = useState('');
   const [targetTableReceipt, setTargetReceipt] = useState('');
@@ -88,7 +90,7 @@ const CustomerOrder = () => {
     }
     del();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [targetTableDelete])
+  }, [targetTableDeleteConfirm])
 
   useEffect(() => {
 
@@ -153,12 +155,12 @@ const CustomerOrder = () => {
 
 
       toast.success("Receipt Created", {
-        position: 'bottom-right'
+        position: 'top-right'
       })
 
     } catch (err) {
       toast.error("Try Again", {
-        position: 'bottom-right'
+        position: 'top-right'
       })
       console.error(err);
     }
@@ -207,15 +209,27 @@ const CustomerOrder = () => {
   }, [targetTableReceipt])
 
   const toDelete = (item) => {
+    setShowModal(true);
     setTargetTableDelete(item);
   }
 
-  const clipboardCheck = (item) => {
+  useEffect(() => {
+    if (isDelete) {
+      setTargetTableDeleteConfirm(targetTableDelete)
+      setIsDelete(false);
+      setShowModal(false);
+    } else return
+  }, [targetTableDelete, isDelete])
+
+  const clipboardCheck = async (item) => {
     setTargetTable(item);
-    setClipboardCheckOpen(!clipboardCheckOpen)
+    setClipboardCheckOpen(!clipboardCheckOpen);
   }
+
+
   const closeModal = () => {
     setClipboardCheckOpen(false)
+    setShowModal(false);
     viewReceiptOpen.current = false;
   }
 
@@ -224,9 +238,13 @@ const CustomerOrder = () => {
     viewReceiptOpen.current = true;
   }
 
+  const handleDelete = () => {
+    setIsDelete(true)
+  };
 
   return (
     <>
+
       {data.map((doc, index) => (
         <div key={index} className={styles.container}>
           <div className={styles.orderCard}>
@@ -260,12 +278,61 @@ const CustomerOrder = () => {
           <ToastContainer />
         </div >))}
 
+
       {clipboardCheckOpen &&
         <div className={StyleModal.modal}>
           <div className={StyleModal.overlay} onClick={closeModal}></div>
           <div className={StyleModal.modalContent}><StatusUpdate value={uid} /></div>
         </div>}
 
+      {showModal && (
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}>
+            <div className="fixed inset-0 flex items-center justify-center p-4 z-10">
+              <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden">
+                {/* Header */}
+                <div className="bg-blue-100 px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <AlertTriangle className="text-blue-600" size={20} />
+                    <h3 className="font-medium text-blue-800">Confirm Cancellation</h3>
+                  </div>
+                  <button
+                    onClick={closeModal}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-4">
+                  <p className="text-gray-700 mb-4">
+                    Are you sure you want to cancel this order? This action cannot be undone.
+                  </p>
+
+                  {/* Buttons */}
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      onClick={closeModal}
+                      className="px-4 py-2 border border-blue-200 text-blue-600 rounded hover:bg-blue-50"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center space-x-1"
+                    >
+                      <Trash2 size={16} />
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>);
 };
 

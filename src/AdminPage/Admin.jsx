@@ -128,7 +128,6 @@ export default function Admin() {
                         <SidebarTrigger className="ml-1" />
                     </div>
                 </header>
-
                 {viewReceiptOpen.current ? <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
                     {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
@@ -138,9 +137,9 @@ export default function Admin() {
                             <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] text-[13px] overflow-auto inset-shadow-sm order-1 md:order-1">
                                 <CustomerOrder />
                             </div>
-                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
+                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] text-[13px] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
                         </div>
-                    ) : <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">{toRender()}</div>}
+                    ) : <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm overflow-hidden">{toRender()}</div>}
                 </div> : <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
                     {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
@@ -152,7 +151,7 @@ export default function Admin() {
                             </div>
                         </div>
                     ) : (
-                        <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm">{toRender()}</div>
+                        <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm overflow-hidden" >{toRender()}</div>
                     )}
                 </div>}
 
