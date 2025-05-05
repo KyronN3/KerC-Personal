@@ -1,16 +1,20 @@
 import StyleModal from '../HomePage/Modal.module.css'
+import LoadingScreen from '../LoadingScreen';
 import { useState, useEffect, useRef } from 'react';
 import { Edit2, Search, PhilippinePeso } from 'lucide-react';
 import { db } from '../config/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
+
 const EditPrice = () => {
+
   const [servicesData, setServicesData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceInputModalOpen, setPriceInputModalOpen] = useState(false);
   const [targetTable, setTargetTable] = useState('');
   const [newPrice, setNewPrice] = useState('');
+  const [loading, setLoading] = useState(true);
   const [update, setUpdate] = useState(false);
   const reload = useNavigate();
   const modalRef = useRef(null);
@@ -21,7 +25,7 @@ const EditPrice = () => {
       try {
         const ref = collection(db, 'Price');
         const dataFetch = await getDocs(ref);
-
+        setTimeout(() => { setLoading(false) }, 600)
         const dataScope = dataFetch.docs.map(data => ({
           ...data.data()
         }))
@@ -267,6 +271,7 @@ const EditPrice = () => {
         </div>
       </div>
     )}
+    {loading && <LoadingScreen />}
   </>);
 };
 

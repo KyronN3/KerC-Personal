@@ -4,8 +4,9 @@ import { collection, doc, getDocs, deleteDoc, addDoc, updateDoc } from 'firebase
 import { ClipboardCheck, AlertTriangle, Trash2, X } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { ReceiptContext, ViewReceiptOpenContext } from '../context.jsx';
-import StatusUpdate from './StatusUpdate.jsx';
 import { useNavigate } from 'react-router-dom';
+import LoadingScreen from '../LoadingScreen.jsx';
+import StatusUpdate from './StatusUpdate.jsx';
 import StyleModal from '../HomePage/Modal.module.css'
 import styles from './CustomerOrder.module.css';
 
@@ -14,6 +15,7 @@ import styles from './CustomerOrder.module.css';
 const CustomerOrder = () => {
 
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { setReceiptId } = useContext(ReceiptContext);
   const { viewReceiptOpen } = useContext(ViewReceiptOpenContext)
   const [data, setData] = useState([]);
@@ -32,6 +34,7 @@ const CustomerOrder = () => {
 
         const ref = collection(db, 'Order');
         const dataFetch = await getDocs(ref);
+        setTimeout(() => { setLoading(false) }, 600)
         const dataReceive = dataFetch.docs.map(doc => ({
           ...doc.data()
         }))
@@ -333,6 +336,7 @@ const CustomerOrder = () => {
           </div>
         </div>
       )}
+      {loading && <LoadingScreen />}
     </>);
 };
 
