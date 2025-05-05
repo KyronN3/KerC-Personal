@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
 import Receipt from './ReceiptArchive.jsx'
+import LoadingScreen from '../LoadingScreen.jsx';
 import StyleModal from '../HomePage/Modal.module.css'
 import styles from './ArchiveFiles.module.css';
 
@@ -14,6 +15,7 @@ const ArchiveFiles = () => {
   const [showModal, setShowModal] = useState(false);
   const [archiveData, setArchiveData] = useState([]);
   const [tempData, setTempData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
   const [targetTableDelete, setTargetTableDelete] = useState();
   const [receiptId, setReceiptId] = useState();
@@ -26,7 +28,7 @@ const ArchiveFiles = () => {
     const getData = async () => {
       try {
         const ref = collection(db, 'Order');
-
+        setTimeout(() => { setLoading(false) }, 600);
         const dataFetch = await getDocs(ref);
         const dataReceive = dataFetch.docs.map(doc => ({
           id: doc.id,
@@ -299,6 +301,7 @@ const ArchiveFiles = () => {
           </div>
         </div>
       )}
+      {loading && <LoadingScreen />}
     </>
   );
 };

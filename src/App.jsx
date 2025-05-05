@@ -12,6 +12,7 @@ import CustomerOrder from './AdminPage/CustomerOrder.jsx'
 import ManageAccount from './AdminPage/ManageAccount.jsx'
 import ArchiveFiles from './AdminPage/ArchiveFiles.jsx'
 import CreateAccount from './Authentication/CreateAccount.jsx'
+import LoadingScreen from './LoadingScreen.jsx'
 import ServicePrice from './PageInquiry/ServicePrice.jsx'
 import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
 import { NotFound } from './notFound.jsx'
@@ -268,21 +269,20 @@ function App() {
 
   return (
     <>
-      
-        <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
-          <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
-            <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
-              <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
-                <UserDataContext.Provider value={{ userData, setUserData }}>
-                  <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-                    <ProtectedRoutes />
-                  </ModalContext.Provider>
-                </UserDataContext.Provider>
-              </CreateAccountContext.Provider>
-            </ReceiptContext.Provider>
-          </ViewReceiptOpenContext.Provider>
-        </ProfilePicContext.Provider>
 
+      <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
+        <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
+          <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
+            <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
+              <UserDataContext.Provider value={{ userData, setUserData }}>
+                <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
+                  <ProtectedRoutes />
+                </ModalContext.Provider>
+              </UserDataContext.Provider>
+            </CreateAccountContext.Provider>
+          </ReceiptContext.Provider>
+        </ViewReceiptOpenContext.Provider>
+      </ProfilePicContext.Provider>
 
       {/* Footer */}
       <footer className="bg-blue-600 text-white py-3 w-full mt-auto">

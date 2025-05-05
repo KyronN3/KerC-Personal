@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Style from './ProfilePageAdmin.module.css';
 import Logo from '../assets/imgs/logo.png';
+import LoadingScreen from '../LoadingScreen.jsx'
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { auth, db, storage } from '../config/firebase.jsx';
@@ -39,6 +40,7 @@ const ProfilePageAdmin = () => {
 
     const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext);
     const [isOpen, setOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
     const [image, setImage] = useState();
     const [imagePreview, setImagePreview] = useState();
@@ -57,6 +59,10 @@ const ProfilePageAdmin = () => {
         username: null
     });
 
+    useEffect(() => {
+        setTimeout(() => { setLoading(false) }, 600)
+    }, [])
+
     const [formData, setFormData] = useState({ ...profile });
 
     const handleEdit = () => {
@@ -65,12 +71,13 @@ const ProfilePageAdmin = () => {
     };
 
     const handleCancel = () => {
-        navManageOrder(0);
         setImage(null);
         setIsEditing(false);
     };
 
     const handleSave = async () => {
+        setLoading(true);
+        setTimeout(() => { setLoading(false) }, 3000)
         setProfile({ ...formData });
         await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
             ...formData
@@ -80,11 +87,10 @@ const ProfilePageAdmin = () => {
                 //picture save
                 const picName = ref(storage, `ProfilePicture/${image.name.concat(v4())}`)
                 await uploadBytes(picName, image)
-                updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
+                await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
                     profilePic: picName._location.path_
                 })
                 setIsEditing(false);
-                navManageOrder(0);
             }
         } catch (err) {
             setIsEditing(false);
@@ -152,7 +158,7 @@ const ProfilePageAdmin = () => {
     }, [])
 
     return (
-        <>
+        <>  {loading && <LoadingScreen />}
             <nav className={Style.HeaderContainer}>
                 <img className={Style.Image} src={Logo} alt="Logo" />
                 <div className={Style.hamburger}>
@@ -167,7 +173,7 @@ const ProfilePageAdmin = () => {
                             <DropdownMenuTrigger asChild>
                                 <Avatar className={Style.Profile}>
                                     <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
-                                    <AvatarFallback>...Loading</AvatarFallback>
+                                    <AvatarFallback className="text-[9.3px]">...Loading</AvatarFallback>
                                 </Avatar>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">

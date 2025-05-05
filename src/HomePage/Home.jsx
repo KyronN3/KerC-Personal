@@ -10,6 +10,7 @@ import Messenger from '../assets/imgs/messengerOutline.png'
 import AboutUsPic from '../assets/imgs/printing.webp'
 import StyleModal from './Modal.module.css'
 import Login from '../Authentication/Login.jsx'
+import LoadingScreen from '../LoadingScreen.jsx'
 import { Squash as Hamburger } from 'hamburger-react';
 import { Button } from "@/components/ui/button"
 import { Bold } from 'lucide-react'
@@ -31,7 +32,6 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { useState, useContext, useEffect } from 'react'
 import CreateAccount from '../Authentication/CreateAccount.jsx'
 import { Link, useNavigate } from 'react-router-dom'
@@ -45,12 +45,15 @@ import { listAll, getDownloadURL, ref } from 'firebase/storage'
 export default function Home({ isLogin = false, isSignup = false }) {
 
   const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext)
-  const navLogout = useNavigate();
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
+  const [loading, setLoading] = useState(true);
   const [modalLogin, setModalLogin] = useState(isLogin);
   const [modalSignup, setModalSignup] = useState(isSignup);
-  const navOrder = useNavigate();
   const [isOpen, setOpen] = useState(false);
+  const navOrder = useNavigate();
+  const navLogout = useNavigate();
+
+  useEffect(() => { setTimeout(() => { setLoading(false) }, 1600) }, [])
 
   const LoginClick = () => {
     setModalLogin(!modalLogin);
@@ -126,6 +129,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
 
   return (<>
 
+    {loading && <LoadingScreen />}
     <nav className={Style.HeaderContainer}>
       <img className={Style.Image} src={Logo} />
 
@@ -141,7 +145,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
             <DropdownMenuTrigger asChild>
               <Avatar className={Style.Profile}>
                 <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
-                <AvatarFallback>...Loading</AvatarFallback>
+                <AvatarFallback className="text-[9.3px]">...Loading</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
