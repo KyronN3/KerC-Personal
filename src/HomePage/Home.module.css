@@ -113,8 +113,8 @@
 }
 
 .Profile {
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   border: 3px solid #bbdefb; /* Lighter blue */
   cursor: pointer;
 }
@@ -630,7 +630,9 @@ body::before {
     padding: 30px;
     font-size: 13px;
     height: auto;
+    border-radius: 13px;
   }
+
 
   h1 {
     font-size: 23px;
@@ -656,6 +658,7 @@ body::before {
     width: 90%;
     height: auto;
     margin: 15px auto;
+    border-radius: 13px;
   }
   .Map {
     margin: 15px auto;
@@ -665,6 +668,7 @@ body::before {
     border-bottom: 1px solid #bbdefb; /* Lighter blue */
     border-left: 0px;
     box-shadow: 6px 0px 6px -1px #42a5f5; /* Medium blue */
+    border-radius: 13px;
   }
 
   .AboutUsPic {
