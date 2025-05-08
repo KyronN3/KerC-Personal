@@ -250,7 +250,7 @@ const EditPrice = () => {
                 return (
                   <tr
                     key={index}
-                    className={actualIndex % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    className={actualIndex % 2 === 0 ? "bg-[#f5faff]" : "bg-gray-50"}
                     ref={targetTable.rowIndex === actualIndex ? targetRowRef : null}
                     style={targetTable.rowIndex === actualIndex && update ? { backgroundColor: '#fff3cd' } : {}}
                   >
