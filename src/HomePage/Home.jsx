@@ -46,14 +46,14 @@ export default function Home({ isLogin = false, isSignup = false }) {
 
   const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext)
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
-  const [loading, setLoading] = useState(true);
   const [modalLogin, setModalLogin] = useState(isLogin);
   const [modalSignup, setModalSignup] = useState(isSignup);
   const [isOpen, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navOrder = useNavigate();
   const navLogout = useNavigate();
 
-  useEffect(() => { setTimeout(() => { setLoading(false) }, 1600) }, [])
+  useEffect(() => { setTimeout(() => { setLoading(false) }, 300); }, [])
 
   const LoginClick = () => {
     setModalLogin(!modalLogin);
@@ -109,28 +109,33 @@ export default function Home({ isLogin = false, isSignup = false }) {
     navOrder('/profilepageadmin')
   }
 
+
   useEffect(() => {
-    const getPic = async () => {
-      const dataSnap = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
-      if (dataSnap.exists()) {
-        const data = dataSnap.data();
-        const response = await listAll(ref(storage, 'ProfilePicture'))
-        const url = response.items.filter((pic) => {
-          return pic._location.path_ == data.profilePic;
-        })
-        url.forEach(async (pic) => {
-          const imageUrl = await getDownloadURL(pic);
-          setCurrentProfilePic(imageUrl);
-        })
+    if (login) {
+      const getPic = async () => {
+        const dataSnap = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
+        if (dataSnap.exists()) {
+          const data = dataSnap.data();
+          const response = await listAll(ref(storage, 'ProfilePicture'))
+          const url = response.items.filter((pic) => {
+            return pic._location.path_ == data.profilePic;
+          })
+          url.forEach(async (pic) => {
+            const imageUrl = await getDownloadURL(pic);
+            setCurrentProfilePic(imageUrl);
+          })
+        }
       }
+      getPic();
     }
-    getPic();
+
   }, [])
 
   return (<>
 
-    {loading && <LoadingScreen />}
+    {loading && modalLogin != true && modalSignup != true ? < LoadingScreen /> : null}
     <nav className={Style.HeaderContainer}>
+
       <img className={Style.Image} src={Logo} />
 
       <div className={Style.hamburger}>

@@ -25,11 +25,14 @@ import { auth } from './config/firebase.jsx'
 import './App.css'
 
 function App() {
+
   const viewReceiptOpen = useRef(false);
+  const [loading, setLoading] = useState(false);
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
   const [receiptId, setReceiptId] = useState('');
   const [currentProfilePic, setCurrentProfilePic] = useState('');
+  const userType = useRef();
   const [login, setLogin] = useState(false);
   const [userData, setUserData] = useState(
     {
@@ -43,7 +46,6 @@ function App() {
       passwordConfirm: null,
       isAdmin: false
     });
-
 
   // const items = [
   //   {
@@ -72,134 +74,12 @@ function App() {
   //   },
   // ]
 
-  const route = createBrowserRouter([
-    {
-      path: '/',
-      element: <Home />,
-      errorElement: <NotFound />
-    },
-    {
-      path: '/login',
-      element: <Outlet />,
-      children: [
-        {
-          index: true,
-          element: <Home isLogin={true} />,
-        },
-        {
-          path: 'signup',
-          element: <Home isLogin={false} isSignup={true} />
-        }
-      ]
-    },
-    {
-      path: '/inquire',
-      element: <Inquire />
-    },
-    {
-      path: '/legal',
-      element: <Legal />
-    },
-    {
-      path: 'servicePrice',
-      element: <ServicePrice />
-    }
-  ])
 
-  function ProtectedRoutes() {
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged(() => {
-        setIsLoading(false);
-      });
-
-      return () => unsubscribe();
-    }, []);
-
-    if (isLoading) {
-      return
-    }
-    if (auth?.currentUser?.email == null) {
-      return <RouterProvider router={route} />;
-    } else {
-      if (!auth?.currentUser?.email.includes("@admin.139907.print.com")) {
-        return <RouterProvider router={createBrowserRouter([
-          {
-            path: '/',
-            element: <Home />,
-            errorElement: <NotFound />
-          },
-          {
-            path: '/customer',
-            element: <Customer />
-          },
-          {
-            path: '/inquire',
-            element: <Inquire />
-          },
-          {
-            path: '/legal',
-            element: <Legal />
-          },
-          {
-            path: 'servicePrice',
-            element: <ServicePrice />
-          }
-        ])} />;
-
-      } else {
-        return <RouterProvider router={createBrowserRouter([
-          {
-            path: '/',
-            element: <Home />,
-            errorElement: <NotFound />
-          },
-          {
-            path: '/admin',
-            element: <Admin />
-          },
-          {
-            path: '/profilepageadmin',
-            element: <ProfilePageAdmin />
-          },
-          {
-            path: '/editprice',
-            element: <Admin />
-          },
-          {
-            path: '/createtask',
-            element: <Admin />
-          },
-          {
-            path: '/archivefiles',
-            element: <Admin />
-          },
-          {
-            path: '/manageaccount',
-            element: <Admin />
-          },
-          {
-            path: '/inquire',
-            element: <Inquire />
-          },
-          {
-            path: '/legal',
-            element: <Legal />
-          },
-          {
-            path: 'serviceprice',
-            element: <ServicePrice />
-          }
-        ])} />;
-      }
-
-    }
-  }
 
   // check if user is Login
   // Created Account through email and password
   useEffect(() => {
+
     const toRemove = auth.onAuthStateChanged(async userLogin => {
       if (userLogin.providerData[0].providerId != 'google.com') {
         try {
@@ -267,25 +147,161 @@ function App() {
   }, [])
 
 
+  const route = createBrowserRouter([
+    {
+      path: '/',
+      element: <Home />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '/login',
+      element: <Outlet />,
+      children: [
+        {
+          index: true,
+          element: <Home isLogin={true} />,
+        },
+        {
+          path: 'signup',
+          element: <Home isLogin={false} isSignup={true} />
+        }
+      ]
+    },
+    {
+      path: '/inquire',
+      element: <Inquire />
+    },
+    {
+      path: '/legal',
+      element: <Legal />
+    },
+    {
+      path: 'servicePrice',
+      element: <ServicePrice />
+    }
+  ])
+
+  const routeCustomer = createBrowserRouter([
+    {
+      path: '/',
+      element: <Home />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '/customer',
+      element: <Customer />
+    },
+    {
+      path: '/inquire',
+      element: <Inquire />
+    },
+    {
+      path: '/legal',
+      element: <Legal />
+    },
+    {
+      path: 'servicePrice',
+      element: <ServicePrice />
+    }
+  ])
+
+
+  const routeAdmin = createBrowserRouter([
+    {
+      path: '/',
+      element: <Home />,
+      errorElement: <NotFound />
+    },
+    {
+      path: '/admin',
+      element: <Admin />
+    },
+    {
+      path: '/profilepageadmin',
+      element: <ProfilePageAdmin />
+    },
+    {
+      path: '/editprice',
+      element: <Admin />
+    },
+    {
+      path: '/createtask',
+      element: <Admin />
+    },
+    {
+      path: '/archivefiles',
+      element: <Admin />
+    },
+    {
+      path: '/manageaccount',
+      element: <Admin />
+    },
+    {
+      path: '/inquire',
+      element: <Inquire />
+    },
+    {
+      path: '/legal',
+      element: <Legal />
+    },
+    {
+      path: 'serviceprice',
+      element: <ServicePrice />
+    }])
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async userLogin => {
+      if (userLogin == null) {
+        userType.current = route;
+        setLoading(true);
+        return
+      }
+
+      if (userLogin.providerData[0].providerId == 'google.com') {
+        userType.current = routeCustomer;
+        const loadingConfirm = userType.current != null ? true : false;
+        setLoading(loadingConfirm)
+        return
+      }
+
+
+      if (userLogin.providerData[0].email.includes('@admin.139907.print.com')) {
+        userType.current = routeAdmin;
+        const loadingConfirm = userType.current != null ? true : false;
+        setLoading(loadingConfirm);
+        return
+      } else {
+        userType.current = routeCustomer;
+        const loadingConfirm = userType.current != null ? true : false;
+        setLoading(loadingConfirm);
+        return
+      }
+
+    })
+
+    return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+
   return (
     <>
-
       <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
         <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
           <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
             <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
               <UserDataContext.Provider value={{ userData, setUserData }}>
                 <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-                  <ProtectedRoutes />
+                  {loading && <RouterProvider router={userType.current}><Home /></RouterProvider>}
                 </ModalContext.Provider>
               </UserDataContext.Provider>
             </CreateAccountContext.Provider>
           </ReceiptContext.Provider>
         </ViewReceiptOpenContext.Provider>
-      </ProfilePicContext.Provider>
+      </ProfilePicContext.Provider >
 
       {/* Footer */}
-      <footer className="bg-blue-600 text-white py-3 w-full mt-auto">
+      < footer className="bg-blue-600 text-white py-3 w-full mt-auto" >
         <div className="container mx-auto flex flex-wrap justify-between items-center px-4">
           <div className="text-sm">
             Copyright © 2025 - Kar-C Printing Services

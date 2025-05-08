@@ -672,7 +672,7 @@ body::before {
   }
 
   .AboutUsPic {
-    padding-top: 150px;
+    margin-top: 150px;
   }
 }
 @media (max-width: 1750px) {

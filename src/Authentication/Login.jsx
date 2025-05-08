@@ -18,12 +18,13 @@ import { ToastContainer, toast } from "react-toastify"
 
 
 export default function LoginForm() {
+
   const navigateHome = useNavigate();
   const { modalSignupOpen, setModalSignupOpen, setLogin } = useContext(ModalContext);
   const [user, setUser] = useState(
     {
-      email: '',
-      password: ''
+      email: null,
+      password: null
     });
 
 
@@ -33,6 +34,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       await signInWithEmailAndPassword(auth, user.email, user.password);
       setLogin(true);
@@ -83,11 +85,11 @@ export default function LoginForm() {
   }
 
   const onChangedEmail = (e) => {
-    setUser(userPrev => setUser({ ...userPrev, email: e.target.value }))
+    setUser(userPrev => ({ ...userPrev, email: e.target.value }))
   }
 
   const onChangedPassword = (e) => {
-    setUser(userPrev => setUser({ ...userPrev, password: e.target.value }))
+    setUser(userPrev => ({ ...userPrev, password: e.target.value }))
   }
 
   return (

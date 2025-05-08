@@ -6,7 +6,7 @@
   width: 100%; /* Use percentage width instead of vh */
   height: auto;
   font-family: Arial, sans-serif;
-  background-color: #ffd700;
+  background-color: #cae0f0;
   box-shadow: 0 1px 13px 1px rgb(255, 255, 255);
   border-radius: 13px;
 }

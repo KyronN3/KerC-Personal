@@ -2,7 +2,7 @@ import React from 'react';
 
 const LoadingScreen = ({ message = "Loading..." }) => {
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center backdrop-blur-sm bg-opacity-70 z-50">
+    <div className="fixed inset-0 flex flex-col z-1000 items-center justify-center backdrop-blur-sm bg-opacity-70 z-50">
       <div className="flex flex-col items-center p-6 rounded-lg">
         {/* Simple Spinner */}
         <div className="w-12 h-12 mb-4">

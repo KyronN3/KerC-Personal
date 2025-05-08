@@ -23,7 +23,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #ffd700;
+  background-color: #cae0f0;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(93, 64, 55, 0.3);
@@ -37,8 +37,8 @@
 
 .cardHeader {
   padding: 12px;
-  border-bottom: 1px solid #e0d0c1;
-  background-color: #ffd700; /* Same as the card background */
+  border-bottom: 1px solid #868383;
+  background-color: #cae0f0; /* Same as the card background */
 }
 
 .customerName {
@@ -83,7 +83,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  border-top: 1px solid #e0d0c1;
+  border-top: 1px solid black;
 }
 
 .viewButton, .deleteButton {
