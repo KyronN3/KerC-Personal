@@ -96,6 +96,10 @@
   transition: all 300ms;
 }
 
+.Login {
+  margin-right: 200px;
+}
+
 .About:hover,
 .Contact:hover {
   transform: translateX(-4px) translateY(-4px);
@@ -774,7 +778,7 @@ body::before {
   .Profile {
     margin-right: 0px;
   }
-
+  
 }
 
 @media (max-width: 620px) {
