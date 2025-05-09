@@ -176,14 +176,28 @@ const CreateTask = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className={`w-80`} variant="outline">{createTask.service != null ? createTask.service : 'Services'}</Button>
+              <Button
+                className="w-full md:w-90 text-sm md:text-base"
+                variant="outline"
+              >
+                {createTask.service != null ? createTask.service : 'Services'}
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-60 h-73 bg-[#cae0f0] border-[#5D4037]">
+            <DropdownMenuContent
+              className="w-full  md:w-60 max-h-72 overflow-y-auto bg-[#cae0f0] border-[#5D4037]"
+            >
               <DropdownMenuLabel className="text-center">KER-C</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup onValueChange={onChangeServices}>
                 {priceData.map((doc, index) => (
-                  <DropdownMenuRadioItem key={index} onClick={() => price(doc)} value={`${doc.service} ${doc.option}`} >{doc.service} {doc.option}</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem
+                    key={index}
+                    onClick={() => price(doc)}
+                    value={`${doc.service} ${doc.option}`}
+                    className="text-sm md:text-base py-2 hover:bg-blue-100"
+                  >
+                    {doc.service} {doc.option}
+                  </DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>

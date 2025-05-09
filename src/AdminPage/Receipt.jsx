@@ -38,7 +38,6 @@ export default function SimpleReceipt() {
 
     }, [receiptId])
 
-
     const handlePrint = () => {
         const printContent = document.getElementById('receipt');
         const originalContents = document.body.innerHTML;
@@ -50,8 +49,8 @@ export default function SimpleReceipt() {
 
     return (
         <>
-         {loading && <LoadingScreen />}
-         
+            {loading && <LoadingScreen />}
+
             <div className={styles.container}>
                 <div className={styles.buttonContainer}>
                     <button
@@ -81,16 +80,19 @@ export default function SimpleReceipt() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className={styles.tableRow}>
-                                    <td className={styles.tableCell}>{items != undefined ? items.service : "Empty"}</td>
-                                    <td className={styles.tableCellRight}>{items != undefined ? items.price : 0}</td>
-                                </tr>
+                                {items != undefined &&
+                                    <tr className={styles.tableRow}>
+                                        <td className={styles.tableCell}>{items != undefined ? items.service : "Empty"}</td>
+                                        <td className={styles.tableCellRight}>{items != undefined ? items.price : 0}</td>
+                                    </tr>}
                             </tbody>
                         </table>
                     </div>
                     <div className={styles.totalContainer}>
                         <span>Total:</span>
-                        <span>{items.price}</span>
+                        {items != undefined &&
+                            <span>{items.price}</span>
+                        }
                     </div>
                     <div className={styles.footer}>
                         Thank you for your business!
