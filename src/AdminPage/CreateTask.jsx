@@ -178,7 +178,7 @@ const CreateTask = () => {
             <DropdownMenuTrigger asChild>
               <Button className={`w-80`} variant="outline">{createTask.service != null ? createTask.service : 'Services'}</Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-60 h-73 bg-[#FAEBD7] border-[#5D4037]">
+            <DropdownMenuContent className="w-60 h-73 bg-[#cae0f0] border-[#5D4037]">
               <DropdownMenuLabel className="text-center">KER-C</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup onValueChange={onChangeServices}>

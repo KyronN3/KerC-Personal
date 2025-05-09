@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import Style from './Admin.module.css'
+import StyleModal from '../HomePage/Modal.module.css'
 import Logo from '../assets/imgs/logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useState, useContext, useEffect } from 'react'
@@ -39,7 +40,7 @@ import {
 export default function Admin() {
 
     const { currentProfilePic } = useContext(ProfilePicContext);
-    const { viewReceiptOpen } = useContext(ViewReceiptOpenContext);
+    const { viewReceiptOpen, setViewReceiptOpen } = useContext(ViewReceiptOpenContext);
     const goToPage = useNavigate();
     const [isOpen, setOpen] = useState(false);
     const goTo = useLocation();
@@ -72,11 +73,17 @@ export default function Admin() {
         goToPage('/profilepageadmin')
     }
 
+    const closeModal = () => {
+        setViewReceiptOpen(false);
+    }
+
+
     //rerender
     useEffect(() => {
     }, [viewReceiptOpen])
 
     return (<>
+
         <nav className={Style.HeaderContainer}>
             <img className={Style.Image} src={Logo} />
             <div className={Style.hamburger}>
@@ -128,19 +135,7 @@ export default function Admin() {
                         <SidebarTrigger className="ml-1" />
                     </div>
                 </header>
-                {viewReceiptOpen.current ? <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
-                    {goTo.pathname === '/createtask' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full">
-                            <div className=" bg-white/80 bg-muted/50 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.6)] rounded-xl p-8 shadow w-full inset-shadow-sm w-full col-span-1 md:col-span-2 overflow-auto ">
-                                <CreateTask />
-                            </div>
-                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] text-[13px] overflow-auto inset-shadow-sm order-1 md:order-1">
-                                <CustomerOrder />
-                            </div>
-                            <div className="rounded-xl bg-muted/50 p-8 shadow h-[54vh] text-[13px] inset-shadow-sm order-2 md:order-2"><Receipt /></div>
-                        </div>
-                    ) : <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm overflow-hidden">{toRender()}</div>}
-                </div> : <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
+                <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
                     {goTo.pathname === '/createtask' ? (
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full h-full">
                             <div className=" rounded-xl bg-muted/50 p-8 shadow w-full col-start-1 col-end-2 overflow-auto inset-shadow-sm">
@@ -153,9 +148,15 @@ export default function Admin() {
                     ) : (
                         <div className="min-h-[100vh] text-[13px] flex-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm overflow-hidden" >{toRender()}</div>
                     )}
-                </div>}
+                </div>
 
             </SidebarInset>
         </SidebarProvider>
+
+        {viewReceiptOpen &&
+            <div className={StyleModal.modal}>
+                <div className={StyleModal.overlay} onClick={closeModal}></div>
+                <div className={StyleModal.modalContent}><Receipt /></div>
+            </div>}
     </>)
 }

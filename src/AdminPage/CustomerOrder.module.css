@@ -165,8 +165,8 @@
   }
 
   .middleSection {
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid black;
+    border-bottom: 1px solid gray;
     border-left: none;
     border-right: none;
     padding: 10px 0;

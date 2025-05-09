@@ -2,13 +2,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Logo from '../assets/imgs/logo.png';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { auth } from '../config/firebase.jsx';
+import { auth, db } from '../config/firebase.jsx';
+import { collection, getDocs } from "firebase/firestore";
 import { signOut } from 'firebase/auth';
 import { Squash as Hamburger } from 'hamburger-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ProfilePicContext, ModalContext } from '../context.jsx';
+import { ProfilePicContext, ModalContext, ServiceContext } from '../context.jsx';
 import {
   LogOut,
   User,
@@ -46,32 +47,12 @@ import newsLetter from "../assets/imgs/inquiryPage/newsLetter.jpg";
 import ordinaryReceipts from "../assets/imgs/inquiryPage/ordinaryReceipts.jpg";
 import stickerLabels from "../assets/imgs/inquiryPage/stickerLabels.jpg";
 import xeroxPhotocopy from "../assets/imgs/inquiryPage/xeroxPhotocopy.jpg";
+import LoadingScreen from '../LoadingScreen.jsx'
 import yearBook from "../assets/imgs/inquiryPage/yearBook.jpg";
 import './InquiryPage.css';
 import Style from './InquiryPage.module.css';
 
-const data = [
-  { image: tshirt, name: "T-shirt printing", description: "We use high-quality screen printing to create durable and vibrant designs for personal, business, or event needs. Perfect for bulk orders with a professional finish." },
-  { image: printingService, name: "Printing Services", description: "Comprehensive printing solutions with exceptional quality. From documents to marketing materials, we deliver clear prints that showcase your content effectively." },
-  { image: calendars, name: "Custom Calendars", description: "Beautifully designed personalized calendars. Create memorable marketing tools or gifts with custom images and important dates highlighted." },
-  { image: tarpaulin, name: "Tarpaulin", description: "We offer high-resolution tarpaulin printing for banners, signage, and events. Designed for durability and vibrant color, our prints are perfect for indoor and outdoor use." },
-  { image: invitation, name: "Invitation Cards", description: "Elegant invitation cards for weddings, corporate events, and special occasions. Create memorable invitations that set the perfect tone for your event." },
-  { image: businessCard, name: "Business Cards", description: "Professional business cards printed with customizable designs. Make a lasting first impression with our high-quality, attention-grabbing business cards." },
-  { image: carbonlessReceipts, name: "Carbonless Receipts", description: "Efficient multi-part carbonless receipt books for businesses needing duplicate or triplicate copies. Each book is professionally bound and customized with your business information." },
-  { image: envelope, name: "Custom Envelopes", description: "Branded envelopes in various sizes with your logo and design elements. Perfect for creating professional correspondence that reinforces your brand identity." },
-  { image: flyersBrochureElectionpropaganda, name: "Flyers & Brochures", description: "Eye-catching flyers and detailed brochures printed on quality paper with vibrant colors. Effectively communicate your message through these versatile marketing materials." },
-  { image: formsDuploDuplication, name: "Forms & Duplications", description: "Using our specialized Riso duplicating machine. Our Riso technology ensures high-volume, cost-effective reproduction for all your business documentation needs." },
-  { image: graduationRibbon, name: "Graduation Ribbons", description: "Personalized graduation ribbons to celebrate academic achievements. Available in various colors with custom printing to commemorate this special milestone." },
-  { image: idCard, name: "ID Cards", description: "Durable and professional ID cards for organizations and events. Includes customization options for design, security features, and attachment methods." },
-  { image: idPictures, name: "ID Pictures", description: "Professional ID photo services with proper lighting and formatting for official documents." },
-  { image: lamination, name: "Lamination Services", description: "Document preservation through high-quality lamination. Protect important papers from damage while maintaining clarity and accessibility." },
-  { image: layouting, name: "Layout Design", description: "Professional layout design services for publications, marketing materials, and documents. Our designers create visually appealing arrangements that effectively convey your message." },
-  { image: newsLetter, name: "Newsletters", description: "Engaging newsletters designed and printed to keep your audience informed. Custom templates and formatting options available for regular communications." },
-  { image: ordinaryReceipts, name: "Standard Receipts", description: "Professional receipt books for daily business transactions. Customizable with your business information and sequential numbering for easy record-keeping." },
-  { image: stickerLabels, name: "Sticker Labels", description: "High-quality adhesive stickers and labels in various sizes and materials. Perfect for product labeling, promotional items, or organizational needs." },
-  { image: xeroxPhotocopy, name: "Xerox & Photocopying", description: "Fast and reliable copying services with options for different paper types and sizes. High-quality reproductions for documents, images, and more." },
-  { image: yearBook, name: "Yearbooks", description: "Professionally designed and printed yearbooks to capture memories. Custom layouts, high-quality binding, and premium paper options for schools, organizations, and special events." }
-];
+
 
 const NextArrow = (props) => {
   const { onClick } = props;
@@ -124,6 +105,7 @@ const settings = {
 };
 
 const scrollToSection = (id) => {
+
   const element = document.getElementById(id);
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' });
@@ -131,13 +113,41 @@ const scrollToSection = (id) => {
 };
 
 function InquiryPage() {
+
   const { currentProfilePic } = useContext(ProfilePicContext);
-  const navLogout = useNavigate();
+  const { setService } = useContext(ServiceContext)
   const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
   const [modalLogin, setModalLogin] = useState(false);
   const [modalSignup, setModalSignup] = useState(false);
-  const navOrder = useNavigate();
   const [isOpen, setOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data] = useState([
+    { image: tshirt, name: "T-Shirt Printing", service: "T-Shirt Printing", description: "We use high-quality screen printing to create durable and vibrant designs for personal, business, or event needs. Perfect for bulk orders with a professional finish.", options: null, price: null },
+    { image: printingService, name: "Printing Services", service: "Printing Service", description: "Comprehensive printing solutions with exceptional quality. From documents to marketing materials, we deliver clear prints that showcase your content effectively.", options: null, price: null },
+    { image: calendars, name: "Custom Calendars", service: "Calendar", description: "Beautifully designed personalized calendars. Create memorable marketing tools or gifts with custom images and important dates highlighted.", options: null, price: null },
+    { image: tarpaulin, name: "Tarpaulin", service: "Tarpaulin", description: "We offer high-resolution tarpaulin printing for banners, signage, and events. Designed for durability and vibrant color, our prints are perfect for indoor and outdoor use.", options: null, price: null },
+    { image: invitation, name: "Invitation Cards", service: "Invitation", description: "Elegant invitation cards for weddings, corporate events, and special occasions. Create memorable invitations that set the perfect tone for your event.", options: null, price: null },
+    { image: businessCard, name: "Business Cards", service: "Business Card", description: "Professional business cards printed with customizable designs. Make a lasting first impression with our high-quality, attention-grabbing business cards.", options: null, price: null },
+    { image: carbonlessReceipts, name: "Carbonless Receipts", service: "Carbonless Receipts", description: "Efficient multi-part carbonless receipt books for businesses needing duplicate or triplicate copies. Each book is professionally bound and customized with your business information.", options: null, price: null },
+    { image: envelope, name: "Custom Envelopes", service: "Envelope", description: "Branded envelopes in various sizes with your logo and design elements. Perfect for creating professional correspondence that reinforces your brand identity.", options: null, price: null },
+    { image: flyersBrochureElectionpropaganda, name: "Flyers & Brochures", service: "Flyers / Brochure / Election propaganda", description: "Eye-catching flyers and detailed brochures printed on quality paper with vibrant colors. Effectively communicate your message through these versatile marketing materials.", options: null, price: null },
+    { image: formsDuploDuplication, name: "Forms & Duplications", service: "Forms/Duplo/Duplication", description: "Using our specialized Riso duplicating machine. Our Riso technology ensures high-volume, cost-effective reproduction for all your business documentation needs.", options: null, price: null },
+    { image: graduationRibbon, name: "Graduation Ribbons", service: "Graduation Ribbon", description: "Personalized graduation ribbons to celebrate academic achievements. Available in various colors with custom printing to commemorate this special milestone.", options: null, price: null },
+    { image: idCard, name: "ID Cards", service: "ID Card", description: "Durable and professional ID cards for organizations and events. Includes customization options for design, security features, and attachment methods.", options: null, price: null },
+    { image: idPictures, name: "ID Pictures", service: "ID pictures", description: "Professional ID photo services with proper lighting and formatting for official documents." },
+    { image: lamination, name: "Lamination Services", service: "Lamination", description: "Document preservation through high-quality lamination. Protect important papers from damage while maintaining clarity and accessibility.", options: null, price: null },
+    { image: layouting, name: "Layout Design", service: "Layouting", description: "Professional layout design services for publications, marketing materials, and documents. Our designers create visually appealing arrangements that effectively convey your message.", options: null, price: null },
+    { image: newsLetter, name: "Newsletters", service: "Newsletter", description: "Engaging newsletters designed and printed to keep your audience informed. Custom templates and formatting options available for regular communications.", options: null, price: null },
+    { image: ordinaryReceipts, name: "Standard Receipts", service: "Ordinary Receipts", description: "Professional receipt books for daily business transactions. Customizable with your business information and sequential numbering for easy record-keeping.", options: null, price: null },
+    { image: stickerLabels, name: "Sticker Labels", service: "Sticker / Labels", description: "High-quality adhesive stickers and labels in various sizes and materials. Perfect for product labeling, promotional items, or organizational needs.", options: null, price: null },
+    { image: xeroxPhotocopy, name: "Xerox & Photocopying", service: "Xerox/Photocopy", description: "Fast and reliable copying services with options for different paper types and sizes. High-quality reproductions for documents, images, and more.", options: null, price: null },
+    { image: yearBook, name: "Yearbooks", service: "Year Book", description: "Professionally designed and printed yearbooks to capture memories. Custom layouts, high-quality binding, and premium paper options for schools, organizations, and special events.", options: null, price: null }])
+
+  const navOrder = useNavigate();
+  const navLogout = useNavigate();
+
+
+  useEffect(() => { setTimeout(() => { setLoading(false) }, 1000) }, [])
 
   const LoginClick = () => {
     setModalLogin(!modalLogin);
@@ -193,13 +203,28 @@ function InquiryPage() {
     navOrder('/profilepageadmin')
   }
 
-  const confirmClick = () => {
+  const confirmClick = async (item) => {
+    const getSnap = await getDocs(collection(db, 'Price'));
+    const docSnap = getSnap.docs.map((doc) => ({
+      Id: doc.id,
+      ...doc.data(),
+      image: item.image,
+      mean: item.description,
+      name: item.name,
+    }))
+
+    const data = docSnap.filter((doc) => {
+      return doc.service.includes(item.service);
+    })
+
+    setService(data)
+
     navOrder('/serviceprice')
   }
 
   return (
+
     <div className="flex flex-col min-h-screen">
-      {/* Navigation */}
       <nav className={Style.HeaderContainer}>
         <img className={Style.Image} src={Logo} alt="Logo" />
 
@@ -265,8 +290,8 @@ function InquiryPage() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="flex-grow">
+        {loading && <LoadingScreen />}
         <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
           <h2 className="Service">Choose a service</h2>
           <div>
@@ -280,7 +305,7 @@ function InquiryPage() {
                     />
                     <h3>{item.name}</h3>
                     <p className="serviceDescription">{item.description}</p>
-                    <button className="btnConfirm" onClick={confirmClick}>Confirm</button>
+                    <button className="btnConfirm" onClick={() => { confirmClick(item) }}>Confirm</button>
                   </div>
                 </div>
               ))}

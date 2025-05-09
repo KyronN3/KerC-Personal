@@ -17,7 +17,7 @@ import ServicePrice from './PageInquiry/ServicePrice.jsx'
 import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext, ProfilePicContext } from './context.jsx'
+import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext, ProfilePicContext, ServiceContext } from './context.jsx'
 import { useState, useEffect, useRef } from 'react'
 import { db } from './config/firebase.jsx'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
@@ -26,9 +26,10 @@ import './App.css'
 
 function App() {
 
-  const viewReceiptOpen = useRef(false);
+  const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
+  const [service, setService] = useState([]);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
   const [receiptId, setReceiptId] = useState('');
   const [currentProfilePic, setCurrentProfilePic] = useState('');
@@ -286,19 +287,21 @@ function App() {
 
   return (
     <>
-      <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
-        <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen }}>
-          <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
-            <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
-              <UserDataContext.Provider value={{ userData, setUserData }}>
-                <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-                  {loading && <RouterProvider router={userType.current}><Home /></RouterProvider>}
-                </ModalContext.Provider>
-              </UserDataContext.Provider>
-            </CreateAccountContext.Provider>
-          </ReceiptContext.Provider>
-        </ViewReceiptOpenContext.Provider>
-      </ProfilePicContext.Provider >
+      <ServiceContext.Provider value={{ service, setService }}>
+        <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
+          <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen, setViewReceiptOpen }}>
+            <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
+              <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
+                <UserDataContext.Provider value={{ userData, setUserData }}>
+                  <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
+                    {loading && <RouterProvider router={userType.current}><Home /></RouterProvider>}
+                  </ModalContext.Provider>
+                </UserDataContext.Provider>
+              </CreateAccountContext.Provider>
+            </ReceiptContext.Provider>
+          </ViewReceiptOpenContext.Provider>
+        </ProfilePicContext.Provider >
+      </ServiceContext.Provider>
 
       {/* Footer */}
       < footer className="bg-blue-600 text-white py-3 w-full mt-auto" >

@@ -17,7 +17,7 @@ const CustomerOrder = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const { setReceiptId } = useContext(ReceiptContext);
-  const { viewReceiptOpen } = useContext(ViewReceiptOpenContext)
+  const { setViewReceiptOpen } = useContext(ViewReceiptOpenContext)
   const [data, setData] = useState([]);
   const [isDelete, setIsDelete] = useState(false);
   const [targetTableDeleteConfirm, setTargetTableDeleteConfirm] = useState('');
@@ -86,7 +86,7 @@ const CustomerOrder = () => {
             return doc.referencekey == dataScope[0].id;
           })
           await deleteDoc(doc(db, 'Receipt', filtered[0].id));
-          viewReceiptOpen.current = false;
+          setViewReceiptOpen(false);
           reload('/createtask');
         }
       }
@@ -233,17 +233,18 @@ const CustomerOrder = () => {
   const closeModal = () => {
     setClipboardCheckOpen(false)
     setShowModal(false);
-    viewReceiptOpen.current = false;
+    setViewReceiptOpen(false);
   }
 
   const viewReceipt = (item) => {
-    setTargetReceipt(item);
-    viewReceiptOpen.current = true;
+    setTargetReceipt(item)
+    setViewReceiptOpen(true)
   }
 
   const handleDelete = () => {
     setIsDelete(true)
   };
+
 
   return (
     <>

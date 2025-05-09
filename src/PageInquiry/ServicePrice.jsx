@@ -3,13 +3,13 @@ import Style from './InquiryPage.module.css';
 import Tshirt from './inquiryPage/tshirt.jpg';
 import TShirtStyle from './TshirtPrinting.module.css';
 import Logo from '../assets/imgs/logo.png';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { auth } from '../config/firebase.jsx';
 import { signOut } from 'firebase/auth';
 import { Squash as Hamburger } from 'hamburger-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ProfilePicContext, ModalContext } from '../context.jsx';
+import { ProfilePicContext, ModalContext, ServiceContext } from '../context.jsx';
 import {
     LogOut,
     User,
@@ -28,21 +28,60 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const TShirtPrintingPage = () => {
+
     const { currentProfilePic } = useContext(ProfilePicContext);
-    const navLogout = useNavigate();
     const { modalSignupOpen, setModalSignupOpen, login } = useContext(ModalContext);
+    const { service, setService } = useContext(ServiceContext);
     const [modalLogin, setModalLogin] = useState(false);
     const [modalSignup, setModalSignup] = useState(false);
-    const navOrder = useNavigate();
     const [isOpen, setOpen] = useState(false);
+    const tempArr = [];
+    const navLogout = useNavigate();
+    const navOrder = useNavigate();
 
-    // State for pricing calculator
-    const [selectedPrinting, setSelectedPrinting] = useState({
-        type: '1 Color',
-        price: 30.00,
-        unit: 'Per T shirt'
-    });
-    const [quantity, setQuantity] = useState(1);
+
+    const [quantities, setQuantities] = useState(
+        service.reduce((acc, option) => {
+            acc[option.Id] = 0;
+            return acc;
+        }, {})
+    );
+
+    // Function to increment quantity for a specific option
+    const incrementQuantity = (id) => {
+        setQuantities({
+            ...quantities,
+            [id]: quantities[id] + 1
+        });
+    };
+
+    // Function to decrement quantity for a specific option
+    const decrementQuantity = (id) => {
+        if (quantities[id] > 0) {
+            setQuantities({
+                ...quantities,
+                [id]: quantities[id] - 1
+            });
+        }
+    };
+
+    // Function to update quantity directly from input
+    const handleQuantityChange = (id, value) => {
+        const newValue = parseInt(value) || 0;
+        if (newValue >= 0) {
+            setQuantities({
+                ...quantities,
+                [id]: newValue
+            });
+        }
+    };
+
+    // Calculate total price
+    const calculateTotal = () => {
+        return service.reduce((total, option) => {
+            return total + (option.priceFinal * quantities[option.Id]);
+        }, 0);
+    };
 
     const LoginClick = () => {
         setModalLogin(!modalLogin);
@@ -109,6 +148,31 @@ const TShirtPrintingPage = () => {
             element.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    useEffect(() => {
+        service.map((item) => {
+            let temp = '0';
+            for (let i = 0; i < item.price.length; i++) {
+                temp = temp.concat(parseInt(item.price.charAt(i)));
+            }
+            const filter = temp.replace('NaN', '').slice(1);
+            tempArr.push(parseInt(filter));
+
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
+
+        setService((servicePrev) => servicePrev.map((doc, index) => ({
+            ...doc,
+            priceFinal: tempArr[index]
+        })))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => { if (service[0] == null) navOrder('/inquire') }, [])
 
     return (<>
         <nav className={Style.HeaderContainer}>
@@ -179,130 +243,110 @@ const TShirtPrintingPage = () => {
 
 
         <div className={TShirtStyle["tshirt-printing-container"]}>
-            <h1 className="text-5xl font-bold mb-6 border-b-4 border-black inline-block pb-2 text-center mx-auto block">T-Shirt Printing</h1>
+            {/* Improved responsive title with proper text wrapping */}
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mt-23 mb-3 xs:mt-23 xs:md-3 sm:mt-23 sm:mb-3 lg:mt-23 xl:mt-1 2xl:mt-3 border-b-4 border-black pb-2 text-center w-full break-words hyphens-auto">
+                {service[0] != null ? service[0].name : null}
+            </h1>
 
-            <div className={TShirtStyle["service-content"]}>
-                <div className={TShirtStyle["tshirt-showcase"]}>
-                    <div className="relative bg-blue-500 rounded-lg p-6 overflow-hidden w-full">
+            <div className={`${TShirtStyle["service-content"]} flex flex-col lg:flex-row`}>
+                {/* Improved responsive image container */}
+                <div className={`${TShirtStyle["tshirt-showcase"]} w-full lg:w-2/5 mb-4 sm:mb-5 lg:mb-0`}>
+                    <div className="relative bg-blue-500 rounded-lg p-3 sm:p-3 md:p-3 lg:p-3 overflow-hidden w-full">
                         <div className="flex justify-center items-center">
-                            <div className="text-white p-4 text-center">
-                                <img src={Tshirt} className='w-100 '></img> {/*Image*/}
-                                <div className="flex justify-end mt-4">
-                                    <div className="w-8 h-8 bg-green-400 rounded-full mr-1"></div>
-                                    <div className="w-8 h-8 bg-green-400 rounded-full mr-1"></div>
-                                    <div className="w-8 h-8 bg-green-400 rounded-full"></div>
+                            <div className="text-white p-1 sm:p-2 md:p-3 text-center max-w-full">
+                                {/* Responsive image with proper sizing constraints */}
+                                <img
+                                    src={service[0] != null ? service[0].image : null}
+                                    className="w-full max-w-[300px] xs:max-w-[300px] sm:max-w-[300px] md:max-w-[300px] lg:max-w-[320px] xl:max-w-[340px] mx-auto object-contain"
+                                    alt="T-shirt"
+                                />
+                                <div className="flex justify-end mt-2 sm:mt-3 md:mt-4">
+                                    <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full mr-1"></div>
+                                    <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full mr-1"></div>
+                                    <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className={TShirtStyle["service-details"]}>
-                    <p className="text-xl mb-8">
-                        We use high-quality screen printing to create durable and vibrant designs for personal, business, or event needs. Perfect for bulk orders with a professional finish.
+                <div className={`${TShirtStyle["service-details"]} w-full lg:w-3/5 lg:pl-4 xl:pl-6`}>
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-5 md:mb-6 lg:mb-8">
+                        {service[0] != null ? service[0].mean : null}
                     </p>
 
-                    <div className={`${TShirtStyle["pricing-table"]} mb-8`}>
-                        <div className={TShirtStyle["price-grid"]}>
-                            <div className={TShirtStyle["price-column"]}>
-                                <ul>
-                                    <li
-                                        className={`${TShirtStyle["price-item"]} ${selectedPrinting.type === '1 Color' ? TShirtStyle.selected : ''}`}
-                                        onClick={() => setSelectedPrinting({ type: '1 Color', price: 30.00, unit: 'Per T shirt' })}
-                                    >
-                                        <span className="mr-2">•</span>
-                                        <span>1 Color</span>
-                                    </li>
-                                    <li
-                                        className={`${TShirtStyle["price-item"]} ${selectedPrinting.type === 'Back to back 1 color' ? TShirtStyle.selected : ''}`}
-                                        onClick={() => setSelectedPrinting({ type: 'Back to back 1 color', price: 60.00, unit: 'Per T shirt' })}
-                                    >
-                                        <span className="mr-2">•</span>
-                                        <span>Back to back 1 color</span>
-                                    </li>
-                                    <li
-                                        className={`${TShirtStyle["price-item"]} ${selectedPrinting.type === 'Colored' ? TShirtStyle.selected : ''}`}
-                                        onClick={() => setSelectedPrinting({ type: 'Colored', price: 55.00, unit: 'Per T shirt' })}
-                                    >
-                                        <span className="mr-2">•</span>
-                                        <span>Colored</span>
-                                    </li>
-                                    <li
-                                        className={`${TShirtStyle["price-item"]} ${selectedPrinting.type === 'Back to back colored' ? TShirtStyle.selected : ''}`}
-                                        onClick={() => setSelectedPrinting({ type: 'Back to back colored', price: 80.00, unit: 'Per T shirt' })}
-                                    >
-                                        <span className="mr-2">•</span>
-                                        <span>Back to back colored</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className={TShirtStyle["price-column"]}>
-                                <ul>
-                                    <li className={TShirtStyle["price-value"]}>₱30.00</li>
-                                    <li className={TShirtStyle["price-value"]}>₱50.00 - ₱70.00</li>
-                                    <li className={TShirtStyle["price-value"]}>₱40.00 - ₱70.00</li>
-                                    <li className={TShirtStyle["price-value"]}>₱80.00</li>
-                                </ul>
-                            </div>
-                            <div className={TShirtStyle["price-column"]}>
-                                <ul>
-                                    <li className={TShirtStyle["price-unit"]}>Per T shirt</li>
-                                    <li className={TShirtStyle["price-unit"]}>Per T shirt</li>
-                                    <li className={TShirtStyle["price-unit"]}>Per T shirt</li>
-                                    <li className={TShirtStyle["price-unit"]}>Per T shirt</li>
-                                </ul>
-                            </div>
+                    {/* Calculator Table with improved responsiveness */}
+                    <div className={`${TShirtStyle.calculator} bg-gray-50 p-3 sm:p-4 md:p-5 lg:p-6 rounded-lg shadow-md mt-4 sm:mt-5 md:mt-6 lg:mt-8`}>
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4">Price Calculator</h2>
+
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full border-collapse">
+                                <thead>
+                                    <tr className="bg-gray-200">
+                                        <th className="py-1 sm:py-2 px-1 sm:px-2 md:px-3 bg-[#e3f2fd] text-left text-xs sm:text-sm md:text-base">Option</th>
+                                        <th className="py-1 sm:py-2 px-1 sm:px-2 md:px-3 bg-[#e3f2fd] text-center text-xs sm:text-sm md:text-base">Price</th>
+                                        <th className="py-1 sm:py-2 px-1 sm:px-2 md:px-3 bg-[#e3f2fd] text-center text-xs sm:text-sm md:text-base">Quantity</th>
+                                        <th className="py-1 sm:py-2 px-1 sm:px-2 md:px-3 bg-[#e3f2fd] text-right text-xs sm:text-sm md:text-base">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {service.map((item) => (
+                                        <tr key={item.Id} className="border-b border-gray-200">
+                                            <td className="py-1 sm:py-2 md:py-3 px-1 sm:px-2 md:px-3 text-xs sm:text-sm md:text-base">{item.option}</td>
+                                            <td className="py-1 sm:py-2 md:py-3 px-1 sm:px-2 md:px-3 text-center text-xs sm:text-sm md:text-base">
+                                                {item.price}
+                                                <span className="text-gray-500 text-xs m-1 sm:text-sm block sm:inline">{item.description}</span>
+                                            </td>
+                                            <td className="py-1 sm:py-2 md:py-3 px-1 sm:px-2 md:px-3">
+                                                <div className="flex items-center justify-center">
+                                                    <button
+                                                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-5 sm:w-6 md:w-8 h-5 sm:h-6 md:h-8 rounded-l flex items-center justify-center"
+                                                        onClick={() => decrementQuantity(item.Id)}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <input
+                                                        min="0"
+                                                        value={quantities[item.Id]}
+                                                        onChange={(e) => handleQuantityChange(item.Id, e.target.value)}
+                                                        className="h-5 sm:h-6 md:h-8 w-8 sm:w-10 md:w-12 text-center text-xs sm:text-sm md:text-base border-t border-b border-gray-300"
+                                                    />
+                                                    <button
+                                                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-5 sm:w-6 md:w-8 h-5 sm:h-6 md:h-8 rounded-r flex items-center justify-center"
+                                                        onClick={() => incrementQuantity(item.Id)}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className="py-1 sm:py-2 md:py-3 px-1 sm:px-2 md:px-3 text-right font-medium text-xs sm:text-sm md:text-base">
+                                                ₱{(item.priceFinal * quantities[item.Id]).toFixed(2)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr className="bg-blue-50">
+                                        <td colSpan="3" className="py-1 sm:py-2 md:py-3 px-1 sm:px-2 md:px-3 text-right font-bold text-xs sm:text-sm md:text-base">Total:</td>
+                                        <td className="py-1 sm:py-2 md:py-3 px-1 sm:px-2 md:px-3 text-right font-bold text-blue-800 text-sm sm:text-lg md:text-xl">
+                                            ₱{calculateTotal().toFixed(2)}
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
 
-                    <div className={`${TShirtStyle.calculator} bg-gray-50 p-6 rounded-lg shadow-md mt-8`}>
-                        <h2 className="text-2xl font-bold mb-4">Price Calculator</h2>
-                        <div className={TShirtStyle["quantity-selector-container"]}>
-                            <div className="selected-option mb-4">
-                                <p className="text-lg font-medium mb-2">Selected Option:</p>
-                                <p className="text-xl text-blue-800">{selectedPrinting.type} - ₱{selectedPrinting.price.toFixed(2)}</p>
-                            </div>
-
-                            <div className={`${TShirtStyle["quantity-selector"]} mb-4`}>
-                                <p className="text-lg font-medium mb-2">Quantity:</p>
-                                <div className="flex items-center justify-center">
-                                    <button
-                                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-l flex items-center justify-center"
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                    >
-                                        -
-                                    </button>
-                                    <input
-                                        min="1"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                        className="h-10 w-16 text-center border-t border-b border-gray-300"
-                                    />
-                                    <button
-                                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-10 h-10 rounded-r flex items-center justify-center"
-                                        onClick={() => setQuantity(quantity + 1)}
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="total-price mb-4">
-                                <p className="text-lg font-medium mb-2">Total:</p>
-                                <p className="text-2xl font-bold text-blue-800">₱{(selectedPrinting.price * quantity).toFixed(2)}</p>
-                            </div>
-                        </div>
-                    </div>
                     <div className={TShirtStyle["back-button"]}>
                         <button
                             onClick={goBackToServices}
-                            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-full transition-all"
+                            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-1 sm:py-2 px-3 sm:px-4 md:px-6 rounded-full transition-all mt-3 sm:mt-4 md:mt-6"
                         >
-                            <ArrowLeft className="mr-2" />
-                            <span className="text-lg font-medium">Choose another service</span>
+                            <ArrowLeft className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
+                            <span className="text-sm sm:text-base md:text-lg font-medium">Choose another service</span>
                         </button>
                     </div>
-                    <p className="mt-4 text-lg">Call for exact pricing and available discounts.</p>
+                    <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg">Call for exact pricing and available discounts.</p>
                 </div>
             </div>
         </div>

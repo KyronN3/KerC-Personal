@@ -7,7 +7,7 @@
   align-items: center;
   gap: 16px;
   padding: 0;
-  z-index: 999;
+  z-index: 1001;
   margin: 0;
   background-color: #1565c0; /* Navy blue tone */
   box-shadow: 0 13px 10px rgba(0, 0, 0, 0.05);
