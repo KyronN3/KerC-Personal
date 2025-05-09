@@ -15,8 +15,6 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 
 const CreateTask = () => {
-
-
   const [priceData, setPriceData] = useState([])
   const [servicePrice, setServicePrice] = useState('');
   const [createTask, setCreateTask] = useState({
@@ -47,7 +45,6 @@ const CreateTask = () => {
     }
     getData();
   }, [])
-
 
   const onChangeName = (e) => {
     setCreateTask((taskPrev) => ({ ...taskPrev, name: e.target.value }))
@@ -124,9 +121,8 @@ const CreateTask = () => {
       });
       console.error(error);
     }
-
-
   }
+
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.formTitle}>CREATE TASK / JOB ORDER</h1>
@@ -177,16 +173,16 @@ const CreateTask = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="w-full md:w-90 text-sm md:text-base"
+                className="w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 text-xs sm:text-sm md:text-base"
                 variant="outline"
               >
                 {createTask.service != null ? createTask.service : 'Services'}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-full  md:w-60 max-h-72 overflow-y-auto bg-[#cae0f0] border-[#5D4037]"
+              className="w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 max-h-60 sm:max-h-72 overflow-y-auto bg-[#cae0f0] border-[#5D4037]"
             >
-              <DropdownMenuLabel className="text-center">KER-C</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center text-xs sm:text-sm md:text-base">KER-C</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup onValueChange={onChangeServices}>
                 {priceData.map((doc, index) => (
@@ -194,7 +190,7 @@ const CreateTask = () => {
                     key={index}
                     onClick={() => price(doc)}
                     value={`${doc.service} ${doc.option}`}
-                    className="text-sm md:text-base py-2 hover:bg-blue-100"
+                    className="text-xs sm:text-sm md:text-base py-1 sm:py-2 hover:bg-blue-100"
                   >
                     {doc.service} {doc.option}
                   </DropdownMenuRadioItem>
