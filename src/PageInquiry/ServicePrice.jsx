@@ -246,37 +246,38 @@ const TShirtPrintingPage = () => {
             {/* Improved responsive title with proper text wrapping */}
             <button
                 onClick={goBackToServices}
-                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-1 sm:py-2 px-3 sm:px-4 md:px-6 rounded-full transition-all mt-3 sm:mt-4 md:mt-6"
+                className="flex items-center bg-blue-600 hover:bg-blue-700 mb-3 text-white py-1 sm:py-2 px-3 sm:px-4 md:px-6 rounded-full transition-all mt-3 sm:mt-4 md:mt-6"
             >
                 <ArrowLeft className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
                 <span className="text-sm sm:text-base md:text-lg font-medium">Choose another service</span>
             </button>
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mt-[-10px] mb-3 xs:mt-23 xs:md-3 sm:mt-23 sm:mb-3 lg:mt-23 xl:mt-1 2xl:mt-3 border-b-4 border-black pb-2 text-center w-full break-words hyphens-auto">
-                {service[0] != null ? service[0].name : null}
-            </h1>
+            <div className="rounded-xl bg-muted/50 p-8 shadow h-full w-full text-[13px] overflow-x-hidden inset-shadow-sm">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mt-[-10px] mb-3 xs:mt-23 xs:md-3 sm:mt-23 sm:mb-3 lg:mt-23 xl:mt-1 2xl:mt-3 border-b-4 border-black pb-2 text-center w-full break-words hyphens-auto">
+                    {service[0] != null ? service[0].name : null}
+                </h1>
 
-            <div className={`${TShirtStyle["service-content"]} flex flex-col lg:flex-row`}>
-                {/* Improved responsive image container */}
-                <div className={`${TShirtStyle["tshirt-showcase"]} w-full lg:w-2/5 mb-4 sm:mb-5 lg:mb-0`}>
-                    <div className="relative bg-blue-500 rounded-lg p-3 sm:p-3 md:p-3 lg:p-3 overflow-hidden w-full">
-                        <div className="flex justify-center items-center">
-                            <div className="text-white p-1 sm:p-2 md:p-3 text-center max-w-full">
-                                {/* Responsive image with proper sizing constraints */}
-                                <img
-                                    src={service[0] != null ? service[0].image : null}
-                                    className="w-full max-w-[300px] xs:max-w-[300px] sm:max-w-[300px] md:max-w-[300px] lg:max-w-[320px] xl:max-w-[340px] mx-auto object-contain"
-                                    alt="T-shirt"
-                                />
-                                <div className="flex justify-end mt-2 sm:mt-3 md:mt-4">
-                                    <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full mr-1"></div>
-                                    <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full mr-1"></div>
-                                    <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full"></div>
+                <div className={`${TShirtStyle["service-content"]} flex flex-col lg:flex-row`}>
+                    {/* Improved responsive image container */}
+                    <div className={`${TShirtStyle["tshirt-showcase"]} w-full lg:w-2/5 mb-4 sm:mb-5 lg:mb-0`}>
+                        <div className="relative bg-[#cae0f0] hover:shadow-xl/20 rounded-lg p-3 sm:p-3 md:p-3 lg:p-3 overflow-hidden w-full">
+                            <div className="flex justify-center items-center">
+                                <div className="text-white p-1 sm:p-2 md:p-3 text-center max-w-full">
+                                    {/* Responsive image with proper sizing constraints */}
+                                    <img
+                                        src={service[0] != null ? service[0].image : null}
+                                        className="w-full max-w-[300px] xs:max-w-[300px] sm:max-w-[300px] md:max-w-[300px] lg:max-w-[320px] xl:max-w-[340px] mx-auto object-contain"
+                                        alt="T-shirt"
+                                    />
+                                    <div className="flex justify-end mt-2 sm:mt-3 md:mt-4">
+                                        <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full mr-1"></div>
+                                        <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full mr-1"></div>
+                                        <div className="w-4 sm:w-6 md:w-7 lg:w-8 h-4 sm:h-6 md:h-7 lg:h-8 bg-green-400 rounded-full"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <div className={`${TShirtStyle["service-details"]} w-full lg:w-3/5 lg:pl-4 xl:pl-6`}>
                     <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 sm:mb-5 md:mb-6 lg:mb-8">
                         {service[0] != null ? service[0].mean : null}
