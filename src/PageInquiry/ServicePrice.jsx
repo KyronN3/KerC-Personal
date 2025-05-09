@@ -244,7 +244,14 @@ const TShirtPrintingPage = () => {
 
         <div className={TShirtStyle["tshirt-printing-container"]}>
             {/* Improved responsive title with proper text wrapping */}
-            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mt-23 mb-3 xs:mt-23 xs:md-3 sm:mt-23 sm:mb-3 lg:mt-23 xl:mt-1 2xl:mt-3 border-b-4 border-black pb-2 text-center w-full break-words hyphens-auto">
+            <button
+                onClick={goBackToServices}
+                className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-1 sm:py-2 px-3 sm:px-4 md:px-6 rounded-full transition-all mt-3 sm:mt-4 md:mt-6"
+            >
+                <ArrowLeft className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
+                <span className="text-sm sm:text-base md:text-lg font-medium">Choose another service</span>
+            </button>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mt-[-10px] mb-3 xs:mt-23 xs:md-3 sm:mt-23 sm:mb-3 lg:mt-23 xl:mt-1 2xl:mt-3 border-b-4 border-black pb-2 text-center w-full break-words hyphens-auto">
                 {service[0] != null ? service[0].name : null}
             </h1>
 
@@ -338,15 +345,8 @@ const TShirtPrintingPage = () => {
                     </div>
 
                     <div className={TShirtStyle["back-button"]}>
-                        <button
-                            onClick={goBackToServices}
-                            className="flex items-center bg-blue-600 hover:bg-blue-700 text-white py-1 sm:py-2 px-3 sm:px-4 md:px-6 rounded-full transition-all mt-3 sm:mt-4 md:mt-6"
-                        >
-                            <ArrowLeft className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
-                            <span className="text-sm sm:text-base md:text-lg font-medium">Choose another service</span>
-                        </button>
                     </div>
-                    <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg">Call for exact pricing and available discounts.</p>
+                    <p className="mt-[-50px] sm:mt-[-30px] text-sm sm:text-base md:text-lg">Call for exact pricing and available discounts.</p>
                 </div>
             </div>
         </div>

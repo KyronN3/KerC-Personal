@@ -292,7 +292,8 @@ function InquiryPage() {
 
       <main className="flex-grow">
         {loading && <LoadingScreen />}
-        <div style={{ width: "85%", margin: "auto", padding: "5px 20px", position: "relative" }}>
+        {/* style={{ width: "85%", margin: "auto", marginTop: '-90px', padding: "5px 20px", position: "relative" }} */}
+        <div className="w-[85%] m-auto p-5 relative mt-[-200px] mb-3 xs:mt-[-100px] xs:md-3 sm:mt-[-130px] sm:mb-3 lg:mt-[-60px] xl:mt-[-60px] 2xl:mt-3">
           <h2 className="Service">Choose a service</h2>
           <div>
             <Slider {...settings}>

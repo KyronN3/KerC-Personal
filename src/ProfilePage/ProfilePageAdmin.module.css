@@ -3,7 +3,7 @@
   position: sticky;
   top: 0;
   width: 100%;
-  justify-content: center;
+  justify-content: space-between; /* Changed from center to space-between */
   align-items: center;
   gap: 16px;
   padding: 0;
@@ -14,15 +14,39 @@
 }
 
 .Image {
-  padding: 30px;
+  padding: 20px;
   height: 130px;
-  margin-right: 30%;
+  margin-left: 100px; /* Removed right margin */
 }
 
 .nav-links {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.Profile {
+  height: 60px;
+  width: 60px;
+  border: 3px solid #bbdefb; /* Lighter blue */
+  cursor: pointer;
+  position: relative; /* Changed from absolute to relative */
+  margin-right: 200px; /* Added margin for spacing */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
+/* Hamburger Menu Styles */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  padding: 8px; /* Reduced from 10px */
+  z-index: 1000;
+  color: white;
+  border-radius: 3%;
+  position: absolute;
+  right: 20px;
+  top: 30px; /* Adjusted to align better */
+  font-size: 14px; /* Added to make hamburger icon smaller */
 }
 
 .Home {
@@ -86,21 +110,42 @@
   box-shadow: none;
 }
 
-/* Hamburger Menu Styles */
-.hamburger {
-  display: none;
-  cursor: pointer;
-  padding: 10px;
-  z-index: 1000;
-  color: white;
-  border-radius: 3%;
+.icons {
+  width: 130px;
+  height: 130px;
 }
 
-.Profile {
-  height: 60px;
-  width: 60px;
-  border: 3px solid #bbdefb; /* Lighter blue */
+.FAQContainerParent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.FAQContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 600px);
+  grid-template-rows: repeat(6, 100px);
+  gap: 16px;
+}
+
+.headerFAQ {
+  border: 1px solid #0d47a1; /* Dark blue */
+  border-radius: 26px;
+  font-size: 30px;
+  width: 100%;
+  height: 70%;
+  text-align: center;
+  align-content: center;
+  background-color: #0d47a1; /* Dark blue */
+  color: #e3f2fd; /* Light blue */
+  overflow: hidden;
+  z-index: 1;
   cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 12px 24px;
 }
 
 .UserProfile {
@@ -109,75 +154,36 @@
   border: 3px solid #bbdefb;
 }
 
-.hamburgerButton {
-  position: fixed;
-  top: 140px;
-  left: 320px;
-  z-index: 999;
-  transition: left 0.3s ease;
-  background-color: #5d4037;
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 40px;
-  width: 40px;
+.headerFAQ::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background-color: #2196f3; /* Medium blue */
+  z-index: -1;
+  transition: height 0.35s ease-in-out;
+  border-radius: 15px;
 }
 
-.hamburgerButton span {
-  height: 3px;
-  width: 100%;
-  background-color: #faebd7;
-  border-radius: 2px;
+.headerFAQ:hover {
+  transform: translateY(-6px);
+  box-shadow: 0px 4px 6px #0d47a1; /* Dark blue */
 }
 
-.SidebarContainer {
-  top: 130px !important;
-  height: calc(100% - 130px) !important;
-  z-index: 899 !important;
-  transition: transform 0.3s ease;
-}
-
-@media (max-width: 768px) {
-  .hamburgerButton {
-    top: 250px;
-  }
-  .SidebarContainer {
-    top: 240px !important;
-    height: calc(100% - 240px) !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .hamburgerButton {
-    top: 200px;
-  }
-  .SidebarContainer {
-    top: 190px !important;
-    height: calc(100% - 190px) !important;
-  }
-}
-
-.Profile {
-  background-color: #a1887f;
-}
-
-.buttonContent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+.headerFAQ:hover::before {
   height: 100%;
 }
 
-.icon {
-  width: 20px;
-  height: 20px;
+.headerFAQ:hover {
+  width: 100%;
+  background-color: #0d47a1; /* Dark blue */
+  color: #e3f2fd; /* Light blue */
+  transform: translateY(-6px);
+  box-shadow: 0px 4px 6px #0d47a1; /* Dark blue */
+  cursor: pointer;
 }
-
 @media (max-width: 1265px) {
   .HeaderContainer {
     z-index: 10;
@@ -192,26 +198,23 @@
   /* Show hamburger in mobile view */
   .hamburger {
     display: block;
-    position: fixed;
-    top: 20px;
-    right: 40px;
-    margin-right: 30px;
   }
 
   /* Hide nav links by default in mobile view */
   .nav-links {
     position: fixed;
     top: 0;
-    right: -100%;
-    width: 100%;
+    right: -50%; /* Start off-screen */
+    width: 50%; /* Only take half the screen */
     height: 100vh;
     flex-direction: column;
     background-color: #1565c0; /* Navy blue tone */
     transition: right 0.5s ease;
     padding-top: 150px;
-    z-index: 999;
+    z-index: 997; /* Lower z-index than profile picture */
     justify-content: flex-start;
     align-items: center;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
   }
 
   /* Show nav links when active */
@@ -238,130 +241,33 @@
     margin-right: 0;
   }
 
+  /* Profile in mobile view - keep position absolute and outside the hamburger menu */
   .Profile {
-    margin-top: 20px;
+    position: fixed; /* Changed to fixed to ensure it stays in place */
+    right: 80px;
+    top: 25px;
+    margin-left: 0; /* Reset margin */
+    z-index: 1001; /* Higher z-index than the hamburger menu to ensure it's always on top */
   }
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 1474px) {
-  .mainContainer {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .bigBox,
-  .smallBox {
-    width: 90%;
-    margin: 15px auto;
-    padding: 20px;
-    height: auto;
-  }
-
-  .bigBox {
-    margin-left: auto;
-  }
-
-  .smallBox {
-    margin-left: auto;
-  }
-
-  .enquire {
-    width: 80%;
-  }
-
-  .AboutUsPic {
-    width: 90%;
-    height: auto;
-    margin: 15px auto;
-  }
-  .Map {
-    margin: 15px auto;
-    width: 90%;
-    border-right: 1px solid #bbdefb; /* Lighter blue */
-    border-top: 1px solid #bbdefb; /* Lighter blue */
-    border-bottom: 1px solid #bbdefb; /* Lighter blue */
-    border-left: 0px;
-    box-shadow: 6px 0px 6px -1px #42a5f5; /* Medium blue */
-  }
-
-  .AboutUsPic {
-    padding-top: 150px;
-  }
-}
 @media (max-width: 1750px) {
-  .cardContainerParent {
-    width: 100%;
-    overflow-x: hidden;
+  .Image {
+    margin-left: 50px; /* Removed right margin */
   }
 
-  .cardContainer {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    gap: 20px;
-    padding: 10px;
-  }
-
-  .cardOpen,
-  .cardMessenger,
-  .cardPhone,
-  .cardFacebook,
-  .cardEmail {
-    width: 100%;
-    height: auto;
-    padding: 20px;
-    margin-bottom: 20px;
+  .Profile {
+    margin-right: 80px;
   }
 }
 
 @media (max-width: 1250px) {
-  .serviceContainer {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 10px;
+  .Image {
+    margin-left: 10px; /* Removed right margin */
   }
 
-  .headerServices {
-    grid-column: auto;
-    grid-row: auto;
-    text-align: center;
-    margin: 10px 0;
-  }
-
-  .columnOne,
-  .columnTwo,
-  .columnThree {
-    grid-column: auto;
-    grid-row: auto;
-    text-align: center;
-    width: 100%;
-    margin: 5px 0;
-  }
-
-  .lineOne,
-  .lineTwo {
-    grid-column: auto;
-    width: 90%;
-    margin: 10px auto;
-  }
-
-  .footerIcons {
-    grid-column: auto;
-    grid-row: auto;
-    position: static;
-    text-align: center;
-    margin: 20px 0 10px 0;
-  }
-
-  .footerIconsContainer {
-    grid-column: auto;
-    grid-row: auto;
-    position: static;
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
+  .Profile {
+    margin-right: 0px;
   }
 }
 
@@ -370,10 +276,26 @@
     grid-template-columns: 1fr;
     width: 90%;
   }
+
+  .Image {
+    margin-left: 10px; /* Removed right margin */
+  }
+
+  .Profile {
+    margin-right: 0px;
+  }
 }
 
 @media (max-width: 490px) {
   .FAQContainerParent {
     padding-bottom: 100px;
+  }
+
+  .Image {
+    margin-left: 10px; /* Removed right margin */
+  }
+
+  .Profile {
+    margin-right: 0px;
   }
 }
