@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Style from './ProfilePageAdmin.module.css';
+import StyleModal from '../HomePage/Modal.module.css'
 import Logo from '../assets/imgs/logo.png';
 import LoadingScreen from '../LoadingScreen.jsx'
 import { useState, useEffect, useContext } from 'react';
@@ -19,6 +20,8 @@ import {
     Edit,
     Save,
     X,
+    Trash2,
+    AlertTriangle,
     Phone,
     Mail,
     Home,
@@ -36,11 +39,13 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const ProfilePageAdmin = () => {
+const ProfilePageCustomer = () => {
 
     const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext);
     const [isOpen, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [deleteTypeConfirm, setDeleteTypeConfirm] = useState('');
     const [isEditing, setIsEditing] = useState(false);
     const [image, setImage] = useState();
     const [imagePreview, setImagePreview] = useState();
@@ -59,8 +64,19 @@ const ProfilePageAdmin = () => {
         username: null
     });
 
+
     useEffect(() => {
         setTimeout(() => { setLoading(false) }, 600)
+    }, [])
+
+    useEffect(() => {
+        const getData = async () => {
+            const dataSnap = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
+            if (dataSnap.exists()) {
+                setProfile({ ...dataSnap.data() });
+            }
+        }
+        getData();
     }, [])
 
     const [formData, setFormData] = useState({ ...profile });
@@ -77,11 +93,12 @@ const ProfilePageAdmin = () => {
 
     const handleSave = async () => {
         setLoading(true);
-        setTimeout(() => { setLoading(false) }, 3000)
+        setTimeout(() => { setLoading(false) }, 1600)
         setProfile({ ...formData });
         await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
             ...formData
         })
+
         try {
             if (image != null) {
                 //picture save
@@ -98,6 +115,7 @@ const ProfilePageAdmin = () => {
         } finally {
             setIsEditing(false);
         }
+
     };
 
     useEffect(() => {
@@ -127,8 +145,12 @@ const ProfilePageAdmin = () => {
     };
 
     const manageOrderNav = () => {
-        navManageOrder('/admin');
+        navManageOrder('/customer');
     };
+
+    const profilePageCustomer = () => {
+        navManageOrder('/profilepagecustomer')
+    }
 
     const logout = async () => {
         await signOut(auth);
@@ -158,6 +180,22 @@ const ProfilePageAdmin = () => {
         }; getData();
     }, [])
 
+
+    const deleteAccount = () => {
+        setDeleteConfirm(!deleteConfirm);
+    }
+
+    const confirmDelete = async () => {
+        if (deleteTypeConfirm == "DELETE") {
+            console.log(true)
+        }
+    }
+
+    const closeModal = () => {
+        setDeleteConfirm(!deleteConfirm)
+    };
+
+
     return (
         <>  {loading && <LoadingScreen />}
             <nav className={Style.HeaderContainer}>
@@ -178,17 +216,17 @@ const ProfilePageAdmin = () => {
                                 </Avatar>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
-                                <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>
+                                <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem>
                                         <User className="mr-2" />
-                                        <span className='cursor-pointer'>Profile</span>
+                                        <span className='cursor-pointer' onClick={profilePageCustomer}>Profile</span>
                                         <DropdownMenuShortcut>P</DropdownMenuShortcut>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem>
                                         <ShoppingCart className="mr-2" />
-                                        <Link to='/admin' className='cursor-pointer' onClick={manageOrderNav}>Manage Orders</Link>
+                                        <Link to='/customer' className='cursor-pointer' onClick={manageOrderNav}>My Order/s</Link>
                                         <DropdownMenuShortcut>M</DropdownMenuShortcut>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
@@ -302,16 +340,6 @@ const ProfilePageAdmin = () => {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 mb-2 text-sm font-medium">Email</label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </div>
-                                    <div>
                                         <label className="block text-gray-700 mb-2 text-sm font-medium">Mobile Number</label>
                                         <input
                                             type="text"
@@ -350,18 +378,6 @@ const ProfilePageAdmin = () => {
                                             onChange={handleChange}
                                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
-                                    </div>
-                                    <div className="col-span-2">
-                                        <label className="flex items-center">
-                                            <input
-                                                readOnly
-                                                type="checkbox"
-                                                name="isAdmin"
-                                                checked={formData.isAdmin}
-                                                className="mr-2 h-5 w-5"
-                                            />
-                                            <span className="text-gray-700">Administrator Access</span>
-                                        </label>
                                     </div>
                                 </div>
                             ) : (
@@ -428,6 +444,14 @@ const ProfilePageAdmin = () => {
                                                 )}
                                             </div>
                                         </div>
+                                        <div className="p-3 bg-gray-50 w-50 rounded flex items-start">
+                                            <button className="flex items-center px-4 py-2 bg-red-500 cursor-pointer text-white w-full rounded transition-all hover:shadow-[0px_-1px_8px_rgba(93,64,55,0.4)]"
+                                                onClick={deleteAccount}>
+                                                <Trash2 className="mr-2" size={20} /> Delete Account
+                                            </button>
+
+                                        </div>
+
                                     </div>
                                 </div>
                             )}
@@ -435,8 +459,65 @@ const ProfilePageAdmin = () => {
                     </div>
                 </div>
             </div >
+
+            {deleteConfirm
+                &&
+                <div className={StyleModal.modal}>
+                    <div className={StyleModal.overlay} onClick={closeModal}></div>
+                    <div className={StyleModal.modalContent}>
+                        <div className="fixed inset-0 flex items-center justify-center p-4 z-10">
+                            <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden">
+
+                                <div className="bg-blue-100 px-4 py-3 flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                        <AlertTriangle className="text-blue-600" size={20} />
+                                        <h3 className="font-medium text-blue-800">Confirm Account Deletion</h3>
+                                    </div>
+                                    <button
+                                        onClick={closeModal}
+                                        className="text-blue-600 cursor-pointer hover:text-blue-800"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                </div>
+
+
+                                <div className="p-4">
+                                    <p className="text-gray-700 mb-4">
+                                        Are you sure you want to delete this account? (Type "DELETE" to confirm). This action cannot be undone.
+                                    </p>
+
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="(Confirm)"
+                                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 uppercase focus:ring-blue-500"
+                                            onChange={(e) => { setDeleteTypeConfirm(e.target.value.toUpperCase()) }}
+                                        />
+                                    </div>
+
+                                    <div className="flex justify-end space-x-3 mt-3">
+                                        <button
+                                            onClick={closeModal}
+                                            className="px-4 py-2 border cursor-pointer border-blue-200 text-blue-600 rounded hover:bg-blue-50"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            className="px-4 py-2 bg-red-500 cursor-pointer text-white rounded hover:bg-red-600 flex items-center space-x-1"
+                                            onClick={confirmDelete}
+                                        >
+                                            <Trash2 size={16} />
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>}
         </>
     );
 };
 
-export default ProfilePageAdmin;
+export default ProfilePageCustomer;

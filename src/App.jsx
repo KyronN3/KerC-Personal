@@ -15,6 +15,7 @@ import CreateAccount from './Authentication/CreateAccount.jsx'
 import LoadingScreen from './LoadingScreen.jsx'
 import ServicePrice from './PageInquiry/ServicePrice.jsx'
 import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
+import ProfilePageCustomer from './ProfilePage/ProfilePageCustomer.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext, ProfilePicContext, ServiceContext } from './context.jsx'
@@ -191,6 +192,10 @@ function App() {
     {
       path: '/customer',
       element: <Customer />
+    },
+    {
+      path: 'profilepagecustomer',
+      element: <ProfilePageCustomer />
     },
     {
       path: '/inquire',

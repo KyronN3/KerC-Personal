@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import { db } from '../config/firebase.jsx';
 import { collection, getDocs, addDoc, doc, deleteDoc, getDoc } from 'firebase/firestore';
@@ -217,8 +216,8 @@ const ArchiveFiles = () => {
     <>
       <div className={styles.gridContainer}>
         <div className={styles.gridRow}>
-          {itemFromDoc.map(doc => (
-            <div key={doc.referenceKeys} className={styles.gridItem}>
+          {itemFromDoc.map((doc, index) => (
+            <div key={index} className={styles.gridItem}>
               <div className={styles.archiveCard}>
                 <div className={styles.cardHeader}>
                   <div className={styles.customerName}>{doc.name}</div>

@@ -109,6 +109,10 @@ export default function Home({ isLogin = false, isSignup = false }) {
     navOrder('/profilepageadmin')
   }
 
+  const goToProfilPageCustomer = () => {
+    navOrder('/profilepagecustomer')
+  }
+
 
   useEffect(() => {
     if (login) {
@@ -165,7 +169,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
                   <User />
                   {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                     ?
-                    <span className='cursor-pointer'>Profile</span>
+                    <span className='cursor-pointer' onClick={goToProfilPageCustomer}>Profile</span>
                     :
                     <span className='cursor-pointer' onClick={goToProfilePageAdmin}>Profile</span>
                   }
@@ -175,7 +179,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
                   {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                     ?
                     <><ShoppingCart />
-                      <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
+                      <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order/s</Link>
                       <DropdownMenuShortcut>M</DropdownMenuShortcut>
                     </>
                     :
