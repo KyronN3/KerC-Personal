@@ -3,42 +3,72 @@
   position: sticky;
   top: 0;
   width: 100%;
-  justify-content: center;
+  justify-content: space-between; /* Changed from center to space-between */
   align-items: center;
   gap: 16px;
   padding: 0;
   z-index: 1000;
   margin: 0;
-  background-color: #795548; 
+  background-color: #1565c0; /* Navy blue tone */
   box-shadow: 0 13px 10px rgba(0, 0, 0, 0.05);
 }
 
 .Image {
-  padding: 30px;
+  padding: 20px;
   height: 130px;
+  margin-left: 160px; /* Removed right margin */
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.Profile {
+  height: 60px;
+  width: 60px;
+  border: 3px solid #bbdefb; /* Lighter blue */
+  cursor: pointer;
+  position: relative; /* Changed from absolute to relative */
+  margin-right: 200px; /* Added margin for spacing */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
+/* Hamburger Menu Styles */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  padding: 8px; /* Reduced from 10px */
+  z-index: 1000;
+  color: white;
+  border-radius: 3%;
+  position: absolute;
+  right: 20px;
+  top: 30px; /* Adjusted to align better */
+  font-size: 14px; /* Added to make hamburger icon smaller */
 }
 
 .Home {
   display: inline-block;
   height: 46px;
   width: 130px;
-  margin-right: 56%;
   text-align: center;
   border-radius: 1rem;
-  border: 2px solid #5D4037; 
-  background-color: #FAEBD7; 
+  border: 2px solid #0d47a1; /* Dark blue */
+  background-color: #e3f2fd; /* Light blue */
   padding: 0.75rem 1.5rem;
   font-size: 15px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #5D4037; 
+  color: #5d4037; /* Dark brown */
   transition: all 300ms;
 }
 
 .Home:hover {
   transform: translateX(-4px) translateY(-4px);
   border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037; 
+  box-shadow: 4px 4px 2px #0d47a1; /* Dark blue */
   cursor: pointer;
 }
 
@@ -48,381 +78,218 @@
   box-shadow: none;
 }
 
-.About {
-  display: inline-block;
-  height: 46px;
-  width: 160px;
-  text-align: center;
-  font-size: 16px;
-  border-radius: 1rem;
-  border: 2px solid #5D4037; 
-  background-color: #FAEBD7; 
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #5D4037; 
-  transition: all 300ms;
-}
-
-.About:hover {
-  transform: translateX(-4px) translateY(-4px);
-  border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037; 
-  cursor: pointer;
-}
-
-.About:active {
-  transform: translateX(0px) translateY(0px);
-  border-radius: 1rem;
-  box-shadow: none;
-}
-
+.About,
 .Contact {
   display: inline-block;
   height: 46px;
   width: 160px;
   text-align: center;
-  border-radius: 1rem;
   font-size: 16px;
-  border: 2px solid #5D4037; 
-  background-color: #FAEBD7;
+  border-radius: 1rem;
+  border: 2px solid #0d47a1; /* Dark blue */
+  background-color: #e3f2fd; /* Light blue */
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #5D4037;
+  color: #5d4037; /* Dark brown */
   transition: all 300ms;
 }
 
+.About:hover,
 .Contact:hover {
   transform: translateX(-4px) translateY(-4px);
   border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
+  box-shadow: 4px 4px 2px #0d47a1; /* Dark blue */
   cursor: pointer;
 }
 
+.About:active,
 .Contact:active {
   transform: translateX(0px) translateY(0px);
   border-radius: 1rem;
   box-shadow: none;
 }
 
-.Profile {
-  height: 60px;
-  width: 60px;
-  border: 3px solid #D7CCC8;
+.icons {
+  width: 130px;
+  height: 130px;
+}
+
+.FAQContainerParent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.FAQContainer {
+  display: grid;
+  grid-template-columns: repeat(1, 600px);
+  grid-template-rows: repeat(6, 100px);
+  gap: 16px;
+}
+
+.headerFAQ {
+  border: 1px solid #0d47a1; /* Dark blue */
+  border-radius: 26px;
+  font-size: 30px;
+  width: 100%;
+  height: 70%;
+  text-align: center;
+  align-content: center;
+  background-color: #0d47a1; /* Dark blue */
+  color: #e3f2fd; /* Light blue */
+  overflow: hidden;
+  z-index: 1;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 12px 24px;
+}
+
+.headerFAQ::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background-color: #2196f3; /* Medium blue */
+  z-index: -1;
+  transition: height 0.35s ease-in-out;
+  border-radius: 15px;
+}
+
+.headerFAQ:hover {
+  transform: translateY(-6px);
+  box-shadow: 0px 4px 6px #0d47a1; /* Dark blue */
+}
+
+.headerFAQ:hover::before {
+  height: 100%;
+}
+
+.headerFAQ:hover {
+  width: 100%;
+  background-color: #0d47a1; /* Dark blue */
+  color: #e3f2fd; /* Light blue */
+  transform: translateY(-6px);
+  box-shadow: 0px 4px 6px #0d47a1; /* Dark blue */
   cursor: pointer;
 }
-
-@media (max-width: 1024px) {
-  .Home {
-    margin-right: 20%;
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1265px) {
   .HeaderContainer {
-    flex-direction: column;
-    padding: 10px 0;
+    z-index: 10;
   }
 
   .Image {
     padding: 15px;
     height: 100px;
+    z-index: 9999;
+  }
+
+  /* Show hamburger in mobile view */
+  .hamburger {
+    display: block;
+  }
+
+  /* Hide nav links by default in mobile view */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -50%; /* Start off-screen */
+    width: 50%; /* Only take half the screen */
+    height: 100vh;
+    flex-direction: column;
+    background-color: #1565c0; /* Navy blue tone */
+    transition: right 0.5s ease;
+    padding-top: 150px;
+    z-index: 997; /* Lower z-index than profile picture */
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Show nav links when active */
+  .nav-links.active {
+    right: 0;
   }
 
   .Home,
   .About,
-  .Contact {
+  .Contact,
+  .Login {
     width: 80%;
+    margin: 15px 0;
+    height: auto;
+    padding: 15px;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Home {
     margin-right: 0;
-    margin-bottom: 10px;
+  }
+
+  /* Profile in mobile view - keep position absolute and outside the hamburger menu */
+  .Profile {
+    position: fixed; /* Changed to fixed to ensure it stays in place */
+    right: 80px;
+    top: 25px;
+    margin-left: 0; /* Reset margin */
+    z-index: 1001; /* Higher z-index than the hamburger menu to ensure it's always on top */
   }
 }
 
-@media (max-width: 480px) {
-  .HeaderContainer {
-    gap: 8px;
+@media (max-width: 1750px) {
+  .Image {
+    margin-left: 50px; /* Removed right margin */
+  }
+
+  .Profile {
+    margin-right: 80px;
+  }
+}
+
+@media (max-width: 1250px) {
+  .Image {
+    margin-left: 10px; /* Removed right margin */
+  }
+
+  .Profile {
+    margin-right: 0px;
+  }
+}
+
+@media (max-width: 620px) {
+  .FAQContainer {
+    grid-template-columns: 1fr;
+    width: 90%;
   }
 
   .Image {
-    padding: 10px;
-    height: 80px;
+    margin-left: 10px; /* Removed right margin */
   }
 
-  .Home,
-  .About,
-  .Contact {
-    width: 90%;
-    height: 40px;
-    font-size: 14px;
-    padding: 0.5rem 1rem;
-  }
-
-  .profile {
-    height: 40px;
-    width: 40px;
+  .Profile {
+    margin-right: 0px;
   }
 }
 
-.SidebarContainer {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 300px;
-  padding: 30px 0;
-  background-color: #5D4037;
-  z-index: 900;
-  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.SidebarButton {
-  display: block;
-  height: 60px;
-  width: 260px;
-  margin: 20px auto;
-  text-align: center;
-  border-radius: 1rem;
-  border: 2px solid #5D4037;
-  background-color: #FAEBD7;
-  padding: 1rem 1.5rem;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #5D4037;
-  transition: all 300ms;
-}
-
-.SidebarButton:hover {
-  transform: translateX(-4px) translateY(-4px);
-  border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
-  cursor: pointer;
-}
-
-.SidebarButton:active {
-  transform: translateX(0px) translateY(0px);
-  border-radius: 1rem;
-  box-shadow: none;
-}
-
-.youOrder {
-  background-color: #D7CCC8;
-}
-
-.orderHistory {
-  background-color: #BCAAA4;
-}
-
-.Profile {
-  background-color: #A1887F;
-}
-
-.MainContentWithSidebar {
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  justify-content: center;
-  padding: 30px;
-  margin-left: 260px;
-  text-align: center;
-  height: auto;
-  color: #5D4037;
-  background-color: #FAEBD7;
-}
-
-.tableContainer {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: repeat(16, 100px);
-  grid-template-rows: repeat(16, 100px);
-  text-align: center;
-  align-items: center;
-  border: 0px solid;
-  box-shadow: 3px 0px 3px 3px #5D4037;
-  gap: 6px;
-  background-color: #D2B48C;
-}
-
-.columnOne {
-  grid-column: 1 / 4;
-  grid-row: 1 / 3;
-  border: 1px solid #FAEBD7;
-  border-radius: 13px;
-}
-
-.columnTwo {
-  grid-column: 4 / 7;
-  grid-row: 1 / 3;
-  border: 1px solid #FAEBD7;
-  border-radius: 13px;
-}
-
-.columnThree {
-  grid-column: 7 / 10;
-  grid-row: 1 / 3;
-  border: 1px solid #FAEBD7;
-  border-radius: 13px;
-}
-
-.columnFour {
-  grid-column: 10 / 13;
-  grid-row: 1 / 3;
-  border: 1px solid #FAEBD7;
-  border-radius: 13px;
-}
-
-.columnFive {
-  grid-column: 13 / 16;
-  grid-row: 1 / 3;
-  border: 1px solid #FAEBD7;
-  border-radius: 13px;
-}
-
-.userName {
-  grid-column: 1 / 4;
-  grid-row: 2 / 4;
-  border-top: 1px solid #A1887F;
-  padding: 30px;
-  border-bottom: 1px solid #A1887F;
-}
-
-.userEmail {
-  grid-column: 4 / 7;
-  grid-row: 2 / 4;
-  border-top: 1px solid #A1887F;
-  padding: 30px;
-  border-bottom: 1px solid #A1887F;
-}
-
-.userPhone {
-  grid-column: 7 / 10;
-  grid-row: 2 / 4;
-  border-top: 1px solid #A1887F;
-  padding: 30px;
-  border-bottom: 1px solid #A1887F;
-}
-
-.userDate {
-  grid-column: 10 / 13;
-  grid-row: 2 / 4;
-  border-top: 1px solid #A1887F;
-  padding: 30px;
-  border-bottom: 1px solid #A1887F;
-}
-
-.userOrder {
-  grid-column: 13 / 16;
-  grid-row: 2 / 4;
-  border-top: 1px solid #A1887F;
-  padding: 30px;
-  border-bottom: 1px solid #A1887F;
-}
-
-.viewStatusButton {
-  display: block;
-  height: 60px;
-  width: 200px;
-  grid-row: 2 / 2;
-  margin: 30px auto;
-  text-align: center;
-  border-radius: 1rem;
-  border: 2px solid #5D4037;
-  background-color: #8D6E63;
-  padding: 1rem 1.5rem;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #FAEBD7;
-  transition: all 300ms;
-}
-
-.viewStatusButton:hover {
-  transform: translateX(-4px) translateY(-4px);
-  border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
-  cursor: pointer;
-}
-
-.viewStatusButton:active {
-  transform: translateX(0px) translateY(0px);
-  border-radius: 1rem;
-  box-shadow: none;
-}
-
-.viewCancelButton {
-  display: block;
-  height: 60px;
-  width: 200px;
-  grid-row: 2 / 4;
-  margin: 30px auto;
-  text-align: center;
-  border-radius: 1rem;
-  border: 2px solid #5D4037;
-  background-color: #A1887F;
-  padding: 1rem 1.5rem;
-  font-size: 16px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #FAEBD7;
-  transition: all 300ms;
-}
-
-.viewCancelButton:hover {
-  transform: translateX(-4px) translateY(-4px);
-  border-radius: 0.375rem;
-  box-shadow: 4px 4px 2px #5D4037;
-  cursor: pointer;
-}
-
-.viewCancelButton:active {
-  transform: translateX(0px) translateY(0px);
-  border-radius: 1rem;
-  box-shadow: none;
-}
-
-.containerOrder {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(200px, 1fr));
-  margin: 0;
-  padding: 0;
-  gap: 16px;
-  height: auto;
-}
-
-.structureOrder {
-  grid-column: 1 / 6;
-  padding: 30px;
-}
-
-.OrderHistory {
-  margin-left: 300px;
-  margin-top: 60px;
-  padding: 60px;
-  display: flex;
-  justify-content: center;
-  background-color: #FAEBD7;
-}
-
-body {
-  position: relative;
-  margin: 0;
-  padding: 0;
-  background-color: #FAEBD7;
-  font-family: Arial, sans-serif;
-  color: #5D4037;
-}
-
-@keyframes reflectLight {
-  0% {
-    top: -200%;
-    left: -200%;
+@media (max-width: 490px) {
+  .FAQContainerParent {
+    padding-bottom: 100px;
   }
-  100% {
-    top: 200%;
-    left: 200%;
+
+  .Image {
+    margin-left: 10px; /* Removed right margin */
+  }
+
+  .Profile {
+    margin-right: 0px;
   }
 }

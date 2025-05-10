@@ -6,10 +6,11 @@ import { auth } from '../config/firebase.jsx'
 import { signOut } from 'firebase/auth'
 import OrderHistory from './OrderHistory.jsx'
 import ProfileEdit from './ProfileEdit.jsx'
-import { createContext, useState } from 'react'
+import { createContext, useState, useContext } from 'react'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../config/firebase.jsx'
 import { Link, useNavigate } from 'react-router-dom'
+import { Squash as Hamburger } from 'hamburger-react';
 import {
     LogOut,
     User,
@@ -25,14 +26,18 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { ProfilePicContext } from '../context.jsx'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const createData = createContext();
 
 export default function Customer(props) {
+
+    const { currentProfilePic } = useContext(ProfilePicContext);
     const [orderOpen, setOrderOpen] = useState(false);
     const [orderHistoryOpen, setHistoryOpen] = useState(false);
     const [editProfileOpen, setEditProfileOpen] = useState(false);
+    const [isOpen, setOpen] = useState(false);
     const [uid, setUid] = useState(null);
 
     const navOrder = useNavigate();
@@ -64,45 +69,50 @@ export default function Customer(props) {
         }
     }
     return (<>
-        <nav className={Style.HeaderContainer}>
-            <img className={Style.Image} src={Logo} alt="Logo" />
-            <Link to='/' className={Style.Home}>Home</Link>
-            <a className={Style.About}>About</a>
-            <a className={Style.Contact}>Contacts</a>
-            <a className={Style.Login}>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Avatar className={Style.Profile}>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>...Loading</AvatarFallback>
-                        </Avatar>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <User />
-                                <span className='cursor-pointer'>Profile</span>
-                                <DropdownMenuShortcut>P</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <ShoppingCart />
-                                <Link to='/customer' className='cursor-pointer' onClick={myOrderNav}>My Order</Link>
-                                <DropdownMenuShortcut>S</DropdownMenuShortcut>
-                            </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                        <DropdownMenuItem>
-                            <LogOut />
-                            <span onClick={logout} className='cursor-pointer'>Log out</span>
-                            <DropdownMenuShortcut>Q</DropdownMenuShortcut>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </a>
-        </nav>
+       <nav className={Style.HeaderContainer}>
+                   <img className={Style.Image} src={Logo} />
+                   <div className={Style.hamburger}>
+                       <Hamburger toggled={isOpen} toggle={setOpen} />
+                   </div>
+                   <div className={`${Style["nav-links"]} ${isOpen ? Style.active : ""}`}>
+                       <Link to='/' onClick={() => { setOpen(false) }} className={Style.Home}>HOME</Link>
+                       <Link to='/#about' onClick={() => { setOpen(false); scrollToSection('about') }} className={Style.About}>ABOUT</Link>
+                       <Link to='/#contact' onClick={() => { setOpen(false); scrollToSection('contact') }} className={Style.Contact}>CONTACTS</Link>
+                       <a className={Style.Login}>
+                           <DropdownMenu>
+                               <DropdownMenuTrigger asChild>
+                                   <Avatar className={Style.Profile}>
+                                       <AvatarImage src={currentProfilePic || "https://github.com/shadcn.png"} />
+                                       <AvatarFallback>...Loading</AvatarFallback>
+                                   </Avatar>
+                               </DropdownMenuTrigger>
+                               <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+                                   <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>
+                                   <DropdownMenuSeparator />
+                                   <DropdownMenuGroup>
+                                       <DropdownMenuItem>
+                                           <User />
+                                           <span className='cursor-pointer'>Profile</span>
+                                           <DropdownMenuShortcut>P</DropdownMenuShortcut>
+                                       </DropdownMenuItem>
+                                       <DropdownMenuItem>
+                                           <ShoppingCart />
+                                           <Link to='/admin' className='cursor-pointer' onClick={myOrderNav}>My Order's</Link>
+                                           <DropdownMenuShortcut>M</DropdownMenuShortcut>
+                                       </DropdownMenuItem>
+                                   </DropdownMenuGroup>
+                                   <DropdownMenuItem>
+                                       <LogOut />
+                                       <span onClick={logout} className='cursor-pointer'>Log out</span>
+                                       <DropdownMenuShortcut>Q</DropdownMenuShortcut>
+                                   </DropdownMenuItem>
+                               </DropdownMenuContent>
+                           </DropdownMenu>
+                       </a>
+                   </div>
+               </nav>
 
-        <div className={Style.SidebarContainer}>
+        {/* <div className={Style.SidebarContainer}>
             <button className={`${Style.SidebarButton} ${Style.yourOrder}`} onClick={orderData}>Your Order/s</button>
             <button className={`${Style.SidebarButton} ${Style.orderHistory}`} onClick={() => {
                 setEditProfileOpen(false);
@@ -114,7 +124,7 @@ export default function Customer(props) {
                 setHistoryOpen(false);
                 setEditProfileOpen(true);
             }}>Edit Profile</button>
-        </div>
+        </div> */}
 
 
         {orderOpen ? (
