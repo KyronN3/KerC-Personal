@@ -118,7 +118,7 @@ const CreateTask = () => {
   const price = (doc) => {
     setServicePrice(doc);
   }
-  console.log(createTask)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -169,7 +169,7 @@ const CreateTask = () => {
     if (createTask.name?.includes('null')) {
       nameRef.current.value = '';
     }
-    if (createTask.phone==(null)) {
+    if (createTask.phone == (null)) {
       phoneRef.current.value = '';
     }
   }, [createTask])
@@ -248,7 +248,7 @@ const CreateTask = () => {
                 className={styles.inputField}
                 disabled={false}
                 required
-                
+
               /> :
               <input
                 type="tel"

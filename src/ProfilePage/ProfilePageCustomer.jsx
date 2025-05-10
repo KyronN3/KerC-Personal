@@ -6,7 +6,7 @@ import LoadingScreen from '../LoadingScreen.jsx'
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { auth, db, storage } from '../config/firebase.jsx';
-import { getDoc, doc, updateDoc } from 'firebase/firestore';
+import { getDocs, getDoc, doc, collection, updateDoc, deleteDoc } from 'firebase/firestore';
 import { listAll, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { signOut } from 'firebase/auth';
 import { Squash as Hamburger } from 'hamburger-react';
@@ -187,7 +187,45 @@ const ProfilePageCustomer = () => {
 
     const confirmDelete = async () => {
         if (deleteTypeConfirm == "DELETE") {
-            console.log(true)
+
+            const dataFetch = await getDocs(collection(db, 'Order'));
+            const dataSnap = dataFetch.docs.map((doc) => ({
+                docId: doc.id,
+                ...doc.data()
+            }))
+
+            const filter = dataSnap.filter((doc) => {
+                return doc.customerID == auth?.currentUser?.uid
+            })
+
+
+            const dataFetchReceipt = await getDocs(collection(db, 'Receipt'));
+            const dataSnapReceipt = dataFetchReceipt.docs.map((doc) => ({
+                docId: doc.id,
+                ...doc.data()
+            }))
+
+            const filterReceipt = dataSnapReceipt.filter((doc) => {
+                return doc.referencekey == filter[0].docId
+            })
+
+            try {
+
+                // ReceiptDelete
+                await deleteDoc(doc(db, 'Receipt', filterReceipt[0].docId));
+
+                //Order Delete
+                await deleteDoc(doc(db, 'Order', filter[0].docId))
+
+                //User Delete
+                await deleteDoc(doc(db, 'Customer', auth?.currentUser?.uid))
+
+                logout();
+
+            } catch (error) { console.error(error) }
+
+
+
         }
     }
 
