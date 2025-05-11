@@ -49,35 +49,6 @@ function App() {
       isAdmin: false
     });
 
-  // const items = [
-  //   {
-  //     id: 1,
-  //     customerName: 'John Doe',
-  //     contactInfo: '123-456-7890',
-  //     orderDetails: 'Custom logo design',
-  //     dueDate: '2023-05-15',
-  //     additionalInfo: 'Rush order',
-  //   },
-  //   {
-  //     id: 2,
-  //     customerName: 'Jane Smith',
-  //     contactInfo: '987-654-3210',
-  //     orderDetails: 'Website development',
-  //     dueDate: '2023-06-30',
-  //     additionalInfo: 'Includes hosting',
-  //   },
-  //   {
-  //     id: 3,
-  //     customerName: 'Jane Smith',
-  //     contactInfo: '987-654-3210',
-  //     orderDetails: 'Website development',
-  //     dueDate: '2023-06-30',
-  //     additionalInfo: 'Includes hosting',
-  //   },
-  // ]
-
-
-
   // check if user is Login
   // Created Account through email and password
   useEffect(() => {
@@ -178,7 +149,7 @@ function App() {
       element: <Legal />
     },
     {
-      path: 'servicePrice',
+      path: '/servicePrice',
       element: <ServicePrice />
     }
   ])
@@ -194,8 +165,16 @@ function App() {
       element: <Customer />
     },
     {
-      path: 'profilepagecustomer',
+      path: '/profilepagecustomer',
       element: <ProfilePageCustomer />
+    },
+    {
+      path: '/order',
+      element: <Customer />
+    },
+    {
+      path: '/orderhistory',
+      element: <Customer />
     },
     {
       path: '/inquire',
@@ -206,7 +185,7 @@ function App() {
       element: <Legal />
     },
     {
-      path: 'servicePrice',
+      path: '/servicePrice',
       element: <ServicePrice />
     }
   ])

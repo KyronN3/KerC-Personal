@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Edit2, Search, PhilippinePeso, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { db } from '../config/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
 import LoadingScreen from '../LoadingScreen';
 
 const EditPrice = () => {
@@ -18,7 +17,6 @@ const EditPrice = () => {
   const [sortField, setSortField] = useState('service');
   const [sortDirection, setSortDirection] = useState('asc');
 
-  const navigate = useNavigate();
   const modalRef = useRef(null);
   const targetRowRef = useRef(null);
 
@@ -37,7 +35,7 @@ const EditPrice = () => {
       }
     };
     getData();
-  }, [update]);
+  },);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -94,7 +92,6 @@ const EditPrice = () => {
         if (dataScope[0] !== undefined) {
           const refWithId = doc(db, 'Price', dataScope[0].id);
           await updateDoc(refWithId, { price: `₱${newPrice}` });
-          navigate(0);
         }
       } catch (err) {
         console.error(err);
@@ -161,48 +158,48 @@ const EditPrice = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const SortIcon = ({ field }) => {
-    if (sortField !== field) return <ChevronDown className="w-4 h-4 opacity-30" />;
+    if (sortField !== field) return <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 opacity-30" />;
     return sortDirection === 'asc' ?
-      <ChevronDown className="w-4 h-4" /> :
-      <ChevronDown className="w-4 h-4 transform rotate-180" />;
+      <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4" /> :
+      <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 transform rotate-180" />;
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-6xl">
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        {/* Search bar */}
-        <div className="p-4 bg-gray-50 border-b">
-          <div className="max-w-md mx-auto">
-            <form onSubmit={handleSearch} className="relative">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search services..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full py-2 pl-10 pr-16 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search className="w-5 h-5 text-gray-400" />
-                </div>
+    <div className="w-full h-full py-4 px-3">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden h-full m-1 flex flex-col">
+        {/* Header and Search Bar */}
+        <div className="p-3 md:p-4 bg-gray-50 border-b">
+          <h1 className="text-base sm:text-lg font-bold mb-3">Price Management</h1>
+
+          <div className="flex flex-col sm:flex-row gap-3 mb-3">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search services..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full py-1.5 pl-8 pr-3 text-xs md:text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+              />
+              <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                <Search className="w-4 h-4 text-gray-400" />
               </div>
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-              >
-                Search
-              </button>
-            </form>
+            </div>
+            <button
+              onClick={handleSearch}
+              className="px-4 py-1.5 text-xs md:text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              SEARCH
+            </button>
           </div>
         </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
+        {/* Table - Added flex-1 to make it expand */}
+        <div className="overflow-auto flex-1 flex flex-col">
           <table className="w-full border-collapse min-w-full table-auto">
             <thead>
-              <tr className="bg-blue-200 text-gray-700">
+              <tr className="bg-blue-200 w-full text-gray-700">
                 <th
-                  className="p-3 text-left font-medium border-b border-gray-200 cursor-pointer"
+                  className="p-1 sm:p-2 text-left font-medium border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs sticky top-0 cursor-pointer"
                   onClick={() => toggleSort('service')}
                 >
                   <div className="flex items-center space-x-1">
@@ -211,7 +208,7 @@ const EditPrice = () => {
                   </div>
                 </th>
                 <th
-                  className="p-3 text-left font-medium border-b border-gray-200 cursor-pointer"
+                  className="p-1 sm:p-2 text-left font-medium border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs sticky top-0 cursor-pointer"
                   onClick={() => toggleSort('option')}
                 >
                   <div className="flex items-center space-x-1">
@@ -220,7 +217,7 @@ const EditPrice = () => {
                   </div>
                 </th>
                 <th
-                  className="p-3 text-left font-medium border-b border-gray-200 cursor-pointer"
+                  className="p-1 sm:p-2 text-left font-medium border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs sticky top-0 cursor-pointer"
                   onClick={() => toggleSort('price')}
                 >
                   <div className="flex items-center space-x-1">
@@ -229,7 +226,7 @@ const EditPrice = () => {
                   </div>
                 </th>
                 <th
-                  className="p-3 text-left font-medium border-b border-gray-200 cursor-pointer"
+                  className="p-1 sm:p-2 text-left font-medium border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs sticky top-0 cursor-pointer"
                   onClick={() => toggleSort('description')}
                 >
                   <div className="flex items-center space-x-1">
@@ -237,12 +234,12 @@ const EditPrice = () => {
                     <SortIcon field="description" />
                   </div>
                 </th>
-                <th className="p-3 text-center font-medium border-b border-gray-200 w-16">
+                <th className="p-1 sm:p-2 text-center font-medium border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs sticky top-0 w-8 sm:w-12">
                   EDIT
                 </th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-[11px] xs:text-xs sm:text-[13px]">
               {currentItems.map((item, index) => {
                 // Calculate the actual index in the full dataset
                 const actualIndex = indexOfFirstItem + index;
@@ -250,33 +247,31 @@ const EditPrice = () => {
                 return (
                   <tr
                     key={index}
-                    className={actualIndex % 2 === 0 ? "bg-[#f5faff]" : "bg-gray-50"}
+                    className={actualIndex % 2 === 0 ? "bg-blue-50" : "bg-white"}
                     ref={targetTable.rowIndex === actualIndex ? targetRowRef : null}
                     style={targetTable.rowIndex === actualIndex && update ? { backgroundColor: '#fff3cd' } : {}}
                   >
-                    <td className="p-3 border-b border-gray-200">{item.service}</td>
-                    <td className="p-3 border-b border-gray-200">
-                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${item.option === 'Premium' ? 'bg-green-100 text-green-800' :
-                          item.option === 'Basic' ? 'bg-blue-100 text-blue-800' :
-                            'bg-gray-100 text-gray-800'
+                    <td className="p-1 sm:p-2 border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs">{item.service}</td>
+                    <td className="p-1 sm:p-2 border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs">
+                      <span className={`inline-flex px-1 sm:px-1.5 py-0.5 text-[10px] xs:text-[11px] sm:text-xs font-medium rounded-full ${item.option === 'Premium' ? 'bg-green-100 text-green-800' :
+                        item.option === 'Basic' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
                         }`}>
                         {item.option}
                       </span>
                     </td>
-                    <td className="p-3 border-b border-gray-200 font-medium">{item.price}</td>
-                    <td className="p-3 border-b border-gray-200 text-gray-600 max-w-sm">
-                      <div className="truncate">{item.description}</div>
+                    <td className="p-1 sm:p-2 border-b border-gray-200 font-medium text-[11px] xs:text-xs sm:text-xs">{item.price}</td>
+                    <td className="p-1 sm:p-2 border-b border-gray-200 text-[11px] xs:text-xs sm:text-xs">
+                      <div className="break-words max-w-[100px] sm:max-w-full">{item.description}</div>
                     </td>
-                    <td className="p-3 border-b border-gray-200">
-                      <div className="flex justify-center">
-                        <button
-                          className="text-gray-600 cursor-pointer hover:text-blue-600 transition-colors p-1 rounded-full hover:bg-gray-100"
-                          onClick={() => priceEdit(item, actualIndex)}
-                          aria-label={`Edit price for ${item.service} ${item.option}`}
-                        >
-                          <Edit2 size={18} />
-                        </button>
-                      </div>
+                    <td className="p-1 sm:p-2 border-b border-gray-200 text-center">
+                      <button
+                        className="text-gray-600 cursor-pointer hover:text-blue-600 transition-colors rounded-full hover:bg-gray-100"
+                        onClick={() => priceEdit(item, actualIndex)}
+                        aria-label={`Edit price for ${item.service} ${item.option}`}
+                      >
+                        <Edit2 size={14} className="sm:w-4 sm:h-4" />
+                      </button>
                     </td>
                   </tr>
                 );
@@ -286,32 +281,55 @@ const EditPrice = () => {
         </div>
 
         {/* Pagination */}
-        <div className="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+        <div className="bg-gray-50 px-2 sm:px-3 md:px-4 py-2 sm:py-3 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200 mt-auto">
+          <div className="w-full mb-2 sm:mb-0 sm:hidden">
+            <p className="text-[11px] text-gray-700 text-center">
+              Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
+              <span className="font-medium">
+                {indexOfLastItem > sortedData.length ? sortedData.length : indexOfLastItem}
+              </span>{' '}
+              of <span className="font-medium">{sortedData.length}</span> results
+            </p>
+            <div className="flex items-center justify-center space-x-3 mt-1">
+              <span className="text-[11px] text-gray-700">Rows:</span>
+              <select
+                value={rowsPerPage}
+                onChange={(e) => {
+                  setRowsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border border-gray-300 rounded px-2 py-1 text-[11px]"
+              >
+                {[5, 10, 25, 50].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    {pageSize}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <div className="flex-1 flex justify-between sm:hidden">
             <button
               onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
               disabled={currentPage === 1}
-              className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${currentPage === 1
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+              className={`relative inline-flex items-center px-2 py-1 border border-gray-300 text-[11px] font-medium rounded-md ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
             >
-              Previous
+              Prev
             </button>
+            <span className="text-[11px] font-medium text-gray-700">
+              {currentPage}/{totalPages}
+            </span>
             <button
               onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)}
-              disabled={currentPage === totalPages}
-              className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${currentPage === totalPages
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+              disabled={currentPage === totalPages || totalPages === 0}
+              className={`relative inline-flex items-center px-2 py-1 border border-gray-300 text-[11px] font-medium rounded-md ${currentPage === totalPages || totalPages === 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
             >
               Next
             </button>
           </div>
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm text-gray-700">
+              <p className="text-xs text-gray-700">
                 Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
                 <span className="font-medium">
                   {indexOfLastItem > sortedData.length ? sortedData.length : indexOfLastItem}
@@ -320,15 +338,15 @@ const EditPrice = () => {
               </p>
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-700">Rows per page:</span>
+              <div className="flex items-center space-x-3">
+                <span className="text-xs text-gray-700">Rows:</span>
                 <select
                   value={rowsPerPage}
                   onChange={(e) => {
                     setRowsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="border border-gray-300 rounded px-2 py-1 text-sm"
+                  className="border border-gray-300 rounded px-2 py-1 text-xs"
                 >
                   {[5, 10, 25, 50].map((pageSize) => (
                     <option key={pageSize} value={pageSize}>
@@ -341,29 +359,23 @@ const EditPrice = () => {
                   <button
                     onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)}
                     disabled={currentPage === 1}
-                    className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm font-medium ${currentPage === 1
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-gray-500 hover:bg-gray-50'
-                      }`}
+                    className={`relative inline-flex items-center px-2 py-1.5 rounded-l-md border border-gray-300 text-xs font-medium ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                   >
                     <span className="sr-only">Previous</span>
-                    <ChevronLeft className="h-5 w-5" />
+                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
                   </button>
 
-                  <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                  <span className="relative inline-flex items-center px-3 py-1.5 border border-gray-300 bg-white text-xs font-medium text-gray-700">
                     {currentPage}/{totalPages}
                   </span>
 
                   <button
                     onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)}
                     disabled={currentPage === totalPages || totalPages === 0}
-                    className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 text-sm font-medium ${currentPage === totalPages || totalPages === 0
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-gray-500 hover:bg-gray-50'
-                      }`}
+                    className={`relative inline-flex items-center px-2 py-1.5 rounded-r-md border border-gray-300 text-xs font-medium ${currentPage === totalPages || totalPages === 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
                   >
                     <span className="sr-only">Next</span>
-                    <ChevronRight className="h-5 w-5" />
+                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                   </button>
                 </nav>
               </div>
@@ -393,31 +405,31 @@ const EditPrice = () => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                    <h3 className="text-lg font-medium leading-6 text-gray-900 mb-2">
+                    <h3 className="text-base sm:text-lg font-medium leading-6 text-gray-900 mb-2">
                       Edit Price: {targetTable.service} - {targetTable.option}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-4">Current price: {targetTable.price}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 mb-4">Current price: {targetTable.price}</p>
 
                     <form onSubmit={handlePrice}>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         Set New Price
                       </label>
                       <div className="relative mt-1 rounded-md shadow-sm">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <PhilippinePeso className="h-5 w-5 text-gray-400" />
+                          <PhilippinePeso className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                         </div>
                         <input
                           type="text"
                           value={newPrice}
                           onChange={onChangePrice}
                           placeholder="Enter new price"
-                          className="block w-full pl-10 pr-20 py-2 sm:text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                          className="block w-full pl-10 pr-20 py-2 text-xs sm:text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                           autoFocus
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center">
                           <button
                             type='submit'
-                            className="h-full px-4 bg-blue-500 text-white rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            className="h-full px-4 bg-blue-500 text-white text-xs sm:text-sm rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                           >
                             Update
                           </button>
@@ -427,7 +439,7 @@ const EditPrice = () => {
                         <button
                           type="button"
                           onClick={closeModal}
-                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+                          className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-xs sm:text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto"
                         >
                           Cancel
                         </button>

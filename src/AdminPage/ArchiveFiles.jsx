@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { db } from '../config/firebase.jsx';
 import { collection, getDocs, addDoc, doc, deleteDoc, getDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { AlertTriangle, Trash2, X } from 'lucide-react';
 import Receipt from './ReceiptArchive.jsx'
@@ -20,7 +19,6 @@ const ArchiveFiles = () => {
   const [receiptId, setReceiptId] = useState();
   const [itemFromDoc, setItemFromDoc] = useState([]);
   const [item, setItem] = useState([]);
-  const reload = useNavigate();
 
   // Fetch Order data
   useEffect(() => {
@@ -63,7 +61,7 @@ const ArchiveFiles = () => {
       }
     };
     datReceive();
-  }, [targetTableDelete]);
+  },);
 
   // Filter data to find unique items not already in Archive
   useEffect(() => {
@@ -89,23 +87,25 @@ const ArchiveFiles = () => {
           const addedDocs = [];
           for (const doc of item) {
 
-            if (doc && doc.referencekey) {
-              await addDoc(ref, {
-                customerID: doc.customerID || '',
-                description: doc.description || '',
-                email: doc.email || '',
-                id: doc.id || '',
-                isReceipt: doc.isReceipt || false,
-                name: doc.name || '',
-                phone: doc.phone || '',
-                price: doc.price || 0,
-                referencekey: doc.referencekey,
-                service: doc.service || '',
-                status: doc.status || null,
-                timeDate: doc.timeDate || '',
-                isArchive: true
-              });
-              addedDocs.push(doc.referencekey);
+            if (doc.status == "Completed") {
+              if (doc && doc.referencekey) {
+                await addDoc(ref, {
+                  customerID: doc.customerID || '',
+                  description: doc.description || '',
+                  email: doc.email || '',
+                  id: doc.id || '',
+                  isReceipt: doc.isReceipt || false,
+                  name: doc.name || '',
+                  phone: doc.phone || '',
+                  price: doc.price || 0,
+                  referencekey: doc.referencekey,
+                  service: doc.service || '',
+                  status: doc.status || null,
+                  timeDate: doc.timeDate || '',
+                  isArchive: true
+                });
+                addedDocs.push(doc.referencekey);
+              }
             }
           }
 
@@ -183,9 +183,7 @@ const ArchiveFiles = () => {
             return doc.referencekey == item.referencekey;
           })
           await deleteDoc(doc(db, 'ReceiptArchive', referencekey[0].docId))
-          reload(0);
         } else {
-          reload(0);
           toast.success("Successfully deleted", {
             position: 'top-right',
             style: {
@@ -206,8 +204,6 @@ const ArchiveFiles = () => {
         });
       }
     }
-
-
 
   };
 

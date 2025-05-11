@@ -137,7 +137,7 @@ const CreateTask = () => {
         timeDate: createTask.timeDate,
         description: createTask.description,
         isReceipt: false,
-        status: null,
+        status: 'Pending',
       })
 
       const refId = doc(db, 'Order', uid.id);
@@ -179,29 +179,29 @@ const CreateTask = () => {
     <div className={styles.formContainer}>
       <h1 className={styles.formTitle}>CREATE TASK / JOB ORDER</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="w-full">
         <div className={styles.formGrid}>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="w-full h-[46px] sm:w-64 md:w-full lg:w-full xl:w-full text-xs sm:text-sm md:text-base"
+                className="w-full h-10 text-sm"
                 variant="outline"
               >
                 {customerName != null ? customerName[0].email : 'Pick Customer'}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 max-h-60 sm:max-h-72 overlay-auto bg-[#cae0f0] border-[#5D4037]"
+              className="w-full max-h-60 overflow-auto bg-[#cae0f0] border-[#5D4037]"
             >
-              <DropdownMenuLabel className="text-center text-xs sm:text-sm md:text-base">Customer Accounts</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center text-sm">Customer Accounts</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup onValueChange={onChangeID}>
                 {customer.map((doc) => (
                   <DropdownMenuRadioItem
                     key={doc.docId}
                     value={doc.docId}
-                    className="text-xs sm:text-sm md:text-[13px] px-2 py-1.5 md:py-2 truncate hover:bg-blue-100 cursor-pointer"
+                    className="text-xs md:text-sm py-1.5 truncate hover:bg-blue-100 cursor-pointer"
                   >
                     {doc.email}
                   </DropdownMenuRadioItem>
@@ -277,16 +277,16 @@ const CreateTask = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="w-full sm:w-90 md:w-90 md-text-sm lg:w-80 xl:w-95 text-xs sm:text-sm"
+                className="w-full h-10 text-sm"
                 variant="outline"
               >
                 {createTask.service != null ? createTask.service : 'Services'}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-full sm:w-64 md:w-72 lg:w-80 xl:w-96 max-h-60 sm:max-h-72 overflow-y-auto bg-[#cae0f0] border-[#5D4037]"
+              className="w-full max-h-60 overflow-y-auto bg-[#cae0f0] border-[#5D4037]"
             >
-              <DropdownMenuLabel className="text-center text-xs sm:text-sm md:text-base">KER-C</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center text-sm">KER-C</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup onValueChange={onChangeServices}>
                 {priceData.map((doc, index) => (
@@ -294,7 +294,7 @@ const CreateTask = () => {
                     key={index}
                     onClick={() => price(doc)}
                     value={`${doc.service} ${doc.option}`}
-                    className="text-xs sm:text-sm md:text-base py-1 sm:py-2 hover:bg-blue-100"
+                    className="text-xs md:text-sm py-1.5 hover:bg-blue-100"
                   >
                     {doc.service} {doc.option}
                   </DropdownMenuRadioItem>
@@ -320,7 +320,7 @@ const CreateTask = () => {
               placeholder="Description"
               onChange={onChangeDescription}
               className={styles.textareaField}
-              rows={5}
+              rows={4}
               required
             />
           </div>

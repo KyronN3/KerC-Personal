@@ -1,13 +1,17 @@
 /* eslint-disable no-undef */
 import Style from './Customer.module.css'
 import Logo from '../assets/imgs/logo.png'
+import Order from '../CustomerPage/Orders.jsx'
+import OrderHistory from '../CustomerPage/OrderHistory.jsx'
+import LoadingScreen from '../LoadingScreen.jsx'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { auth } from '../config/firebase.jsx'
 import { signOut } from 'firebase/auth'
-import { createContext, useState, useContext } from 'react'
+import { createContext, useState, useContext, useEffect } from 'react'
 // import { collection, getDocs } from 'firebase/firestore'
 // import { db } from '../config/firebase.jsx'
-import { Link, useNavigate } from 'react-router-dom'
+import { ProfilePicContext } from '../context.jsx'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Squash as Hamburger } from 'hamburger-react';
 import {
     LogOut,
@@ -24,7 +28,13 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ProfilePicContext } from '../context.jsx'
+import { AppSidebar } from "@/components/app-sidebar"
+import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from "@/components/ui/sidebar"
+
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const createData = createContext();
@@ -33,6 +43,8 @@ export default function Customer() {
 
     const { currentProfilePic } = useContext(ProfilePicContext);
     const [isOpen, setOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const goTo = useLocation();
 
     const navOrder = useNavigate();
 
@@ -49,6 +61,17 @@ export default function Customer() {
         navOrder('/profilepagecustomer')
     }
 
+    const toRender = () => {
+        switch (goTo.pathname) {
+            case '/order':
+                return <Order />
+
+            case '/orderhistory':
+                return <OrderHistory />
+        }
+    }
+
+    useEffect(() => { setTimeout(() => { setLoading(false) }, 600) }, [])
     // const orderData = async () => {
     //     setEditProfileOpen(false);
     //     setHistoryOpen(false);
@@ -68,6 +91,8 @@ export default function Customer() {
     // }
 
     return (<>
+
+        {loading && <LoadingScreen />}
         <nav className={Style.HeaderContainer}>
             <img className={Style.Image} src={Logo} />
             <div className={Style.hamburger}>
@@ -110,6 +135,20 @@ export default function Customer() {
                 </a>
             </div>
         </nav>
+
+        <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="text-[6vh]">
+                <header className="flex h-16 shrink items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                    <div className="flex items-center gap-2 px-4">
+                        <SidebarTrigger className="ml-1" />
+                    </div>
+                </header>
+                <div className="flex flex-1 flex-row justify-center gap-4 p-4 pt-0 overflow-hidden">
+                    <div className="min-h-[100vh] text-[13px] flex-1 w-1 rounded-xl bg-muted/50 md:min-h-min inset-shadow-sm overflow-hidden" >{toRender()}</div>
+                </div>
+            </SidebarInset>
+        </SidebarProvider>
 
 
     </>)
