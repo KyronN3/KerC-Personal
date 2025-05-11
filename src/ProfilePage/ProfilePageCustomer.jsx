@@ -210,18 +210,12 @@ const ProfilePageCustomer = () => {
             })
 
             try {
-
-                // ReceiptDelete
-                await deleteDoc(doc(db, 'Receipt', filterReceipt[0].docId));
-
-                //Order Delete
-                await deleteDoc(doc(db, 'Order', filter[0].docId))
-
-                //User Delete
-                await deleteDoc(doc(db, 'Customer', auth?.currentUser?.uid))
-
-                logout();
-
+                if (filterReceipt.length > 0 && filter.length > 0) {
+                    await deleteDoc(doc(db, 'Receipt', filterReceipt[0].docId));
+                    await deleteDoc(doc(db, 'Order', filter[0].docId))
+                    await deleteDoc(doc(db, 'Customer', auth?.currentUser?.uid))
+                    logout();
+                }
             } catch (error) { console.error(error) }
 
 
