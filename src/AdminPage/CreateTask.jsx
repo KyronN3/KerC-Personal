@@ -137,6 +137,7 @@ const CreateTask = () => {
         timeDate: createTask.timeDate,
         description: createTask.description,
         isReceipt: false,
+        message: '',
         status: 'Pending',
       })
 

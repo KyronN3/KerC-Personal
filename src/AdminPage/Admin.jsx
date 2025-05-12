@@ -10,7 +10,6 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import CreateTask from './CreateTask.jsx'
 import EditPrice from './EditPrice.jsx'
 import CustomerOrder from './CustomerOrder.jsx'
-import ManageAccount from './ManageAccount.jsx'
 import Receipt from './Receipt.jsx'
 import { ViewReceiptOpenContext, ProfilePicContext } from '../context.jsx';
 import { Squash as Hamburger } from 'hamburger-react';
@@ -63,9 +62,6 @@ export default function Admin() {
 
             case '/archivefiles':
                 return <ArchiveFiles />
-
-            case '/manageaccount':
-                return <ManageAccount />
         }
     }
 

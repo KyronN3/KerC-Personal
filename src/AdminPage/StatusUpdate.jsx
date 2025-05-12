@@ -1,37 +1,26 @@
-import { useState } from 'react';
-import { FileText, Plus } from 'lucide-react';
+import { Textarea } from "@/components/ui/textarea";
+import { useState, useContext } from 'react';
+import { PostCloseContext } from '../context';
 import { db } from '../config/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function StatusUpdate({ value }) {
+export default function StatusUpdate({ value, }) {
+
+  const { setPostClose } = useContext(PostCloseContext);
+  const [message, setMessage] = useState('');
   const [status, setStatus] = useState('');
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null); // For displaying the image preview
   const uid = value;
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file)); // Create a preview of the image
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setPostClose(false)
       const ref = doc(db, 'Order', uid);
-      const dataToUpdate = { status: status };
-
-      if (image) {
-        // You would typically upload the image to a storage service here and then get the URL
-      }
-
+      const dataToUpdate = { status: status, message: message };
       await updateDoc(ref, dataToUpdate);
       setStatus('');
-      setImage(null);
-      setImagePreview(null); // Reset preview after submission
       toast.success("Updated Successfully!", {
         position: 'bottom-center',
         hideProgressBar: true,
@@ -79,6 +68,7 @@ export default function StatusUpdate({ value }) {
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
+            required
           >
             <option value="">Select Status</option>
             <option value="Pending">Pending</option>
@@ -86,32 +76,19 @@ export default function StatusUpdate({ value }) {
             <option value="Completed">Completed</option>
           </select>
         </div>
-        <div>
-          {imagePreview && (
-            <div className="mb-4">
-              <img src={imagePreview} alt="Image Preview" className="w-full h-auto rounded border border-gray-300 mb-2" />
-            </div>
-          )}
-          <label
-            htmlFor="image-upload"
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded cursor-pointer hover:bg-blue-700 transition duration-200"
-          >
-            <Plus size={16} />
-            <span>Add Image</span>
-          </label>
-          <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
-          />
-        </div>
+
+        <Textarea
+          id="notes"
+          onChange={(e) => { setMessage(e.target.value) }}
+          className="w-full border border-[#bbdefb] rounded-md shadow-sm resize-none bg-[#e3f2fd]/50 focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+          rows={3}
+          required
+        />
+
         <div className="flex justify-center">
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200"
-          >
+            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-200">
             Post
           </button>
         </div>

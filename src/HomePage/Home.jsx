@@ -157,7 +157,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
                 <AvatarFallback className="text-[9.3px]">...Loading</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
+            <DropdownMenuContent className="w-56 relative z-[10000001] bg-[#f3c278]">
               {!auth?.currentUser?.email.includes("@admin.139907.print.com")
                 ?
                 <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
@@ -262,7 +262,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
               <img src={Shop} className={Style.icons} />
               <h2 style={{ marginTop: 10, fontStyle: Bold, fontWeight: 1000 }}>Opening Hours</h2>
               <p>
-                Monday - Saturday
+                Monday - Saturday<br />
                 8:00 AM - 7:00 PM
               </p>
             </div>
@@ -279,7 +279,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
               <img src={Telephone} className={Style.icons} />
               <h2 style={{ marginTop: 10, fontStyle: Bold, fontWeight: 1000 }}>Call Us</h2>
               <p>
-                09276850004
+                09276850004<br />
                 09123456789
               </p>
             </div>

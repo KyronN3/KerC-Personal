@@ -1,42 +1,115 @@
 import { Textarea } from "@/components/ui/textarea";
-import Template from '../assets/imgs/inquiryPage/printing.png';
+import { db } from "../config/firebase";
+import { getDoc, doc } from 'firebase/firestore'
+import { X, Package, Calendar, Clock, CheckCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import LoadingScreen from '../LoadingScreen'
 
-export default function OrderStatusModal() {
-  const statusMessage = "Almost done na po :). Ready to pick up tomorrow";
+export default function OrderStatusModal({ onClose, lastUpdated = "today at 2:30 PM", customerID }) {
+
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState();
+  const [animateIn, setAnimateIn] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => { setLoading(false) }, 300)
+    const getData = async () => {
+      const dataSnap = await getDoc(doc(db, 'Order', customerID));
+      if (dataSnap.exists()) {
+        setData(dataSnap.data());
+      }
+    }
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    // Animation timing
+    setAnimateIn(true);
+
+    // Set up escape key handler
+    const handleEscape = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleEscape);
+
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
+  // Handle backdrop click to close
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) onClose();
+  };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-opacity-70 flex items-center justify-center z-50">
-      <div className="bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-2xl w-full max-w-sm md:max-w-md lg:max-w-lg">
-        <div className="flex items-center justify-end mb-4">
-          <button className="text-gray-500 hover:text-gray-700 focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-        <div className="mb-6">
-          <div className="w-full md:w-3/4 lg:w-1/2 rounded-md overflow-hidden shadow-md mx-auto mb-4">
-            <img src={Template} alt="Order Image" className="w-full h-auto object-cover" />
+    <>
+      {loading && <LoadingScreen />}
+      <div
+        onClick={handleBackdropClick}
+      >
+
+        <div
+          className={`bg-white rounded-lg shadow-2xl w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden 
+        ${animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} transition-all duration-300`}
+        >
+          {/* Header */}
+          <div className="bg-[#e3f2fd] px-3 sm:px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-blue-800 flex items-center gap-1 sm:gap-2">
+              <Package className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
+              <span>Order Status</span>
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-blue-600 hover:text-blue-800 focus:outline-none rounded-full p-1"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5 md:h-6 md:w-6" />
+            </button>
+          </div>
+
+          {/* Status Area */}
+          <div className="px-3 sm:px-4 md:px-6 mt-6 pb-4 md:pb-6">
+            <div className="mb-3 md:mb-4">
+              <div className="flex items-center gap-1 sm:gap-2 text-blue-800 font-medium mb-1 md:mb-2">
+
+                {(data != null) && data.status == "Pending"
+                  ?
+                  <Clock className="h-4 w-4 md:h-5 md:w-5" />
+                  : (data != null) && data.status == "Completed"
+                    ?
+                    <CheckCircle className="h-4 w-4 md:h-5 md:w-5" />
+                    : <X className="h-4 w-4 md:h-5 md:w-5" />
+                }
+
+                <span className="text-sm md:text-base">
+                  {data != null && data.status}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 sm:gap-2 text-gray-600 mb-2 md:mb-4">
+                <Calendar className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
+                <span className="text-xs sm:text-sm">Updated {lastUpdated}</span>
+              </div>
+              <Textarea
+                id="notes"
+                className="w-full border border-[#bbdefb] rounded-md shadow-sm resize-none bg-[#e3f2fd]/50 focus:ring-2 focus:ring-blue-500 text-gray-800 text-sm md:text-base"
+                rows={3}
+                value={data != null && data.message}
+                readOnly
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 mt-4 md:mt-6">
+              <button
+                onClick={onClose}
+                className="w-full sm:w-auto px-4 sm:px-5 md:px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 transition text-sm md:text-base"
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
-        <div className="mt-4">
-          <label htmlFor="notes" className="block text-lg font-semibold text-gray-800 mb-2">
-            Order Status:
-          </label>
-          <Textarea
-            id="notes"
-            className="w-full border border-gray-300 rounded-md shadow-sm sm:text-sm resize-none bg-[#e6f2ff] focus:ring-2 focus:ring-blue-500"
-            rows={4}
-            value={statusMessage}
-            readOnly
-          />
-        </div>
-        <div className="mt-6 flex justify-end">
-          <button className="px-4 py-2 md:px-6 md:py-3 bg-[#e6f2ff] text-gray-800 rounded-md hover:bg-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300 transition duration-200 ease-in-out">
-            Close
-          </button>
-        </div>
       </div>
-    </div>
+    </>
   );
 }

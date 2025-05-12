@@ -254,13 +254,13 @@
   padding: 36px;
   align-items: center;
   height: 100%;
-  background-color: #6cb8f7; /* Light blue */
-  color: #0d47a1; /* Dark blue */
-  border-radius: 3%;
-  border: 2px solid #bbdefb; /* Lighter blue */
-  box-shadow: -2px -1px 15px #e3f2fd; /* Very light blue */
+  background-color: #42a5f5; /* Adjusted for better visibility */
+  color: #0d47a1;
+  border-radius: 16px; /* Increased border radius */
+  border: none; /* Removed border for cleaner look */
+  box-shadow: 0 10px 20px rgba(66, 165, 245, 0.2); /* More subtle shadow */
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* More dynamic transition */
 }
 
 .cardOpen {
@@ -304,8 +304,8 @@
     to bottom right,
     rgba(255, 255, 255, 0) 0%,
     rgba(255, 255, 255, 0) 40%,
-    rgba(255, 255, 255, 0.4) 50%,
-    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.6) 50%,
+    /* Increased visibility */ rgba(255, 255, 255, 0) 60%,
     rgba(255, 255, 255, 0) 100%
   );
   transform: rotate(30deg);
@@ -340,19 +340,29 @@
 .cardPhone:hover,
 .cardFacebook:hover,
 .cardEmail:hover {
-  box-shadow: -2px -1px 20px #e3f2fd; /* Very light blue */
-  border-color: #e3f2fd; /* Very light blue */
-  transform: translateY(-30px);
+  box-shadow: 0 15px 30px rgba(66, 165, 245, 0.4); /* Enhanced shadow */
+  transform: translateY(-30px) scale(1.03); /* Added slight scale for better effect */
+  background-color: #64b5f6; /* Lighter blue on hover */
 }
 
 .cardMessenger:hover,
 .cardFacebook:hover {
-  transform: translateY(-20px);
+  transform: translateY(-20px) scale(1.03);
 }
 
 .icons {
   width: 130px;
   height: 130px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); /* Added shadow to icons */
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.cardOpen:hover .icons,
+.cardMessenger:hover .icons,
+.cardPhone:hover .icons,
+.cardFacebook:hover .icons,
+.cardEmail:hover .icons {
+  transform: scale(1.1); /* Grow icons on hover */
 }
 
 .FAQContainerParent {
@@ -673,9 +683,11 @@ body::before {
     margin: 15px auto;
     border-radius: 13px;
   }
+
   .Map {
-    margin: 15px auto;
+    margin: 13px auto;
     width: 90%;
+    height: 260px;
     border-right: 1px solid #bbdefb; /* Lighter blue */
     border-top: 1px solid #bbdefb; /* Lighter blue */
     border-bottom: 1px solid #bbdefb; /* Lighter blue */
@@ -778,7 +790,6 @@ body::before {
   .Profile {
     margin-right: 0px;
   }
-  
 }
 
 @media (max-width: 620px) {

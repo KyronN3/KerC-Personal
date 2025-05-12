@@ -2,24 +2,25 @@ import { useState, useEffect, useContext } from 'react';
 import { db } from '../config/firebase.jsx';
 import { collection, doc, getDocs, deleteDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { ClipboardCheck, AlertTriangle, Trash2, X, Clock, Mail, Phone, CheckCircle } from 'lucide-react';
-import { ToastContainer, toast } from 'react-toastify';
-import { ReceiptContext, ViewReceiptOpenContext } from '../context.jsx';
+import { ReceiptContext, ViewReceiptOpenContext, PostCloseContext } from '../context.jsx';
 import { useNavigate } from 'react-router-dom';
 import LoadingScreen from '../LoadingScreen.jsx';
 import StatusUpdate from './StatusUpdate.jsx';
+import StyleModal from '../HomePage/Modal.module.css'
 
 const CustomerOrder = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(true);
+
+  const { postClose, setPostClose } = useContext(PostCloseContext);
   const { setReceiptId } = useContext(ReceiptContext);
   const { setViewReceiptOpen } = useContext(ViewReceiptOpenContext);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [isDelete, setIsDelete] = useState(false);
   const [targetTableDeleteConfirm, setTargetTableDeleteConfirm] = useState('');
   const [targetTableDelete, setTargetTableDelete] = useState('');
   const [targetTable, setTargetTable] = useState('');
   const [targetTableReceipt, setTargetReceipt] = useState('');
-  const [clipboardCheckOpen, setClipboardCheckOpen] = useState(false);
   const [uid, setUid] = useState('');
   const reload = useNavigate();
 
@@ -33,7 +34,11 @@ const CustomerOrder = () => {
           docId: doc.id,
           ...doc.data()
         }));
-        setData(dataReceive);
+
+        const filter = dataReceive.filter((doc) => {
+          return doc.status != "Cancelled"
+        })
+        setData(filter);
       } catch (error) {
         console.error(error);
       }
@@ -146,14 +151,7 @@ const CustomerOrder = () => {
         return doc.referencekey == docData.referencekey;
       });
       if (id[0] != undefined) await updateDoc(doc(db, 'Archive', id[0].docId), { isReceipt: true });
-
-      toast.success("Receipt Created", {
-        position: 'top-right'
-      });
     } catch (err) {
-      toast.error("Try Again", {
-        position: 'top-right'
-      });
       console.error(err);
     }
   };
@@ -214,11 +212,11 @@ const CustomerOrder = () => {
 
   const clipboardCheck = async (item) => {
     setTargetTable(item);
-    setClipboardCheckOpen(!clipboardCheckOpen);
+    setPostClose(true)
   };
 
   const closeModal = () => {
-    setClipboardCheckOpen(false);
+    setPostClose(false)
     setShowModal(false);
     setViewReceiptOpen(false);
   };
@@ -331,7 +329,7 @@ const CustomerOrder = () => {
                       onClick={() => toDelete(doc)}
                       className="w-full border border-red-300 text-red-600 hover:bg-red-50 py-2 rounded-md text-sm font-medium"
                     >
-                      CANCEL ORDER
+                      CANCEL/DELETE
                     </button>
                   </div>
                 </div>
@@ -343,18 +341,20 @@ const CustomerOrder = () => {
 
 
       {/* Status Update Modal */}
-      {clipboardCheckOpen && (
-        <div className="fixed inset-0 bg-opacity-10 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0" onClick={closeModal}></div>
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden z-10">
-            <div className="bg-blue-50 px-4 py-3 flex items-center justify-between border-b border-blue-100">
-              <h3 className="font-medium text-blue-800">Order Status</h3>
-              <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
-                <X size={20} />
-              </button>
-            </div>
-            <div className="p-4">
-              <StatusUpdate value={uid} />
+      {postClose && (
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}>
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden z-10">
+              <div className="bg-blue-50 px-4 py-3 flex items-center justify-between border-b border-blue-100">
+                <h3 className="font-medium text-blue-800">Order Status</h3>
+                <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                  <X size={20} />
+                </button>
+              </div>
+              <div className="p-4">
+                <StatusUpdate value={uid} />
+              </div>
             </div>
           </div>
         </div>
@@ -362,48 +362,50 @@ const CustomerOrder = () => {
 
       {/* Delete Confirmation Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-opacity-10 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0" onClick={closeModal}></div>
-          <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden z-10">
-            <div className="bg-blue-100 px-4 py-3 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <AlertTriangle className="text-blue-600" size={20} />
-                <h3 className="font-medium text-blue-800">Confirm Cancellation</h3>
-              </div>
-              <button
-                onClick={closeModal}
-                className="text-blue-600 hover:text-blue-800"
-              >
-                <X size={20} />
-              </button>
-            </div>
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}>
 
-            <div className="p-4">
-              <p className="text-gray-700 mb-4">
-                Are you sure you want to cancel this order? This action cannot be undone.
-              </p>
-
-              <div className="flex justify-end space-x-3">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden z-10">
+              <div className="bg-blue-100 px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <AlertTriangle className="text-blue-600" size={20} />
+                  <h3 className="font-medium text-blue-800">Confirm Cancellation</h3>
+                </div>
                 <button
                   onClick={closeModal}
-                  className="px-4 py-2 border border-blue-200 text-blue-600 rounded hover:bg-blue-50"
+                  className="text-blue-600 hover:text-blue-800"
                 >
-                  Cancel
+                  <X size={20} />
                 </button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center space-x-1"
-                >
-                  <Trash2 size={16} />
-                  <span>Delete</span>
-                </button>
+              </div>
+
+              <div className="p-4">
+                <p className="text-gray-700 mb-4">
+                  Are you sure you want to cancel this order? This action cannot be undone.
+                </p>
+
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={closeModal}
+                    className="px-4 py-2 border border-blue-200 text-blue-600 rounded hover:bg-blue-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 flex items-center space-x-1"
+                  >
+                    <Trash2 size={16} />
+                    <span>Delete</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      )}
 
-      <ToastContainer />
+      )}
       {loading && <LoadingScreen />}
     </>
   );

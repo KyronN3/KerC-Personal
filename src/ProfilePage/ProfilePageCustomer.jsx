@@ -392,26 +392,7 @@ const ProfilePageCustomer = () => {
                                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2 text-sm font-medium">Password</label>
-                                        <input
-                                            type="password"
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700 mb-2 text-sm font-medium">Confirm Password</label>
-                                        <input
-                                            type="password"
-                                            name="passwordConfirm"
-                                            value={formData.passwordConfirm}
-                                            onChange={handleChange}
-                                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </div>
+
                                 </div>
                             ) : (
                                 // View Details
@@ -458,14 +439,6 @@ const ProfilePageCustomer = () => {
                                         </div>
 
                                         <div className="p-3 bg-gray-50 rounded flex items-start">
-                                            <Key className="mr-3 text-blue-500 mt-1 flex-shrink-0" size={20} />
-                                            <div>
-                                                <p className="text-xs md:text-sm text-gray-500">Password</p>
-                                                <p className="font-medium text-sm md:text-base">••••••</p>
-                                            </div>
-                                        </div>
-
-                                        <div className="p-3 bg-gray-50 rounded flex items-start col-span-1 md:col-span-2">
                                             <Shield className="mr-3 text-blue-500 mt-1 flex-shrink-0" size={20} />
                                             <div>
                                                 <p className="text-xs md:text-sm text-gray-500">Access Level</p>

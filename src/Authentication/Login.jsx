@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Link, useNavigate } from "react-router-dom"
-import { ModalContext, UserDataContext } from '../context.jsx'
+import { ModalContext } from '../context.jsx'
 import { useContext, useState } from "react"
 import { auth, googleAuth } from "../config/firebase.jsx"
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth"
@@ -105,7 +105,7 @@ export default function LoginForm() {
         width: 350,
       }}
     >
-      <Card style={{ backgroundColor: "rgb(250, 241, 230)" }}>
+      <Card style={{ backgroundColor: "#e3f2fd" }}>
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription style={{ color: "black" }}>
@@ -122,7 +122,7 @@ export default function LoginForm() {
                   type="email"
                   onChange={onChangedEmail}
                   placeholder="m@example.com"
-                  style={{ borderColor: "black" }}
+                  style={{ borderColor: "black", backgroundColor: "white" }}
                   required
                 />
               </div>
@@ -136,7 +136,7 @@ export default function LoginForm() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" onChange={onChangedPassword} type="password" style={{ borderColor: "black" }} placeholder="******" required />
+                <Input id="password" onChange={onChangedPassword} type="password" style={{ borderColor: "black", backgroundColor: "white" }} placeholder="******" required />
               </div>
               <Button type="submit" className="w-full" style={{ cursor: "pointer" }}>
                 Login

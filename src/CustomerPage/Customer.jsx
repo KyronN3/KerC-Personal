@@ -72,23 +72,6 @@ export default function Customer() {
     }
 
     useEffect(() => { setTimeout(() => { setLoading(false) }, 600) }, [])
-    // const orderData = async () => {
-    //     setEditProfileOpen(false);
-    //     setHistoryOpen(false);
-    //     setOrderOpen(true);
-
-    //     try {
-    //         const ref = collection(db, "Order");
-    //         const data = await getDocs(ref);
-    //         const dataFetch = data.docs.map((doc) => ({
-    //             ...doc.data()
-    //         }))
-    //         setUid(dataFetch[0].CustomerID);
-    //         console.log(uid);
-    //     } catch (err) {
-    //         console.error(err)
-    //     }
-    // }
 
     return (<>
 
@@ -111,7 +94,7 @@ export default function Customer() {
                             </Avatar>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56 relative z-[1000] bg-[#f3c278]">
-                            <DropdownMenuLabel className="text-center">Admin</DropdownMenuLabel>
+                            <DropdownMenuLabel className="text-center">My Account</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuGroup>
                                 <DropdownMenuItem>
