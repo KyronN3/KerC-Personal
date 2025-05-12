@@ -9,6 +9,7 @@ import styles from './Receipt.module.css';
 export default function SimpleReceipt(props) {
 
     const [items, setItems] = useState([]);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => { setTimeout(() => { setLoading(false) }, 300) }, [])
@@ -23,6 +24,7 @@ export default function SimpleReceipt(props) {
                     docId: doc.id,
                     ...doc.data()
                 }))
+                setTotalPrice(parseInt(receiptReceive[0].price.slice(1)) * parseInt(receiptReceive[0].quantity));
                 const data = receiptReceive.filter(doc => {
                     return doc.referencekey == props.id
                 })
@@ -32,8 +34,7 @@ export default function SimpleReceipt(props) {
             }
         }
         receiptIdSearch();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    })
 
 
     const handlePrint = () => {
@@ -74,19 +75,22 @@ export default function SimpleReceipt(props) {
                                 <tr className={styles.tableHeader}>
                                     <th className={styles.tableHeaderLeft}>Service</th>
                                     <th className={styles.tableHeaderRight}>Price</th>
+                                    <th className={styles.tableHeaderRight}>Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className={styles.tableRow}>
-                                    <td className={styles.tableCell}>{items != undefined ? items.service : "Empty"}</td>
-                                    <td className={styles.tableCellRight}>{items != undefined ? items.price : 0}</td>
-                                </tr>
+                                {items != undefined &&
+                                    <tr className={styles.tableRow}>
+                                        <td className={styles.tableCell}>{items != undefined ? items.service : "Empty"}</td>
+                                        <td className={styles.tableCellRight}>{items != undefined ? items.price : 0}</td>
+                                        <td className={styles.tableCellRight}>{items != undefined ? items.quantity : 0}</td>
+                                    </tr>}
                             </tbody>
                         </table>
                     </div>
                     <div className={styles.totalContainer}>
                         <span>Total:</span>
-                        <span>{items.price}</span>
+                        <span>{totalPrice}</span>
                     </div>
                     <div className={styles.footer}>
                         Thank you for your business!

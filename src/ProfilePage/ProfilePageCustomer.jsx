@@ -8,9 +8,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { auth, db, storage } from '../config/firebase.jsx';
 import { getDocs, getDoc, doc, collection, updateDoc, deleteDoc } from 'firebase/firestore';
 import { listAll, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { signOut } from 'firebase/auth';
+import { signOut, updateEmail, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 import { Squash as Hamburger } from 'hamburger-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ToastContainer, toast } from 'react-toastify';
 import { v4 } from 'uuid';
 import { ProfilePicContext } from '../context.jsx';
 import {
@@ -94,27 +95,52 @@ const ProfilePageCustomer = () => {
     const handleSave = async () => {
         setLoading(true);
         setTimeout(() => { setLoading(false) }, 1600)
-        setProfile({ ...formData });
-        await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
-            ...formData
-        })
+        if (formData.password == formData.passwordConfirm) {
+            try {
+                const credentials = EmailAuthProvider.credential(profile.email, profile.password);
+                await reauthenticateWithCredential(auth?.currentUser, credentials)
 
-        try {
-            if (image != null) {
-                //picture save
-                const picName = ref(storage, `ProfilePicture/${image.name.concat(v4())}`)
-                await uploadBytes(picName, image)
+                await updateEmail(auth?.currentUser, formData.email);
+                await updatePassword(auth?.currentUser, formData.password)
+                setProfile({ ...formData });
                 await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
-                    profilePic: picName._location.path_
+                    ...formData
                 })
+            } catch (err) {
+                toast.error("Unsuccessful, makes sure password/email is correct. Try Again !", {
+                    position: 'bottom-right',
+                    style: {
+                        width: "20vw",
+                        fontSize: "13px"
+                    }
+                });
+                console.error(err)
+            }
+            try {
+                if (image != null) {
+                    const picName = ref(storage, `ProfilePicture/${image.name.concat(v4())}`)
+                    await uploadBytes(picName, image)
+                    await updateDoc(doc(db, 'Customer', auth?.currentUser?.uid), {
+                        profilePic: picName._location.path_
+                    })
+                    setIsEditing(false);
+                }
+            } catch (err) {
+                setIsEditing(false);
+                console.error(err)
+            } finally {
                 setIsEditing(false);
             }
-        } catch (err) {
-            setIsEditing(false);
-            console.error(err)
-        } finally {
-            setIsEditing(false);
+        } else {
+            toast.error("Unsuccessful, make sure password and password confirm is the same. Try Again !", {
+                position: 'bottom-right',
+                style: {
+                    width: "20vw",
+                    fontSize: "13px"
+                }
+            });
         }
+
 
     };
 
@@ -142,6 +168,8 @@ const ProfilePageCustomer = () => {
             ...formData,
             [name]: value
         });
+
+
     };
 
     const manageOrderNav = () => {
@@ -215,6 +243,7 @@ const ProfilePageCustomer = () => {
                 if (filter.length > 0) await deleteDoc(doc(db, 'Order', filter[0].docId))
 
                 await deleteDoc(doc(db, 'Customer', auth?.currentUser?.uid))
+                await auth?.currentUser?.delete();
                 logout();
 
             } catch (error) { console.error(error) }
@@ -497,6 +526,7 @@ const ProfilePageCustomer = () => {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div >
 
             {deleteConfirm
@@ -554,6 +584,7 @@ const ProfilePageCustomer = () => {
                             </div>
                         </div>
                     </div>
+
                 </div>
             }
         </>

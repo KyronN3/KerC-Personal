@@ -2,7 +2,8 @@ import React, { useState, useContext } from 'react';
 import { auth } from '../config/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import styles from './CreateAccount.module.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import { ModalContext, UserDataContext, CreateAccountContext } from '../context';
 
 
@@ -98,6 +99,13 @@ const CreateAccount = () => {
                 setModalSignupOpen(false);
             } catch (error) {
                 setUserData(user);
+                toast.error("Unsuccessful, Wrong Email/Password. Please Try Again!", {
+                    position: 'bottom-right',
+                    style: {
+                        width: "20vw",
+                        fontSize: "13px"
+                    }
+                });
                 console.error(error);
             }
         } else {
@@ -250,8 +258,10 @@ const CreateAccount = () => {
                     <button type="submit" className={styles.button}>
                         Sign Up
                     </button>
+                    <ToastContainer />
                 </form>
             </div>
+
         </div>
     );
 };

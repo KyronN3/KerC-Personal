@@ -1,14 +1,15 @@
 import { CheckCircle, Clock, Mail, Phone, ShoppingBag, XCircle, AlertTriangle, X, Trash2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { auth, db } from "../config/firebase";
 import { getDocs, doc, collection, deleteDoc } from "firebase/firestore";
 import OrderStatus from './OrderStatus.jsx'
 import StyleModal from '../HomePage/Modal.module.css'
+import { OrderStatusCloseContext } from "../context.jsx";
 
 export default function OrdersGrid() {
 
+  const { orderStatusOpen, setOrderStatusOpen } = useContext(OrderStatusCloseContext)
   const [showModal, setShowModal] = useState(false);
-  const [orderStatusOpen, setOrderStatusOpen] = useState(false);
   const [id, setId] = useState('');
   const [orders, setOrders] = useState([]);
 

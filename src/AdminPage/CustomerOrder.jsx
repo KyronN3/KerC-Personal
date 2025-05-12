@@ -127,12 +127,14 @@ const CustomerOrder = () => {
       if (!docData.isReceipt) {
         await addDoc(ref, {
           referencekey: docData.referencekey,
+          quantity: docData.quantity,
           price: docData.price,
           service: docData.service,
         });
 
         await addDoc(collection(db, 'ReceiptArchive'), {
           referencekey: docData.referencekey,
+          quantity: docData.quantity,
           price: docData.price,
           service: docData.service,
         });

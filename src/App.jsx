@@ -1,23 +1,15 @@
 import Home from './HomePage/Home.jsx'
-import Order from './CustomerPage/Orders.jsx'
 import Customer from './CustomerPage/Customer.jsx'
 import Admin from './AdminPage/Admin.jsx'
 import Inquire from './PageInquiry/InquiryPage.jsx'
 import Legal from './LegalPage/PageTerm.jsx'
-import OrderStatus from './CustomerPage/OrderStatus.jsx'
-import OrderHistory from './CustomerPage/OrderHistory.jsx'
-import CreateTask from './AdminPage/CreateTask.jsx'
-import EditPrice from './AdminPage/EditPrice.jsx'
-import CustomerOrder from './AdminPage/CustomerOrder.jsx'
-import ArchiveFiles from './AdminPage/ArchiveFiles.jsx'
-import CreateAccount from './Authentication/CreateAccount.jsx'
-import LoadingScreen from './LoadingScreen.jsx'
+import messenger from './assets/imgs/messenger.png'
 import ServicePrice from './PageInquiry/ServicePrice.jsx'
 import ProfilePageAdmin from './ProfilePage/ProfilePageAdmin.jsx'
 import ProfilePageCustomer from './ProfilePage/ProfilePageCustomer.jsx'
 import { NotFound } from './notFound.jsx'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
-import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext, ProfilePicContext, ServiceContext, PostCloseContext } from './context.jsx'
+import { ModalContext, UserDataContext, CreateAccountContext, ReceiptContext, ViewReceiptOpenContext, ProfilePicContext, ServiceContext, PostCloseContext, OrderStatusCloseContext } from './context.jsx'
 import { useState, useEffect, useRef } from 'react'
 import { db } from './config/firebase.jsx'
 import { doc, setDoc, getDoc } from 'firebase/firestore'
@@ -26,15 +18,17 @@ import './App.css'
 
 function App() {
 
+  const userType = useRef();
+  // const goTo = useNavigate();
   const [viewReceiptOpen, setViewReceiptOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [orderStatusOpen, setOrderStatusOpen] = useState(false);
   const [postClose, setPostClose] = useState(false); // Change this if the post is wrong
   const [modalSignupOpen, setModalSignupOpen] = useState(false);
   const [service, setService] = useState([]);
   const [createAccountOpen, setCreateAccountOpen] = useState(false);
   const [receiptId, setReceiptId] = useState('');
   const [currentProfilePic, setCurrentProfilePic] = useState('');
-  const userType = useRef();
   const [login, setLogin] = useState(false);
   const [userData, setUserData] = useState(
     {
@@ -264,57 +258,47 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-
   return (
     <>
-      <PostCloseContext.Provider value={{ postClose, setPostClose }}>
-        <ServiceContext.Provider value={{ service, setService }}>
-          <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
-            <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen, setViewReceiptOpen }}>
-              <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
-                <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
-                  <UserDataContext.Provider value={{ userData, setUserData }}>
-                    <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
-                      {loading && <RouterProvider router={userType.current}><Home /></RouterProvider>}
-                    </ModalContext.Provider>
-                  </UserDataContext.Provider>
-                </CreateAccountContext.Provider>
-              </ReceiptContext.Provider>
-            </ViewReceiptOpenContext.Provider>
-          </ProfilePicContext.Provider >
-        </ServiceContext.Provider>
-      </PostCloseContext.Provider>
+      <OrderStatusCloseContext.Provider value={{ orderStatusOpen, setOrderStatusOpen }}>
+        <PostCloseContext.Provider value={{ postClose, setPostClose }}>
+          <ServiceContext.Provider value={{ service, setService }}>
+            <ProfilePicContext.Provider value={{ currentProfilePic, setCurrentProfilePic }}>
+              <ViewReceiptOpenContext.Provider value={{ viewReceiptOpen, setViewReceiptOpen }}>
+                <ReceiptContext.Provider value={{ receiptId, setReceiptId }}>
+                  <CreateAccountContext.Provider value={{ createAccountOpen, setCreateAccountOpen }}>
+                    <UserDataContext.Provider value={{ userData, setUserData }}>
+                      <ModalContext.Provider value={{ modalSignupOpen, setModalSignupOpen, login, setLogin }}>
+                        {loading && <RouterProvider router={userType.current}><Home /></RouterProvider>}
+                      </ModalContext.Provider>
+                    </UserDataContext.Provider>
+                  </CreateAccountContext.Provider>
+                </ReceiptContext.Provider>
+              </ViewReceiptOpenContext.Provider>
+            </ProfilePicContext.Provider >
+          </ServiceContext.Provider>
+        </PostCloseContext.Provider>
+      </OrderStatusCloseContext.Provider>
 
-      {/* Footer */}
       < footer className="bg-blue-600 text-white py-3 w-full mt-auto" >
         <div className="container mx-auto flex flex-wrap justify-between items-center px-4">
           <div className="text-sm">
-            Copyright © 2025 - Kar-C Printing Services
+            Copyright Â© 2025 - KER-C Printing Services
           </div>
           <div className="text-sm">
-            <a href="#" className="hover:underline mr-4">Terms & Conditions</a>
+            <a href='/legal' className="hover:underline mr-4">Terms & Conditions</a>
           </div>
           <div className="flex space-x-4">
             {/* Facebook Icon - made larger with w-6 h-6 */}
-            <a href="#" className="hover:text-blue-200">
+            <a href="https://www.facebook.com/kercprintingservices" className="hover:text-blue-200" target='_blank' rel='noopener noreferrer'>
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd"></path>
               </svg>
             </a>
 
-            {/* Email Icon - made larger with w-6 h-6 */}
-            <a href="#" className="hover:text-blue-200">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
-                <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
-              </svg>
-            </a>
-
             {/* Messenger Icon - made larger with w-6 h-6 */}
-            <a href="#" className="hover:text-blue-200">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fillRule="evenodd" d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 008.44-9.9c0-5.53-4.5-10.02-10-10.02z" clipRule="evenodd"></path>
-              </svg>
+            <a href="https://m.me/kercprintingservices" className="hover:text-blue-200" target='_blank' rel='noopener noreferrer'>
+              <img src={messenger} alt="" style={{ height: 20, marginTop: 2 }} />
             </a>
           </div>
         </div>

@@ -10,6 +10,7 @@ export default function SimpleReceipt() {
 
     const { receiptId } = useContext(ReceiptContext);
     const [loading, setLoading] = useState(true);
+    const [totalPrice, setTotalPrice] = useState(0);
     const [items, setItems] = useState([]);
 
     useEffect(() => {
@@ -29,14 +30,14 @@ export default function SimpleReceipt() {
                 const data = receiptReceive.filter(doc => {
                     return doc.id == receiptId
                 })
+                setTotalPrice(parseInt(data[0].price.slice(1)) * parseInt(data[0].quantity));
                 setItems(data[0]);
             } catch (err) {
                 console.error(err);
             }
         }
         receiptIdSearch();
-
-    }, [receiptId])
+    })
 
     const handlePrint = () => {
         const printContent = document.getElementById('receipt');
@@ -77,6 +78,7 @@ export default function SimpleReceipt() {
                                 <tr className={styles.tableHeader}>
                                     <th className={styles.tableHeaderLeft}>Service</th>
                                     <th className={styles.tableHeaderRight}>Price</th>
+                                    <th className={styles.tableHeaderRight}>Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,15 +86,14 @@ export default function SimpleReceipt() {
                                     <tr className={styles.tableRow}>
                                         <td className={styles.tableCell}>{items != undefined ? items.service : "Empty"}</td>
                                         <td className={styles.tableCellRight}>{items != undefined ? items.price : 0}</td>
+                                        <td className={styles.tableCellRight}>{items != undefined ? items.quantity : 0}</td>
                                     </tr>}
                             </tbody>
                         </table>
                     </div>
                     <div className={styles.totalContainer}>
                         <span>Total:</span>
-                        {items != undefined &&
-                            <span>{items.price}</span>
-                        }
+                        <span>{totalPrice}</span>
                     </div>
                     <div className={styles.footer}>
                         Thank you for your business!

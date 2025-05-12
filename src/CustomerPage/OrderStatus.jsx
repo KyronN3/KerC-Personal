@@ -2,14 +2,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { db } from "../config/firebase";
 import { getDoc, doc } from 'firebase/firestore'
 import { X, Package, Calendar, Clock, CheckCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import LoadingScreen from '../LoadingScreen'
+import { OrderStatusCloseContext } from "../context";
 
-export default function OrderStatusModal({ onClose, lastUpdated = "today at 2:30 PM", customerID }) {
+export default function OrderStatusModal({ customerID }) {
 
+  const { setOrderStatusOpen } = useContext(OrderStatusCloseContext)
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState();
-  const [animateIn, setAnimateIn] = useState(false);
 
   useEffect(() => {
     setTimeout(() => { setLoading(false) }, 300)
@@ -23,34 +24,19 @@ export default function OrderStatusModal({ onClose, lastUpdated = "today at 2:30
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    // Animation timing
-    setAnimateIn(true);
-
-    // Set up escape key handler
-    const handleEscape = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleEscape);
-
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [onClose]);
-
-  // Handle backdrop click to close
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
-  };
+  const onClose = () => {
+    setOrderStatusOpen(false);
+  }
 
   return (
     <>
       {loading && <LoadingScreen />}
       <div
-        onClick={handleBackdropClick}
+      // onClick={handleBackdropClick}
       >
 
         <div
-          className={`bg-white rounded-lg shadow-2xl w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden 
-        ${animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95'} transition-all duration-300`}
+          className={`bg-white rounded-lg shadow-2xl w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden 'opacity-100 scale-100' : 'opacity-0 scale-95'} transition-all duration-300`}
         >
           {/* Header */}
           <div className="bg-[#e3f2fd] px-3 sm:px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
@@ -87,7 +73,7 @@ export default function OrderStatusModal({ onClose, lastUpdated = "today at 2:30
               </div>
               <div className="flex items-center gap-1 sm:gap-2 text-gray-600 mb-2 md:mb-4">
                 <Calendar className="h-4 w-4 md:h-5 md:w-5 text-blue-600" />
-                <span className="text-xs sm:text-sm">Updated {lastUpdated}</span>
+                <span className="text-xs sm:text-sm">Updated {data != null && data.timeDate}</span>
               </div>
               <Textarea
                 id="notes"

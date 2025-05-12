@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+
 import './PageTerm.css';
 
 function PageTerm() {
-  const [isOpen, setIsOpen] = useState(0);
   
   return (
     <>  

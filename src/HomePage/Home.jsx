@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 import Style from './Home.module.css'
 import Logo from '../assets/imgs/logo.png'
@@ -379,23 +378,23 @@ export default function Home({ isLogin = false, isSignup = false }) {
           </ul>
 
           <ul className={Style.columnTwo}>
-            <li>Offset Printing</li>
-            <li>Digital Printing</li>
-            <li>Business Cards</li>
-            <li>Flyers & brochures</li>
-            <li>Stickers & Labels</li>
-            <li>Calendars</li>
-            <li>Envelopes</li>
+            <li>Newsletters</li>
+            <li>Wedding & Invitation Cards</li>
+            <li>ID Cards</li>
+            <li>Tarpaulin</li>
+            <li>Layouting</li>
+            <li>Election Propaganda</li>
+            <li>Bookbinding</li>
           </ul>
 
           <ul className={Style.columnThree}>
-            <li>Offset Printing</li>
-            <li>Digital Printing</li>
-            <li>Business Cards</li>
-            <li>Flyers & brochures</li>
-            <li>Stickers & Labels</li>
-            <li>Calendars</li>
-            <li>Envelopes</li>
+            <li>Bookbinding</li>
+            <li>Yearbook Printing</li>
+            <li>Lamination</li>
+            <li>T-Shirt Printing</li>
+            <li>Xerox / Photocopy</li>
+            <li>Carbonless Receipts</li>
+            <li>Graduation Ribbons</li>
           </ul>
           <hr className={Style.lineTwo} />
         </div>

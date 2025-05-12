@@ -8,3 +8,4 @@ export const ProfilePicContext = createContext();
 export const AppSideBarOpenContext = createContext();
 export const ServiceContext = createContext();
 export const PostCloseContext = createContext();
+export const OrderStatusCloseContext = createContext();
