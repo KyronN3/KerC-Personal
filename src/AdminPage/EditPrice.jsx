@@ -3,14 +3,17 @@ import { Edit2, Search, PhilippinePeso, ChevronLeft, ChevronRight, ChevronDown }
 import { db } from '../config/firebase';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import LoadingScreen from '../LoadingScreen';
+import StyleModal from '../HomePage/Modal.module.css'
 
 const EditPrice = () => {
+
   const [servicesData, setServicesData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceInputModalOpen, setPriceInputModalOpen] = useState(false);
   const [targetTable, setTargetTable] = useState('');
   const [newPrice, setNewPrice] = useState('');
   const [loading, setLoading] = useState(true);
+  const [updateData, setUpdateData] = useState(1);
   const [update, setUpdate] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -35,7 +38,7 @@ const EditPrice = () => {
       }
     };
     getData();
-  },);
+  }, [updateData]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -92,6 +95,15 @@ const EditPrice = () => {
         if (dataScope[0] !== undefined) {
           const refWithId = doc(db, 'Price', dataScope[0].id);
           await updateDoc(refWithId, { price: `₱${newPrice}` });
+          setLoading(true);
+          setTimeout(() => { setLoading(false) }, 600);
+          setUpdateData((updatePrev) => {
+            if (updatePrev == 20) {
+              return 0
+            } else {
+              return updatePrev + 1
+            }
+          })
         }
       } catch (err) {
         console.error(err);
@@ -386,15 +398,9 @@ const EditPrice = () => {
 
       {/* Price Edit Modal */}
       {priceInputModalOpen && (
-        <div className="fixed inset-0 overflow-y-auto z-50">
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              onClick={closeModal}
-              aria-label="Close modal"
-            ></div>
-
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div className={StyleModal.modal}>
+          <div className={StyleModal.overlay} onClick={closeModal}></div>
+          <div className={StyleModal.modalContent}>
 
             <div
               className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"

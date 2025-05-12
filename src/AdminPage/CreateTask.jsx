@@ -30,7 +30,8 @@ const CreateTask = () => {
     service: null,
     price: null,
     timeDate: null,
-    description: null
+    description: null,
+    quantity: 1,
   })
 
   useEffect(() => {
@@ -115,6 +116,10 @@ const CreateTask = () => {
     setCreateTask((taskPrev) => ({ ...taskPrev, description: e.target.value }))
   }
 
+  const onChangeQuantity = (e) => {
+    setCreateTask((taskPrev) => ({ ...taskPrev, quantity: e.target.value }))
+  }
+
   const price = (doc) => {
     setServicePrice(doc);
   }
@@ -136,6 +141,7 @@ const CreateTask = () => {
         price: servicePrice.price,
         timeDate: createTask.timeDate,
         description: createTask.description,
+        quantity: createTask.quantity,
         isReceipt: false,
         message: '',
         status: 'Pending',
@@ -310,6 +316,19 @@ const CreateTask = () => {
               name="timeDate"
               onChange={onChangeDateTime}
               placeholder="Time/Date"
+              className={styles.inputField}
+              required
+            />
+          </div>
+
+          <div className={styles.singleRow}>
+            <input
+              type="number"
+              name="quantity"
+              min="1"
+              value={createTask.quantity}
+              onChange={onChangeQuantity}
+              placeholder="Quantity"
               className={styles.inputField}
               required
             />

@@ -34,11 +34,6 @@ const dataAdmin = {
       name: "Archive File",
       url: "/archivefiles",
       icon: Archive
-    },
-    {
-      name: "Manage Account",
-      url: "/manageaccount",
-      icon: CircleUser
     }
   ],
 }
