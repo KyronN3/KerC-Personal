@@ -31,7 +31,7 @@ const CreateTask = () => {
     price: null,
     timeDate: null,
     description: null,
-    quantity: 1,
+    quantity: '',
   })
 
   useEffect(() => {
@@ -130,7 +130,9 @@ const CreateTask = () => {
       if (createTask.service == null) {
         throw new Error("Please pick a Service")
       }
-
+      if (createTask.quantity == 0) {
+        throw new Error('Error Quantity')
+      }
       const ref = collection(db, 'Order');
       const uid = await addDoc(ref, {
         name: createTask.name,
@@ -325,8 +327,8 @@ const CreateTask = () => {
             <input
               type="number"
               name="quantity"
-              min="1"
-              value={createTask.quantity}
+              min='1'
+              value={createTask.quantity == null ? '' : createTask.quantity}
               onChange={onChangeQuantity}
               placeholder="Quantity"
               className={styles.inputField}

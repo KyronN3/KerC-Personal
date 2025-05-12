@@ -372,6 +372,39 @@ const ProfilePageCustomer = () => {
                                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
+                                    {auth?.currentUser?.providerData[0].providerId != 'google.com' &&
+                                        <>
+                                            < div >
+                                                <label className="block text-gray-700 mb-2 text-sm font-medium">Email</label>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-gray-700 mb-2 text-sm font-medium">Password</label>
+                                                <input
+                                                    type="password"
+                                                    name="password"
+                                                    value={formData.password}
+                                                    onChange={handleChange}
+                                                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-gray-700 mb-2 text-sm font-medium">Confirm Password</label>
+                                                <input
+                                                    type="password"
+                                                    name="passwordConfirm"
+                                                    value={formData.passwordConfirm}
+                                                    onChange={handleChange}
+                                                    className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                        </>
+                                    }
                                     <div>
                                         <label className="block text-gray-700 mb-2 text-sm font-medium">Mobile Number</label>
                                         <input
@@ -521,7 +554,8 @@ const ProfilePageCustomer = () => {
                             </div>
                         </div>
                     </div>
-                </div>}
+                </div>
+            }
         </>
     );
 };

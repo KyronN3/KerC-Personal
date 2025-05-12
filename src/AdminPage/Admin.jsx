@@ -5,13 +5,15 @@ import Logo from '../assets/imgs/logo.png'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useState, useContext, useEffect } from 'react'
 import { signOut } from 'firebase/auth'
-import { auth } from '../config/firebase.jsx'
+import { auth, db, storage } from '../config/firebase.jsx'
+import { getDoc, doc } from 'firebase/firestore'
+import { listAll, getDownloadURL, ref } from 'firebase/storage'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import CreateTask from './CreateTask.jsx'
 import EditPrice from './EditPrice.jsx'
 import CustomerOrder from './CustomerOrder.jsx'
 import Receipt from './Receipt.jsx'
-import { ViewReceiptOpenContext, ProfilePicContext } from '../context.jsx';
+import { ViewReceiptOpenContext, ProfilePicContext, ModalContext } from '../context.jsx';
 import { Squash as Hamburger } from 'hamburger-react';
 import ArchiveFiles from './ArchiveFiles.jsx'
 import {
@@ -36,9 +38,11 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+
 export default function Admin() {
 
-    const { currentProfilePic } = useContext(ProfilePicContext);
+    const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext);
+    const { login } = useContext(ModalContext);
     const { viewReceiptOpen, setViewReceiptOpen } = useContext(ViewReceiptOpenContext);
     const goToPage = useNavigate();
     const [isOpen, setOpen] = useState(false);
@@ -64,6 +68,26 @@ export default function Admin() {
                 return <ArchiveFiles />
         }
     }
+
+    useEffect(() => {
+        if (login) {
+            const getPic = async () => {
+                const dataSnap = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
+                if (dataSnap.exists()) {
+                    const data = dataSnap.data();
+                    const response = await listAll(ref(storage, 'ProfilePicture'))
+                    const url = response.items.filter((pic) => {
+                        return pic._location.path_ == data.profilePic;
+                    })
+                    url.forEach(async (pic) => {
+                        const imageUrl = await getDownloadURL(pic);
+                        setCurrentProfilePic(imageUrl);
+                    })
+                }
+            }
+            getPic();
+        }
+    })
 
     const goToProfilePageAdmin = () => {
         goToPage('/profilepageadmin')

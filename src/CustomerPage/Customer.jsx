@@ -5,12 +5,12 @@ import Order from '../CustomerPage/Orders.jsx'
 import OrderHistory from '../CustomerPage/OrderHistory.jsx'
 import LoadingScreen from '../LoadingScreen.jsx'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { auth } from '../config/firebase.jsx'
+import { auth, db, storage } from '../config/firebase.jsx'
+import { listAll, getDownloadURL, ref } from 'firebase/storage'
+import { getDoc, doc } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 import { createContext, useState, useContext, useEffect } from 'react'
-// import { collection, getDocs } from 'firebase/firestore'
-// import { db } from '../config/firebase.jsx'
-import { ProfilePicContext } from '../context.jsx'
+import { ProfilePicContext, ModalContext } from '../context.jsx'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { Squash as Hamburger } from 'hamburger-react';
 import {
@@ -41,7 +41,9 @@ export const createData = createContext();
 
 export default function Customer() {
 
-    const { currentProfilePic } = useContext(ProfilePicContext);
+
+    const { currentProfilePic, setCurrentProfilePic } = useContext(ProfilePicContext);
+    const { login } = useContext(ModalContext);
     const [isOpen, setOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const goTo = useLocation();
@@ -60,6 +62,26 @@ export default function Customer() {
     const profilePageCustomer = () => {
         navOrder('/profilepagecustomer')
     }
+
+    useEffect(() => {
+        if (login) {
+            const getPic = async () => {
+                const dataSnap = await getDoc(doc(db, 'Customer', auth?.currentUser?.uid));
+                if (dataSnap.exists()) {
+                    const data = dataSnap.data();
+                    const response = await listAll(ref(storage, 'ProfilePicture'))
+                    const url = response.items.filter((pic) => {
+                        return pic._location.path_ == data.profilePic;
+                    })
+                    url.forEach(async (pic) => {
+                        const imageUrl = await getDownloadURL(pic);
+                        setCurrentProfilePic(imageUrl);
+                    })
+                }
+            }
+            getPic();
+        }
+    })
 
     const toRender = () => {
         switch (goTo.pathname) {

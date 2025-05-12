@@ -20,6 +20,7 @@ import { ToastContainer, toast } from "react-toastify"
 export default function LoginForm() {
 
   const navigateHome = useNavigate();
+  const [open, setOpen] = useState(true);
   const { modalSignupOpen, setModalSignupOpen, setLogin } = useContext(ModalContext);
   const [user, setUser] = useState(
     {
@@ -34,45 +35,48 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      await signInWithEmailAndPassword(auth, user.email, user.password);
-      setLogin(true);
-      navigateHome('/')
-      toast.success("Login Successfully", {
-        position: 'bottom-center',
-        hideProgressBar: true,
-        closeButton: false,
-        autoClose: 3000,
-        pauseOnFocusLoss: false,
-        style: {
-          top: '60px',
-          border: '1px solid black',
-          width: 'auto',
-          height: '60px'
-        }
-      });
-    } catch (error) {
-      toast.error("Wrong email or password, please try Again!", {
-        position: 'bottom-center',
-        hideProgressBar: true,
-        closeButton: false,
-        autoClose: 3000,
-        pauseOnFocusLoss: false,
-        style: {
-          top: '60px',
-          border: '1px solid black',
-          width: 'auto',
-          height: '60px'
-        }
-      });
-      console.error(error)
+    if (open) {
+      try {
+        await signInWithEmailAndPassword(auth, user.email, user.password);
+        setLogin(true);
+        navigateHome('/')
+        toast.success("Login Successfully", {
+          position: 'bottom-center',
+          hideProgressBar: true,
+          closeButton: false,
+          autoClose: 3000,
+          pauseOnFocusLoss: false,
+          style: {
+            top: '60px',
+            border: '1px solid black',
+            width: 'auto',
+            height: 'auto'
+          }
+        });
+      } catch (error) {
+        toast.error("Wrong email or password, please try Again!", {
+          position: 'bottom-center',
+          hideProgressBar: true,
+          closeButton: false,
+          autoClose: 3000,
+          pauseOnFocusLoss: false,
+          style: {
+            top: '60px',
+            border: '1px solid black',
+            width: 'auto',
+            height: 'auto'
+          }
+        });
+        console.error(error)
+      }
     }
   }
 
   const authGoogle = async () => {
     try {
+      setOpen(false);
       await signInWithPopup(auth, googleAuth);
+      setTimeout(() => { setOpen(true) }, 3000)
       setLogin(true);
       navigateHome('/');
       toast.success("Login Successfully", {

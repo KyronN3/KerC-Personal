@@ -133,7 +133,7 @@ export default function Home({ isLogin = false, isSignup = false }) {
       getPic();
     }
 
-  }, [])
+  })
 
   return (<>
 
