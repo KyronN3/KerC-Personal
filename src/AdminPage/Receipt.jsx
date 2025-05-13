@@ -77,8 +77,9 @@ export default function SimpleReceipt() {
                             <thead>
                                 <tr className={styles.tableHeader}>
                                     <th className={styles.tableHeaderLeft}>Service</th>
-                                    <th className={styles.tableHeaderRight}>Price</th>
                                     <th className={styles.tableHeaderRight}>Quantity</th>
+                                    <th className={styles.tableHeaderRight}>Price</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
