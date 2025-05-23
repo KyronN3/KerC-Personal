@@ -79,7 +79,8 @@
 }
 
 .About,
-.Contact {
+.Contact,
+.Login {
   display: inline-block;
   height: 46px;
   width: 160px;
