@@ -283,7 +283,7 @@ function App() {
       < footer className="bg-blue-600 text-white py-3 w-full mt-auto" >
         <div className="container mx-auto flex flex-wrap justify-between items-center px-4">
           <div className="text-sm">
-            Copyright Â© 2025 - KER-C Printing Services
+            Copyright © 2025 - KER-C Printing Services
           </div>
           <div className="text-sm">
             <a href='/legal' className="hover:underline mr-4">Terms & Conditions</a>
